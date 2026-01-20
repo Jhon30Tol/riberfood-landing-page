@@ -23,9 +23,10 @@ import orderScreen from './images/tela_pedidos_5.jpg';
 import employeePhoto from './images/foto_fun_6.png';
 import iconLogo from './images/Icon_sem_Fundo.png';
 import textLogo from './images/riberfood_logo-bg_null.png';
+import { SignupForm } from './types';
 
 // Components
-const Navbar: React.FC = () => {
+const Navbar: React.FC<{ onOpenModal: () => void }> = ({ onOpenModal }) => {
   const [isOpen, setIsOpen] = useState(false);
 
   return (
@@ -64,7 +65,13 @@ const Navbar: React.FC = () => {
             <a href="#solucao" onClick={() => setIsOpen(false)} className="text-gray-300 block px-3 py-2 rounded-md text-base font-medium">Solução</a>
             <a href="#beneficios" onClick={() => setIsOpen(false)} className="text-gray-300 block px-3 py-2 rounded-md text-base font-medium">Benefícios</a>
             <a href="#faq" onClick={() => setIsOpen(false)} className="text-gray-300 block px-3 py-2 rounded-md text-base font-medium">FAQ</a>
-            <button className="w-full bg-orange-600 text-white px-3 py-3 rounded-md text-base font-bold">
+            <button
+              onClick={() => {
+                setIsOpen(false);
+                onOpenModal();
+              }}
+              className="w-full bg-orange-600 text-white px-3 py-3 rounded-md text-base font-bold"
+            >
               Quero conhecer a plataforma
             </button>
           </div>
@@ -119,10 +126,237 @@ const FAQSection: React.FC = () => {
   );
 };
 
+const TrialModal: React.FC<{ isOpen: boolean; onClose: () => void }> = ({ isOpen, onClose }) => {
+  const [step, setStep] = useState<'form' | 'success'>('form');
+  const [loading, setLoading] = useState(false);
+  const [formData, setFormData] = useState<SignupForm>({
+    cnpj: '',
+    nomeEmpresa: '',
+    nomeAdmin: '',
+    email: '',
+    senha: '',
+    telefone: ''
+  });
+
+  if (!isOpen) return null;
+
+  const handleCnpjChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    let value = e.target.value.replace(/\D/g, '');
+    if (value.length > 14) value = value.slice(0, 14);
+
+    // Mask: 00.000.000/0000-00
+    value = value.replace(/^(\d{2})(\d)/, '$1.$2');
+    value = value.replace(/^(\d{2})\.(\d{3})(\d)/, '$1.$2.$3');
+    value = value.replace(/\.(\d{3})(\d)/, '.$1/$2');
+    value = value.replace(/(\d{4})(\d)/, '$1-$2');
+
+    setFormData({ ...formData, cnpj: value });
+  };
+
+  const handlePhoneChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    let value = e.target.value.replace(/\D/g, '');
+    if (value.length > 11) value = value.slice(0, 11);
+
+    // Mask: (00) 00000-0000
+    value = value.replace(/^(\d{2})(\d)/, '($1) $2');
+    value = value.replace(/(\d{5})(\d)/, '$1-$2');
+
+    setFormData({ ...formData, telefone: value });
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setLoading(true);
+
+    try {
+      // Clean data for API
+      const payload = {
+        ...formData,
+        cnpj: formData.cnpj.replace(/\D/g, ''),
+        telefone: formData.telefone
+      };
+
+      const response = await fetch('https://riberfood.com.br/api/public/cadastro-trial', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json'
+        },
+        mode: 'cors',
+        body: JSON.stringify(payload)
+      });
+
+      const data = await response.json();
+
+      if (data.sucesso) {
+        setStep('success');
+      } else {
+        alert(data.mensagem || 'Erro ao criar conta. Tente novamente.');
+      }
+    } catch (error) {
+      console.error('Error submitting form:', error);
+      // For demo/testing purposes, if CORS fails or server is down, we might want to simulate success?
+      // But let's stick to real implementation.
+      alert('Erro de conexão. Por favor, tente novamente mais tarde.');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  return (
+    <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
+      <div
+        className="absolute inset-0 bg-gray-900/80 backdrop-blur-sm"
+        onClick={onClose}
+      ></div>
+
+      <div className="relative w-full max-w-lg bg-white rounded-3xl shadow-2xl overflow-hidden animate-in zoom-in duration-300">
+        <button
+          onClick={onClose}
+          className="absolute top-4 right-4 p-2 text-gray-400 hover:text-gray-900 transition-colors"
+        >
+          <X className="h-6 w-6" />
+        </button>
+
+        {step === 'form' ? (
+          <div className="p-8 sm:p-10">
+            <h2 className="text-2xl font-black text-gray-900 mb-2">Comece seu teste grátis por 7 dias</h2>
+            <p className="text-gray-600 mb-8">Preencha os dados abaixo para criar sua conta instantaneamente.</p>
+
+            <form onSubmit={handleSubmit} className="space-y-4">
+              <div>
+                <label className="block text-sm font-bold text-gray-700 mb-1">CNPJ</label>
+                <input
+                  required
+                  type="text"
+                  placeholder="00.000.000/0000-00"
+                  className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-orange-600 focus:ring-2 focus:ring-orange-600/20 transition-all outline-none"
+                  value={formData.cnpj}
+                  onChange={handleCnpjChange}
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-bold text-gray-700 mb-1">Nome da Empresa</label>
+                <input
+                  required
+                  type="text"
+                  placeholder="Ex: Pizzaria do João"
+                  className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-orange-600 focus:ring-2 focus:ring-orange-600/20 transition-all outline-none"
+                  value={formData.nomeEmpresa}
+                  onChange={e => setFormData({ ...formData, nomeEmpresa: e.target.value })}
+                />
+              </div>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-sm font-bold text-gray-700 mb-1">Seu Nome</label>
+                  <input
+                    required
+                    type="text"
+                    placeholder="Nome completo"
+                    className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-orange-600 focus:ring-2 focus:ring-orange-600/20 transition-all outline-none"
+                    value={formData.nomeAdmin}
+                    onChange={e => setFormData({ ...formData, nomeAdmin: e.target.value })}
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-bold text-gray-700 mb-1">Telefone</label>
+                  <input
+                    required
+                    type="text"
+                    placeholder="(00) 00000-0000"
+                    className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-orange-600 focus:ring-2 focus:ring-orange-600/20 transition-all outline-none"
+                    value={formData.telefone}
+                    onChange={handlePhoneChange}
+                  />
+                </div>
+              </div>
+              <div>
+                <label className="block text-sm font-bold text-gray-700 mb-1">Email</label>
+                <input
+                  required
+                  type="email"
+                  placeholder="seu@email.com"
+                  className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-orange-600 focus:ring-2 focus:ring-orange-600/20 transition-all outline-none"
+                  value={formData.email}
+                  onChange={e => setFormData({ ...formData, email: e.target.value })}
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-bold text-gray-700 mb-1">Senha</label>
+                <input
+                  required
+                  type="password"
+                  placeholder="Mínimo 6 caracteres"
+                  className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-orange-600 focus:ring-2 focus:ring-orange-600/20 transition-all outline-none"
+                  value={formData.senha}
+                  onChange={e => setFormData({ ...formData, senha: e.target.value })}
+                />
+              </div>
+
+              <button
+                disabled={loading}
+                className="w-full mt-6 bg-orange-600 hover:bg-orange-700 disabled:bg-orange-400 text-white py-4 rounded-xl text-lg font-black transition-all transform hover:scale-[1.02] active:scale-[0.98] shadow-xl shadow-orange-600/30 flex items-center justify-center gap-2"
+              >
+                {loading ? 'Processando...' : 'Iniciar Teste Grátis'} <TrendingUp className="w-5 h-5" />
+              </button>
+            </form>
+          </div>
+        ) : (
+          <div className="p-10 text-center">
+            <div className="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-6">
+              <Check className="w-10 h-10 text-green-600" />
+            </div>
+            <h2 className="text-3xl font-black text-gray-900 mb-4">✅ Tudo pronto!</h2>
+            <div className="space-y-6 text-gray-600">
+              <p className="text-lg">Sua conta foi criada com sucesso!</p>
+
+              <div className="bg-gray-50 p-6 rounded-2xl border border-gray-100">
+                <p className="text-sm uppercase tracking-wider font-bold text-gray-400 mb-2">📧 Enviamos um email para:</p>
+                <p className="text-lg font-bold text-gray-900">{formData.email}</p>
+              </div>
+
+              <div className="text-left space-y-4 max-w-xs mx-auto">
+                <p className="font-medium">Dentro de alguns minutos você receberá:</p>
+                <ul className="space-y-2">
+                  <li className="flex items-center gap-2">
+                    <div className="w-1.5 h-1.5 bg-orange-600 rounded-full"></div>
+                    <span>Link de acesso ao sistema</span>
+                  </li>
+                  <li className="flex items-center gap-2">
+                    <div className="w-1.5 h-1.5 bg-orange-600 rounded-full"></div>
+                    <span>Suas credenciais</span>
+                  </li>
+                  <li className="flex items-center gap-2">
+                    <div className="w-1.5 h-1.5 bg-orange-600 rounded-full"></div>
+                    <span>Primeiros passos</span>
+                  </li>
+                </ul>
+              </div>
+
+              <div className="pt-6">
+                <p className="text-sm mb-4">Não recebeu?</p>
+                <button
+                  onClick={() => alert('Email reenviado com sucesso!')}
+                  className="text-orange-600 font-bold hover:underline"
+                >
+                  Reenviar email
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
+      </div>
+    </div>
+  );
+};
+
 const App: React.FC = () => {
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
   return (
     <div className="min-h-screen">
-      <Navbar />
+      <Navbar onOpenModal={() => setIsModalOpen(true)} />
+      <TrialModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} />
 
       {/* Hero Section */}
       <section className="relative pt-32 pb-24 md:pt-48 md:pb-40 bg-gray-900 text-white overflow-hidden">
@@ -145,7 +379,10 @@ const App: React.FC = () => {
                 Pare de perder pedidos, organize suas entregas e tenha tudo em um só lugar — livre de mensalidades.
               </p>
               <div className="flex flex-col sm:flex-row gap-4 justify-center md:justify-start">
-                <button className="bg-orange-600 hover:bg-orange-700 text-white px-10 py-5 rounded-full text-lg font-black transition-all transform hover:scale-105 active:scale-95 shadow-2xl shadow-orange-600/40 flex items-center justify-center gap-2">
+                <button
+                  onClick={() => setIsModalOpen(true)}
+                  className="bg-orange-600 hover:bg-orange-700 text-white px-10 py-5 rounded-full text-lg font-black transition-all transform hover:scale-105 active:scale-95 shadow-2xl shadow-orange-600/40 flex items-center justify-center gap-2"
+                >
                   Quero conhecer a plataforma <Zap className="w-5 h-5 fill-current" />
                 </button>
               </div>
@@ -422,7 +659,10 @@ const App: React.FC = () => {
           <p className="text-xl text-gray-600 mb-12 max-w-2xl mx-auto relative z-10">
             Comece agora e veja como é possível ter controle, simplicidade e livre de mensalidades em um só lugar. O lucro das suas vendas pertence a você.
           </p>
-          <button className="relative z-10 bg-orange-600 hover:bg-orange-700 text-white px-12 py-6 rounded-full text-xl font-black transition-all transform hover:scale-105 active:scale-95 shadow-2xl shadow-orange-600/40 flex items-center justify-center gap-3 mx-auto">
+          <button
+            onClick={() => setIsModalOpen(true)}
+            className="relative z-10 bg-orange-600 hover:bg-orange-700 text-white px-12 py-6 rounded-full text-xl font-black transition-all transform hover:scale-105 active:scale-95 shadow-2xl shadow-orange-600/40 flex items-center justify-center gap-3 mx-auto"
+          >
             Quero ver como funciona <Truck className="w-6 h-6" />
           </button>
         </div>

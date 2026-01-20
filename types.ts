@@ -9,3 +9,11 @@ export interface BenefitItem {
   description: string;
   image: string;
 }
+export interface SignupForm {
+  cnpj: string;
+  nomeEmpresa: string;
+  nomeAdmin: string;
+  email: string;
+  senha: string;
+  telefone: string;
+}
