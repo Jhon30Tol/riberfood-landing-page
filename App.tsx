@@ -43,9 +43,7 @@ const Navbar: React.FC = () => {
               <a href="#solucao" className="text-gray-300 hover:text-white px-3 py-2 rounded-md text-sm font-medium transition-colors">Solução</a>
               <a href="#beneficios" className="text-gray-300 hover:text-white px-3 py-2 rounded-md text-sm font-medium transition-colors">Benefícios</a>
               <a href="#faq" className="text-gray-300 hover:text-white px-3 py-2 rounded-md text-sm font-medium transition-colors">FAQ</a>
-              <button className="bg-orange-600 hover:bg-orange-700 text-white px-6 py-2.5 rounded-full text-sm font-bold transition-all transform hover:scale-105 active:scale-95 shadow-lg shadow-orange-600/20">
-                Falar com consultor
-              </button>
+
             </div>
           </div>
           <div className="md:hidden">
@@ -82,7 +80,7 @@ const FAQSection: React.FC = () => {
   const faqs: FAQItem[] = [
     {
       question: "A RiberFood cobra comissão por pedido?",
-      answer: "Não. Trabalhamos com mensalidade fixa, sem comissão sobre vendas. Todo o lucro das suas vendas fica com você."
+      answer: "Cobramos uma taxa fixa do cliente para custos de manter o sistema atualizado e funcionando, mas para a empresa não há custo nem mensalidade."
     },
     {
       question: "Preciso saber tecnologia para usar?",
@@ -144,7 +142,7 @@ const App: React.FC = () => {
                 Sem complicação.
               </h1>
               <p className="text-lg md:text-xl text-gray-400 mb-10 max-w-xl mx-auto md:mx-0">
-                Pare de perder pedidos, organize suas entregas e tenha tudo em um só lugar — com baixo custo e visual moderno.
+                Pare de perder pedidos, organize suas entregas e tenha tudo em um só lugar — livre de mensalidades.
               </p>
               <div className="flex flex-col sm:flex-row gap-4 justify-center md:justify-start">
                 <button className="bg-orange-600 hover:bg-orange-700 text-white px-10 py-5 rounded-full text-lg font-black transition-all transform hover:scale-105 active:scale-95 shadow-2xl shadow-orange-600/40 flex items-center justify-center gap-2">
@@ -260,7 +258,7 @@ const App: React.FC = () => {
                 </div>
                 <div className="flex items-center gap-3">
                   <CheckCircle className="w-6 h-6 text-green-500" />
-                  <span className="text-lg text-gray-700 font-medium">Mensalidade fixa, sem surpresas</span>
+                  <span className="text-lg text-gray-700 font-medium">Livre de mensalidades e taxas</span>
                 </div>
                 <div className="flex items-center gap-3">
                   <CheckCircle className="w-6 h-6 text-green-500" />
@@ -422,7 +420,7 @@ const App: React.FC = () => {
             PRONTO PARA ORGANIZAR <br /> SEU DELIVERY?
           </h2>
           <p className="text-xl text-gray-600 mb-12 max-w-2xl mx-auto relative z-10">
-            Comece agora e veja como é possível ter controle, simplicidade e baixo custo em um só lugar. O lucro das suas vendas pertence a você.
+            Comece agora e veja como é possível ter controle, simplicidade e livre de mensalidades em um só lugar. O lucro das suas vendas pertence a você.
           </p>
           <button className="relative z-10 bg-orange-600 hover:bg-orange-700 text-white px-12 py-6 rounded-full text-xl font-black transition-all transform hover:scale-105 active:scale-95 shadow-2xl shadow-orange-600/40 flex items-center justify-center gap-3 mx-auto">
             Quero ver como funciona <Truck className="w-6 h-6" />
