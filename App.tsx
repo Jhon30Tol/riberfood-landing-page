@@ -74,6 +74,9 @@ const Navbar: React.FC<{ onOpenModal: () => void }> = ({ onOpenModal }) => {
             >
               Quero conhecer a plataforma
             </button>
+            <p className="text-orange-500 text-xs font-bold text-center mt-2 flex items-center justify-center gap-1">
+              <CheckCircle className="w-3 h-3" /> Comece a usar imediatamente sem Custo
+            </p>
           </div>
         </div>
       )}
@@ -220,7 +223,7 @@ const TrialModal: React.FC<{ isOpen: boolean; onClose: () => void }> = ({ isOpen
 
         {step === 'form' ? (
           <div className="p-8 sm:p-10">
-            <h2 className="text-2xl font-black text-gray-900 mb-2">Comece seu teste grátis por 7 dias</h2>
+            <h2 className="text-2xl font-black text-gray-900 mb-2">Comece a usar imediatamente sem Custo</h2>
             <p className="text-gray-600 mb-8">Preencha os dados abaixo para criar sua conta instantaneamente.</p>
 
             <form onSubmit={handleSubmit} className="space-y-4">
@@ -297,7 +300,7 @@ const TrialModal: React.FC<{ isOpen: boolean; onClose: () => void }> = ({ isOpen
                 disabled={loading}
                 className="w-full mt-6 bg-orange-600 hover:bg-orange-700 disabled:bg-orange-400 text-white py-4 rounded-xl text-lg font-black transition-all transform hover:scale-[1.02] active:scale-[0.98] shadow-xl shadow-orange-600/30 flex items-center justify-center gap-2"
               >
-                {loading ? 'Processando...' : 'Iniciar Teste Grátis'} <TrendingUp className="w-5 h-5" />
+                {loading ? 'Processando...' : 'Começar Imediatamente'} <TrendingUp className="w-5 h-5" />
               </button>
             </form>
           </div>
@@ -379,12 +382,17 @@ const App: React.FC = () => {
                 Pare de perder pedidos, organize suas entregas e tenha tudo em um só lugar — livre de mensalidades.
               </p>
               <div className="flex flex-col sm:flex-row gap-4 justify-center md:justify-start">
-                <button
-                  onClick={() => setIsModalOpen(true)}
-                  className="bg-orange-600 hover:bg-orange-700 text-white px-10 py-5 rounded-full text-lg font-black transition-all transform hover:scale-105 active:scale-95 shadow-2xl shadow-orange-600/40 flex items-center justify-center gap-2"
-                >
-                  Quero conhecer a plataforma <Zap className="w-5 h-5 fill-current" />
-                </button>
+                <div className="flex flex-col items-center md:items-start gap-4">
+                  <button
+                    onClick={() => setIsModalOpen(true)}
+                    className="bg-orange-600 hover:bg-orange-700 text-white px-10 py-5 rounded-full text-lg font-black transition-all transform hover:scale-105 active:scale-95 shadow-2xl shadow-orange-600/40 flex items-center justify-center gap-2"
+                  >
+                    Quero conhecer a plataforma <Zap className="w-5 h-5 fill-current" />
+                  </button>
+                  <p className="text-orange-500 font-bold flex items-center gap-2">
+                    <CheckCircle className="w-5 h-5" /> Comece a usar imediatamente sem Custo
+                  </p>
+                </div>
               </div>
             </div>
             <div className="relative">
@@ -659,12 +667,17 @@ const App: React.FC = () => {
           <p className="text-xl text-gray-600 mb-12 max-w-2xl mx-auto relative z-10">
             Comece agora e veja como é possível ter controle, simplicidade e livre de mensalidades em um só lugar. O lucro das suas vendas pertence a você.
           </p>
-          <button
-            onClick={() => setIsModalOpen(true)}
-            className="relative z-10 bg-orange-600 hover:bg-orange-700 text-white px-12 py-6 rounded-full text-xl font-black transition-all transform hover:scale-105 active:scale-95 shadow-2xl shadow-orange-600/40 flex items-center justify-center gap-3 mx-auto"
-          >
-            Quero ver como funciona <Truck className="w-6 h-6" />
-          </button>
+          <div className="space-y-4 relative z-10">
+            <button
+              onClick={() => setIsModalOpen(true)}
+              className="bg-orange-600 hover:bg-orange-700 text-white px-12 py-6 rounded-full text-xl font-black transition-all transform hover:scale-105 active:scale-95 shadow-2xl shadow-orange-600/40 flex items-center justify-center gap-3 mx-auto"
+            >
+              Quero ver como funciona <Truck className="w-6 h-6" />
+            </button>
+            <p className="text-orange-600 font-bold flex items-center justify-center gap-2">
+              <CheckCircle className="w-5 h-5" /> Comece a usar imediatamente sem Custo
+            </p>
+          </div>
         </div>
       </section>
 
