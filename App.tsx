@@ -229,18 +229,19 @@ const TrialModal: React.FC<{ isOpen: boolean; onClose: () => void }> = ({ isOpen
 
               <form onSubmit={handleSubmit} className="space-y-4">
                 <div>
-                  <label className="block text-sm font-bold text-gray-700 mb-1">CNPJ</label>
+                  <label className="block text-sm font-bold text-gray-700 mb-1">CNPJ <span className="text-red-500">*</span></label>
                   <input
                     required
                     type="text"
                     placeholder="00.000.000/0000-00"
+                    minLength={18}
                     className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-orange-600 focus:ring-2 focus:ring-orange-600/20 transition-all outline-none"
                     value={formData.cnpj}
                     onChange={handleCnpjChange}
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-bold text-gray-700 mb-1">Nome da Empresa</label>
+                  <label className="block text-sm font-bold text-gray-700 mb-1">Nome da Empresa <span className="text-red-500">*</span></label>
                   <input
                     required
                     type="text"
@@ -252,7 +253,7 @@ const TrialModal: React.FC<{ isOpen: boolean; onClose: () => void }> = ({ isOpen
                 </div>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div>
-                    <label className="block text-sm font-bold text-gray-700 mb-1">Seu Nome</label>
+                    <label className="block text-sm font-bold text-gray-700 mb-1">Seu Nome <span className="text-red-500">*</span></label>
                     <input
                       required
                       type="text"
@@ -263,11 +264,12 @@ const TrialModal: React.FC<{ isOpen: boolean; onClose: () => void }> = ({ isOpen
                     />
                   </div>
                   <div>
-                    <label className="block text-sm font-bold text-gray-700 mb-1">Telefone</label>
+                    <label className="block text-sm font-bold text-gray-700 mb-1">Telefone <span className="text-red-500">*</span></label>
                     <input
                       required
                       type="text"
                       placeholder="(00) 00000-0000"
+                      minLength={14}
                       className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-orange-600 focus:ring-2 focus:ring-orange-600/20 transition-all outline-none"
                       value={formData.telefone}
                       onChange={handlePhoneChange}
@@ -275,7 +277,7 @@ const TrialModal: React.FC<{ isOpen: boolean; onClose: () => void }> = ({ isOpen
                   </div>
                 </div>
                 <div>
-                  <label className="block text-sm font-bold text-gray-700 mb-1">Email</label>
+                  <label className="block text-sm font-bold text-gray-700 mb-1">Email <span className="text-red-500">*</span></label>
                   <input
                     required
                     type="email"
@@ -286,11 +288,12 @@ const TrialModal: React.FC<{ isOpen: boolean; onClose: () => void }> = ({ isOpen
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-bold text-gray-700 mb-1">Senha</label>
+                  <label className="block text-sm font-bold text-gray-700 mb-1">Senha <span className="text-red-500">*</span></label>
                   <input
                     required
                     type="password"
                     placeholder="Mínimo 6 caracteres"
+                    minLength={6}
                     className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-orange-600 focus:ring-2 focus:ring-orange-600/20 transition-all outline-none"
                     value={formData.senha}
                     onChange={e => setFormData({ ...formData, senha: e.target.value })}
