@@ -213,141 +213,143 @@ const TrialModal: React.FC<{ isOpen: boolean; onClose: () => void }> = ({ isOpen
         onClick={onClose}
       ></div>
 
-      <div className="relative w-full max-w-lg bg-white rounded-3xl shadow-2xl overflow-hidden animate-in zoom-in duration-300">
+      <div className="relative w-full max-w-lg bg-white rounded-3xl shadow-2xl overflow-hidden animate-in zoom-in duration-300 max-h-[90vh] flex flex-col">
         <button
           onClick={onClose}
-          className="absolute top-4 right-4 p-2 text-gray-400 hover:text-gray-900 transition-colors"
+          className="absolute top-4 right-4 p-2 text-gray-400 hover:text-gray-900 transition-colors z-10 bg-white/80 backdrop-blur-sm rounded-full"
         >
           <X className="h-6 w-6" />
         </button>
 
-        {step === 'form' ? (
-          <div className="p-8 sm:p-10">
-            <h2 className="text-2xl font-black text-gray-900 mb-2">Comece a usar imediatamente sem Custo</h2>
-            <p className="text-gray-600 mb-8">Preencha os dados abaixo para criar sua conta instantaneamente.</p>
+        <div className="overflow-y-auto flex-1 custom-scrollbar">
+          {step === 'form' ? (
+            <div className="p-8 sm:p-10">
+              <h2 className="text-2xl font-black text-gray-900 mb-2">Comece a usar imediatamente sem Custo</h2>
+              <p className="text-gray-600 mb-8">Preencha os dados abaixo para criar sua conta instantaneamente.</p>
 
-            <form onSubmit={handleSubmit} className="space-y-4">
-              <div>
-                <label className="block text-sm font-bold text-gray-700 mb-1">CNPJ</label>
-                <input
-                  required
-                  type="text"
-                  placeholder="00.000.000/0000-00"
-                  className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-orange-600 focus:ring-2 focus:ring-orange-600/20 transition-all outline-none"
-                  value={formData.cnpj}
-                  onChange={handleCnpjChange}
-                />
-              </div>
-              <div>
-                <label className="block text-sm font-bold text-gray-700 mb-1">Nome da Empresa</label>
-                <input
-                  required
-                  type="text"
-                  placeholder="Ex: Pizzaria do João"
-                  className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-orange-600 focus:ring-2 focus:ring-orange-600/20 transition-all outline-none"
-                  value={formData.nomeEmpresa}
-                  onChange={e => setFormData({ ...formData, nomeEmpresa: e.target.value })}
-                />
-              </div>
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <form onSubmit={handleSubmit} className="space-y-4">
                 <div>
-                  <label className="block text-sm font-bold text-gray-700 mb-1">Seu Nome</label>
+                  <label className="block text-sm font-bold text-gray-700 mb-1">CNPJ</label>
                   <input
                     required
                     type="text"
-                    placeholder="Nome completo"
+                    placeholder="00.000.000/0000-00"
                     className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-orange-600 focus:ring-2 focus:ring-orange-600/20 transition-all outline-none"
-                    value={formData.nomeAdmin}
-                    onChange={e => setFormData({ ...formData, nomeAdmin: e.target.value })}
+                    value={formData.cnpj}
+                    onChange={handleCnpjChange}
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-bold text-gray-700 mb-1">Telefone</label>
+                  <label className="block text-sm font-bold text-gray-700 mb-1">Nome da Empresa</label>
                   <input
                     required
                     type="text"
-                    placeholder="(00) 00000-0000"
+                    placeholder="Ex: Pizzaria do João"
                     className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-orange-600 focus:ring-2 focus:ring-orange-600/20 transition-all outline-none"
-                    value={formData.telefone}
-                    onChange={handlePhoneChange}
+                    value={formData.nomeEmpresa}
+                    onChange={e => setFormData({ ...formData, nomeEmpresa: e.target.value })}
                   />
                 </div>
-              </div>
-              <div>
-                <label className="block text-sm font-bold text-gray-700 mb-1">Email</label>
-                <input
-                  required
-                  type="email"
-                  placeholder="seu@email.com"
-                  className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-orange-600 focus:ring-2 focus:ring-orange-600/20 transition-all outline-none"
-                  value={formData.email}
-                  onChange={e => setFormData({ ...formData, email: e.target.value })}
-                />
-              </div>
-              <div>
-                <label className="block text-sm font-bold text-gray-700 mb-1">Senha</label>
-                <input
-                  required
-                  type="password"
-                  placeholder="Mínimo 6 caracteres"
-                  className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-orange-600 focus:ring-2 focus:ring-orange-600/20 transition-all outline-none"
-                  value={formData.senha}
-                  onChange={e => setFormData({ ...formData, senha: e.target.value })}
-                />
-              </div>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <div>
+                    <label className="block text-sm font-bold text-gray-700 mb-1">Seu Nome</label>
+                    <input
+                      required
+                      type="text"
+                      placeholder="Nome completo"
+                      className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-orange-600 focus:ring-2 focus:ring-orange-600/20 transition-all outline-none"
+                      value={formData.nomeAdmin}
+                      onChange={e => setFormData({ ...formData, nomeAdmin: e.target.value })}
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-bold text-gray-700 mb-1">Telefone</label>
+                    <input
+                      required
+                      type="text"
+                      placeholder="(00) 00000-0000"
+                      className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-orange-600 focus:ring-2 focus:ring-orange-600/20 transition-all outline-none"
+                      value={formData.telefone}
+                      onChange={handlePhoneChange}
+                    />
+                  </div>
+                </div>
+                <div>
+                  <label className="block text-sm font-bold text-gray-700 mb-1">Email</label>
+                  <input
+                    required
+                    type="email"
+                    placeholder="seu@email.com"
+                    className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-orange-600 focus:ring-2 focus:ring-orange-600/20 transition-all outline-none"
+                    value={formData.email}
+                    onChange={e => setFormData({ ...formData, email: e.target.value })}
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-bold text-gray-700 mb-1">Senha</label>
+                  <input
+                    required
+                    type="password"
+                    placeholder="Mínimo 6 caracteres"
+                    className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-orange-600 focus:ring-2 focus:ring-orange-600/20 transition-all outline-none"
+                    value={formData.senha}
+                    onChange={e => setFormData({ ...formData, senha: e.target.value })}
+                  />
+                </div>
 
-              <button
-                disabled={loading}
-                className="w-full mt-6 bg-orange-600 hover:bg-orange-700 disabled:bg-orange-400 text-white py-4 rounded-xl text-lg font-black transition-all transform hover:scale-[1.02] active:scale-[0.98] shadow-xl shadow-orange-600/30 flex items-center justify-center gap-2"
-              >
-                {loading ? 'Processando...' : 'Começar Imediatamente'} <TrendingUp className="w-5 h-5" />
-              </button>
-            </form>
-          </div>
-        ) : (
-          <div className="p-10 text-center">
-            <div className="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-6">
-              <Check className="w-10 h-10 text-green-600" />
-            </div>
-            <h2 className="text-3xl font-black text-gray-900 mb-4">✅ Tudo pronto!</h2>
-            <div className="space-y-6 text-gray-600">
-              <p className="text-lg">Sua conta foi criada com sucesso!</p>
-
-              <div className="bg-gray-50 p-6 rounded-2xl border border-gray-100">
-                <p className="text-sm uppercase tracking-wider font-bold text-gray-400 mb-2">📧 Enviamos um email para:</p>
-                <p className="text-lg font-bold text-gray-900">{formData.email}</p>
-              </div>
-
-              <div className="text-left space-y-4 max-w-xs mx-auto">
-                <p className="font-medium">Dentro de alguns minutos você receberá:</p>
-                <ul className="space-y-2">
-                  <li className="flex items-center gap-2">
-                    <div className="w-1.5 h-1.5 bg-orange-600 rounded-full"></div>
-                    <span>Link de acesso ao sistema</span>
-                  </li>
-                  <li className="flex items-center gap-2">
-                    <div className="w-1.5 h-1.5 bg-orange-600 rounded-full"></div>
-                    <span>Suas credenciais</span>
-                  </li>
-                  <li className="flex items-center gap-2">
-                    <div className="w-1.5 h-1.5 bg-orange-600 rounded-full"></div>
-                    <span>Primeiros passos</span>
-                  </li>
-                </ul>
-              </div>
-
-              <div className="pt-6">
-                <p className="text-sm mb-4">Não recebeu?</p>
                 <button
-                  onClick={() => alert('Email reenviado com sucesso!')}
-                  className="text-orange-600 font-bold hover:underline"
+                  disabled={loading}
+                  className="w-full mt-6 bg-orange-600 hover:bg-orange-700 disabled:bg-orange-400 text-white py-4 rounded-xl text-lg font-black transition-all transform hover:scale-[1.02] active:scale-[0.98] shadow-xl shadow-orange-600/30 flex items-center justify-center gap-2"
                 >
-                  Reenviar email
+                  {loading ? 'Processando...' : 'Começar Imediatamente'} <TrendingUp className="w-5 h-5" />
                 </button>
+              </form>
+            </div>
+          ) : (
+            <div className="p-10 text-center">
+              <div className="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-6">
+                <Check className="w-10 h-10 text-green-600" />
+              </div>
+              <h2 className="text-3xl font-black text-gray-900 mb-4">✅ Tudo pronto!</h2>
+              <div className="space-y-6 text-gray-600">
+                <p className="text-lg">Sua conta foi criada com sucesso!</p>
+
+                <div className="bg-gray-50 p-6 rounded-2xl border border-gray-100">
+                  <p className="text-sm uppercase tracking-wider font-bold text-gray-400 mb-2">📧 Enviamos um email para:</p>
+                  <p className="text-lg font-bold text-gray-900">{formData.email}</p>
+                </div>
+
+                <div className="text-left space-y-4 max-w-xs mx-auto">
+                  <p className="font-medium">Dentro de alguns minutos você receberá:</p>
+                  <ul className="space-y-2">
+                    <li className="flex items-center gap-2">
+                      <div className="w-1.5 h-1.5 bg-orange-600 rounded-full"></div>
+                      <span>Link de acesso ao sistema</span>
+                    </li>
+                    <li className="flex items-center gap-2">
+                      <div className="w-1.5 h-1.5 bg-orange-600 rounded-full"></div>
+                      <span>Suas credenciais</span>
+                    </li>
+                    <li className="flex items-center gap-2">
+                      <div className="w-1.5 h-1.5 bg-orange-600 rounded-full"></div>
+                      <span>Primeiros passos</span>
+                    </li>
+                  </ul>
+                </div>
+
+                <div className="pt-6">
+                  <p className="text-sm mb-4">Não recebeu?</p>
+                  <button
+                    onClick={() => alert('Email reenviado com sucesso!')}
+                    className="text-orange-600 font-bold hover:underline"
+                  >
+                    Reenviar email
+                  </button>
+                </div>
               </div>
             </div>
-          </div>
-        )}
+          )}
+        </div>
       </div>
     </div>
   );
