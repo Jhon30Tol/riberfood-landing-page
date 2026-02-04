@@ -35,7 +35,7 @@ const Navbar: React.FC<{ onOpenModal: () => void }> = ({ onOpenModal }) => {
         <div className="flex items-center justify-between h-20">
           <div className="flex-shrink-0 flex items-center gap-2">
             <div className="p-1 rounded-lg">
-              <img src={iconLogo} alt="RiberFood Icon" className="w-10 h-10 object-contain" />
+              <img src={iconLogo} alt="Riberfood Icon" className="w-10 h-10 object-contain" />
             </div>
             <img src={textLogo} alt="RIBERFOOD" className="h-8 object-contain" />
           </div>
@@ -89,7 +89,7 @@ const FAQSection: React.FC = () => {
 
   const faqs: FAQItem[] = [
     {
-      question: "A RiberFood cobra comissão por pedido?",
+      question: "A Riberfood cobra comissão por pedido?",
       answer: "Cobramos uma taxa fixa do cliente para custos de manter o sistema atualizado e funcionando, mas para a empresa não há custo nem mensalidade."
     },
     {
@@ -97,7 +97,7 @@ const FAQSection: React.FC = () => {
       answer: "Não. A plataforma é extremamente simples e intuitiva. Além disso, você recebe um treinamento básico personalizado para começar com total segurança."
     },
     {
-      question: "A RiberFood atende só Ribeirão Preto?",
+      question: "A Riberfood atende só Ribeirão Preto?",
       answer: "Nossa sede é em Ribeirão Preto/SP, mas a plataforma foi pensada para atender negócios de delivery em todo o Brasil."
     }
   ];
@@ -129,6 +129,36 @@ const FAQSection: React.FC = () => {
   );
 };
 
+const BRAZILIAN_STATES = [
+  { value: 'AC', label: 'Acre' },
+  { value: 'AL', label: 'Alagoas' },
+  { value: 'AP', label: 'Amapá' },
+  { value: 'AM', label: 'Amazonas' },
+  { value: 'BA', label: 'Bahia' },
+  { value: 'CE', label: 'Ceará' },
+  { value: 'DF', label: 'Distrito Federal' },
+  { value: 'ES', label: 'Espírito Santo' },
+  { value: 'GO', label: 'Goiás' },
+  { value: 'MA', label: 'Maranhão' },
+  { value: 'MT', label: 'Mato Grosso' },
+  { value: 'MS', label: 'Mato Grosso do Sul' },
+  { value: 'MG', label: 'Minas Gerais' },
+  { value: 'PA', label: 'Pará' },
+  { value: 'PB', label: 'Paraíba' },
+  { value: 'PR', label: 'Paraná' },
+  { value: 'PE', label: 'Pernambuco' },
+  { value: 'PI', label: 'Piauí' },
+  { value: 'RJ', label: 'Rio de Janeiro' },
+  { value: 'RN', label: 'Rio Grande do Norte' },
+  { value: 'RS', label: 'Rio Grande do Sul' },
+  { value: 'RO', label: 'Rondônia' },
+  { value: 'RR', label: 'Roraima' },
+  { value: 'SC', label: 'Santa Catarina' },
+  { value: 'SP', label: 'São Paulo' },
+  { value: 'SE', label: 'Sergipe' },
+  { value: 'TO', label: 'Tocantins' }
+];
+
 const TrialModal: React.FC<{ isOpen: boolean; onClose: () => void }> = ({ isOpen, onClose }) => {
   const [step, setStep] = useState<'form' | 'success'>('form');
   const [loading, setLoading] = useState(false);
@@ -138,7 +168,8 @@ const TrialModal: React.FC<{ isOpen: boolean; onClose: () => void }> = ({ isOpen
     nomeAdmin: '',
     email: '',
     senha: '',
-    telefone: ''
+    telefone: '',
+    estado: ''
   });
 
   if (!isOpen) return null;
@@ -250,6 +281,28 @@ const TrialModal: React.FC<{ isOpen: boolean; onClose: () => void }> = ({ isOpen
                     value={formData.nomeEmpresa}
                     onChange={e => setFormData({ ...formData, nomeEmpresa: e.target.value })}
                   />
+                </div>
+
+                <div>
+                  <label className="block text-sm font-bold text-gray-700 mb-1">Estado <span className="text-red-500">*</span></label>
+                  <div className="relative">
+                    <select
+                      required
+                      className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-orange-600 focus:ring-2 focus:ring-orange-600/20 transition-all outline-none appearance-none bg-white"
+                      value={formData.estado}
+                      onChange={e => setFormData({ ...formData, estado: e.target.value })}
+                    >
+                      <option value="" disabled>Selecione um estado</option>
+                      {BRAZILIAN_STATES.map(state => (
+                        <option key={state.value} value={state.value}>
+                          {state.label}
+                        </option>
+                      ))}
+                    </select>
+                    <div className="absolute inset-y-0 right-0 flex items-center px-4 pointer-events-none text-gray-500">
+                      <ChevronDown className="w-5 h-5" />
+                    </div>
+                  </div>
                 </div>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div>
@@ -404,7 +457,7 @@ const App: React.FC = () => {
               <div className="relative z-10 rounded-2xl overflow-hidden shadow-2xl border border-white/10 group">
                 <img
                   src={ownerImage}
-                  alt="Dono de restaurante satisfeito usando sistema RiberFood"
+                  alt="Dono de restaurante satisfeito usando sistema Riberfood"
                   className="w-full transition-transform duration-700 group-hover:scale-110"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-gray-900 via-transparent to-transparent opacity-60"></div>
@@ -485,7 +538,7 @@ const App: React.FC = () => {
                 A RIBERFOOD ORGANIZA SEU DELIVERY EM UM SÓ LUGAR
               </h2>
               <p className="text-xl text-gray-600 mb-8 leading-relaxed">
-                A RiberFood é uma plataforma completa para lanchonetes, marmitarias, bares e restaurantes que querem vender por delivery sem depender de comissões abusivas.
+                A Riberfood é uma plataforma completa para lanchonetes, marmitarias, bares e restaurantes que querem vender por delivery sem depender de comissões abusivas.
               </p>
 
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-10">
@@ -532,7 +585,7 @@ const App: React.FC = () => {
                 </div>
                 <img
                   src={dashboardImage}
-                  alt="Painel de controle RiberFood"
+                  alt="Painel de controle Riberfood"
                   className="w-full"
                 />
               </div>
@@ -556,7 +609,7 @@ const App: React.FC = () => {
               <div className="aspect-video relative overflow-hidden bg-gray-200">
                 <img
                   src={conversionRate}
-                  alt="Tela de pedidos RiberFood"
+                  alt="Tela de pedidos Riberfood"
                   className="w-full h-full object-contain p-2 transition-transform group-hover:scale-105"
                 />
                 <div className="absolute inset-0 bg-orange-600/10 group-hover:bg-transparent transition-colors"></div>
@@ -623,7 +676,7 @@ const App: React.FC = () => {
                 UMA PLATAFORMA FEITA PARA QUEM VIVE O DIA A DIA DO DELIVERY
               </h2>
               <p className="text-xl text-gray-400 mb-10 leading-relaxed">
-                A RiberFood nasce com um objetivo claro: Ajudar pequenos e médios negócios a crescer sem aumentar os custos operacionais.
+                A Riberfood nasce com um objetivo claro: Ajudar pequenos e médios negócios a crescer sem aumentar os custos operacionais.
               </p>
               <div className="space-y-6">
                 {[
@@ -693,7 +746,7 @@ const App: React.FC = () => {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row justify-between items-center gap-8">
           <div className="flex items-center gap-2">
             <div className="p-1 rounded-md">
-              <img src={iconLogo} alt="RiberFood Icon" className="w-8 h-8 object-contain" />
+              <img src={iconLogo} alt="Riberfood Icon" className="w-8 h-8 object-contain" />
             </div>
             <img src={textLogo} alt="RIBERFOOD" className="h-6 object-contain filter brightness-0 invert opacity-80" />
           </div>
@@ -703,7 +756,7 @@ const App: React.FC = () => {
             <a href="#" className="hover:text-white transition-colors">Área do Cliente</a>
           </div>
           <div className="text-sm">
-            © 2024 RiberFood. Todos os direitos reservados. Ribeirão Preto - SP.
+            © 2024 Riberfood. Todos os direitos reservados. Ribeirão Preto - SP.
           </div>
         </div>
       </footer>
