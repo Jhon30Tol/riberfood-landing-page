@@ -1,5 +1,4 @@
-
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   CheckCircle,
   ChevronDown,
@@ -12,7 +11,8 @@ import {
   Menu,
   X,
   Smartphone,
-  Check
+  Check,
+  PartyPopper
 } from 'lucide-react';
 import { FAQItem, BenefitItem } from './types';
 import ownerImage from './images/dono_resturante_1.jpeg';
@@ -514,6 +514,85 @@ const WaitlistModal: React.FC<{ isOpen: boolean; onClose: () => void }> = ({ isO
   );
 };
 
+const EconomySimulator: React.FC = () => {
+  const [orders, setOrders] = useState<string>('1000');
+  const [ticket, setTicket] = useState<string>('30');
+  const [savings, setSavings] = useState<number>(0);
+
+  const calculate = () => {
+    const numOrders = parseFloat(orders) || 0;
+    const numTicket = parseFloat(ticket) || 0;
+    // Calculation: (orders * ticket) * 20% commission
+    const totalSavings = (numOrders * numTicket) * 0.20;
+    setSavings(totalSavings);
+  };
+
+  // Run calculation on mount
+  useEffect(() => {
+    calculate();
+  }, []);
+
+  return (
+    <div className="bg-white rounded-[2.5rem] p-8 shadow-2xl max-w-2xl mx-auto border border-gray-100 animate-in fade-in slide-in-from-bottom-8 duration-700">
+      <div className="text-center mb-8">
+        <h2 className="text-3xl font-black text-gray-900 flex items-center justify-center gap-3">
+          <span role="img" aria-label="money bags">💰</span> Simulador de Economia
+        </h2>
+      </div>
+
+      <div className="space-y-6 mb-8">
+        <div>
+          <label className="block text-sm font-bold text-gray-700 mb-2 text-left">
+            Quantos pedidos você faz por mês?
+          </label>
+          <input
+            type="number"
+            value={orders}
+            onChange={(e) => setOrders(e.target.value)}
+            className="w-full px-6 py-4 bg-gray-50 border-2 border-gray-100 rounded-2xl focus:border-orange-600 focus:outline-none text-xl font-bold text-gray-900 transition-all"
+            placeholder="Ex: 1000"
+          />
+        </div>
+
+        <div>
+          <label className="block text-sm font-bold text-gray-700 mb-2 text-left">
+            Qual o ticket médio dos seus pedidos? (R$)
+          </label>
+          <input
+            type="number"
+            value={ticket}
+            onChange={(e) => setTicket(e.target.value)}
+            className="w-full px-6 py-4 bg-gray-50 border-2 border-gray-100 rounded-2xl focus:border-orange-600 focus:outline-none text-xl font-bold text-gray-900 transition-all"
+            placeholder="Ex: 30"
+          />
+        </div>
+
+        <button
+          onClick={calculate}
+          className="w-full bg-orange-700 hover:bg-orange-800 text-white py-5 rounded-2xl font-black text-xl transition-all shadow-xl shadow-orange-700/20 transform active:scale-95"
+        >
+          Calcular Economia
+        </button>
+      </div>
+
+      <div className="bg-green-600 rounded-3xl p-8 text-white relative overflow-hidden group">
+        <div className="absolute top-0 right-0 p-4 opacity-20 transform group-hover:scale-110 transition-transform">
+          <PartyPopper className="w-16 h-16" />
+        </div>
+        <p className="text-lg font-bold mb-2 opacity-90 flex items-center justify-center gap-2">
+          🎉 Você economiza por mês:
+        </p>
+        <div className="text-5xl font-black mb-4">
+          {new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(savings)}
+        </div>
+        <p className="text-sm opacity-80 max-w-xs mx-auto">
+          em comparação com plataformas que cobram 20% de comissão sobre cada pedido
+        </p>
+      </div>
+    </div>
+  );
+};
+
 const PlansPage: React.FC<{ onBack: () => void; onSelectFree: () => void; onSelectSoon: () => void }> = ({ onBack, onSelectFree, onSelectSoon }) => {
   const freeBenefits = [
     "Cardápio digital via Link e QR Code",
@@ -550,21 +629,130 @@ const PlansPage: React.FC<{ onBack: () => void; onSelectFree: () => void; onSele
     "Impressão Automática de Pedidos"
   ];
 
+  const scrollToSection = (id: string) => {
+    const element = document.getElementById(id);
+    if (element) {
+      element.scrollIntoView({ behavior: 'smooth' });
+    }
+  };
+
   return (
-    <div className="min-h-screen bg-gray-900 text-white pb-20">
-      <header className="py-10 px-4 border-b border-white/10">
+    <div className="min-h-screen bg-gray-900 text-white pb-20 overflow-x-hidden">
+      <header className="fixed top-0 left-0 right-0 z-50 py-6 px-4 bg-gray-900/80 backdrop-blur-md border-b border-white/10">
         <div className="max-w-7xl mx-auto flex items-center justify-between">
           <div className="flex items-center gap-2">
             <img src={iconLogo} alt="Logo" className="w-8 h-8" />
             <img src={textLogo} alt="Riberfood" className="h-6 filter brightness-0 invert" />
           </div>
-          <button onClick={onBack} className="text-gray-400 hover:text-white font-bold flex items-center gap-2">
+          <button onClick={onBack} className="text-gray-400 hover:text-white font-bold flex items-center gap-2 transition-colors">
             <X className="w-5 h-5" /> Voltar
           </button>
         </div>
       </header>
 
-      <main className="max-w-7xl mx-auto px-4 pt-16">
+      {/* Intro Section - Prints 2 & 3 */}
+      <section className="pt-32 pb-20 bg-gray-50 text-gray-900 relative">
+        <div className="max-w-7xl mx-auto px-4 grid lg:grid-cols-2 gap-16 items-center">
+          <div className="text-center md:text-left space-y-8 animate-in fade-in slide-in-from-left-8 duration-1000">
+            <h1 className="text-4xl md:text-6xl font-black leading-tight">
+              Uma plataforma pensada para você <span className="text-orange-700">lucrar mais.</span>
+            </h1>
+            <div className="space-y-6 text-xl text-gray-600 max-w-2xl">
+              <p>
+                Sem mensalidade e sem precisar aumentar o preço dos seus produtos para pagar taxas abusivas para plataformas gigantes.
+              </p>
+              <p className="font-medium">
+                Se vender pouco, você não precisa se preocupar com mensalidade.
+              </p>
+              <p className="font-bold text-gray-900">
+                Se vender muito, o lucro é seu — nós apenas ajudamos você a crescer.
+              </p>
+            </div>
+            <div className="flex flex-col sm:flex-row gap-4 pt-4">
+              <button
+                onClick={() => scrollToSection('como-funciona')}
+                className="bg-orange-700 hover:bg-orange-800 text-white px-10 py-5 rounded-2xl text-lg font-black transition-all shadow-xl shadow-orange-700/20"
+              >
+                Saiba mais
+              </button>
+              <button
+                onClick={() => scrollToSection('simulador')}
+                className="border-2 border-orange-700 text-orange-700 hover:bg-orange-50 px-10 py-5 rounded-2xl text-lg font-black transition-all"
+              >
+                Calcule sua economia
+              </button>
+            </div>
+          </div>
+          <div className="relative animate-in fade-in slide-in-from-right-8 duration-1000">
+            <div className="bg-gray-900 rounded-[3rem] p-12 text-white shadow-3xl relative overflow-hidden">
+              <div className="absolute top-0 right-0 w-64 h-64 bg-orange-600/10 blur-[100px] -mr-32 -mt-32"></div>
+              <h2 className="text-3xl font-black mb-8 leading-tight">Comece a usar nossa plataforma hoje mesmo</h2>
+              <ul className="space-y-6 text-lg text-gray-400">
+                <li className="flex items-center gap-3">
+                  <CheckCircle className="w-6 h-6 text-orange-600" /> Sistema completo para restaurantes e delivery.
+                </li>
+                <li className="flex items-center gap-3">
+                  <CheckCircle className="w-6 h-6 text-orange-600" /> Sem mensalidade. Sem pegadinhas.
+                </li>
+                <li className="flex items-center gap-3">
+                  <CheckCircle className="w-6 h-6 text-orange-600" /> Sem prazo promocional.
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* How it works - Print 4 */}
+      <section id="como-funciona" className="py-24 bg-white text-gray-900">
+        <div className="max-w-7xl mx-auto px-4 text-center">
+          <h2 className="text-4xl md:text-5xl font-black mb-4">Como funciona na prática?</h2>
+          <p className="text-xl text-gray-500 mb-16">Você define e repassa a taxa ao consumidor final.</p>
+
+          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
+            {[
+              {
+                step: "1",
+                title: "Cliente faz o pedido",
+                desc: "Ele acessa seu cardápio digital e finaliza a compra."
+              },
+              {
+                step: "2",
+                title: "Pedido vai direto para você",
+                desc: "O pedido chega automaticamente na sua operação."
+              },
+              {
+                step: "3",
+                title: "Taxa repassada pelo lojista",
+                desc: "A taxa operacional é cobrada do cliente consumidor e repassada por você, lojista."
+              },
+              {
+                step: "4",
+                title: "Sem mensalidade",
+                desc: "Você não paga mensalidade e mantém sua margem."
+              }
+            ].map((item, i) => (
+              <div key={i} className="bg-gray-50 p-8 rounded-[2.5rem] border border-gray-100 relative group hover:border-orange-500 transition-all">
+                <div className="w-12 h-12 bg-orange-700 text-white rounded-full flex items-center justify-center text-xl font-black mx-auto mb-6">
+                  {item.step}
+                </div>
+                <h3 className="text-xl font-bold mb-4">{item.title}</h3>
+                <p className="text-gray-600">{item.desc}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Simulator - Print 5 */}
+      <section id="simulador" className="py-24 bg-gray-50 text-gray-900">
+        <div className="max-w-7xl mx-auto px-4 text-center">
+          <EconomySimulator />
+        </div>
+      </section>
+
+      {/* Existing Plans Section */}
+      <main id="planos" className="max-w-7xl mx-auto px-4 pt-24">
         <div className="text-center mb-16">
           <h1 className="text-4xl md:text-5xl font-black mb-4">Escolha o plano ideal para você</h1>
           <p className="text-xl text-gray-400">Transparência total e sem taxas ocultas.</p>
@@ -586,7 +774,7 @@ const PlansPage: React.FC<{ onBack: () => void; onSelectFree: () => void; onSele
             </div>
             <div className="p-8 pt-0 text-gray-900 text-left">
               <h3 className="font-bold mb-4 uppercase tracking-wider text-xs text-gray-400">Benefícios inclusos:</h3>
-              <ul className="grid grid-cols-1 gap-3 mb-10">
+              <ul className="grid grid-cols-1 gap-3 mb-10 overflow-y-auto max-h-[400px] pr-2 custom-scrollbar">
                 {freeBenefits.map((benefit, i) => (
                   <li key={i} className="flex items-start gap-3 text-sm font-medium">
                     <CheckCircle className="w-4 h-4 text-green-500 mt-0.5 flex-shrink-0" />
