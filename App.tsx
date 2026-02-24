@@ -411,12 +411,253 @@ const TrialModal: React.FC<{ isOpen: boolean; onClose: () => void }> = ({ isOpen
   );
 };
 
+const WaitlistModal: React.FC<{ isOpen: boolean; onClose: () => void }> = ({ isOpen, onClose }) => {
+  const [step, setStep] = useState<'form' | 'success'>('form');
+  const [loading, setLoading] = useState(false);
+  const [formData, setFormData] = useState({
+    nome: '',
+    telefone: '',
+    email: ''
+  });
+
+  if (!isOpen) return null;
+
+  const handlePhoneChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    let value = e.target.value.replace(/\D/g, '');
+    if (value.length > 11) value = value.slice(0, 11);
+    value = value.replace(/^(\d{2})(\d)/, '($1) $2');
+    value = value.replace(/(\d{5})(\d)/, '$1-$2');
+    setFormData({ ...formData, telefone: value });
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setLoading(true);
+    // Simulate API call for waitlist
+    setTimeout(() => {
+      setLoading(false);
+      setStep('success');
+    }, 1500);
+  };
+
+  return (
+    <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
+      <div className="absolute inset-0 bg-gray-900/80 backdrop-blur-sm" onClick={onClose}></div>
+      <div className="relative w-full max-w-md bg-white rounded-3xl shadow-2xl overflow-hidden animate-in zoom-in duration-300">
+        <button onClick={onClose} className="absolute top-4 right-4 p-2 text-gray-400 hover:text-gray-900 z-10">
+          <X className="h-6 w-6" />
+        </button>
+
+        <div className="p-8">
+          {step === 'form' ? (
+            <>
+              <h2 className="text-2xl font-black text-gray-900 mb-2">Entre na lista de espera</h2>
+              <p className="text-gray-600 mb-6">Seja o primeiro a saber quando os novos recursos estiverem disponíveis.</p>
+              <form onSubmit={handleSubmit} className="space-y-4">
+                <div>
+                  <label className="block text-sm font-bold text-gray-700 mb-1">Nome</label>
+                  <input
+                    required
+                    type="text"
+                    className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-orange-600/20 outline-none"
+                    value={formData.nome}
+                    onChange={e => setFormData({ ...formData, nome: e.target.value })}
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-bold text-gray-700 mb-1">Telefone</label>
+                  <input
+                    required
+                    type="text"
+                    placeholder="(00) 00000-0000"
+                    className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-orange-600/20 outline-none"
+                    value={formData.telefone}
+                    onChange={handlePhoneChange}
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-bold text-gray-700 mb-1">Email</label>
+                  <input
+                    required
+                    type="email"
+                    className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-orange-600/20 outline-none"
+                    value={formData.email}
+                    onChange={e => setFormData({ ...formData, email: e.target.value })}
+                  />
+                </div>
+                <button
+                  disabled={loading}
+                  className="w-full bg-orange-600 text-white py-4 rounded-xl font-black hover:bg-orange-700 transition-colors"
+                >
+                  {loading ? 'Enviando...' : 'Entrar na lista'}
+                </button>
+              </form>
+            </>
+          ) : (
+            <div className="text-center py-6">
+              <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                <Check className="w-8 h-8 text-green-600" />
+              </div>
+              <h2 className="text-2xl font-black text-gray-900 mb-2">Inscrito com sucesso!</h2>
+              <p className="text-gray-600">Avisaremos você assim que as novidades chegarem.</p>
+              <button
+                onClick={onClose}
+                className="mt-6 text-orange-600 font-bold hover:underline"
+              >
+                Fechar
+              </button>
+            </div>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+};
+
+const PlansPage: React.FC<{ onBack: () => void; onSelectFree: () => void; onSelectSoon: () => void }> = ({ onBack, onSelectFree, onSelectSoon }) => {
+  const freeBenefits = [
+    "Cardápio digital via Link e QR Code",
+    "Cardápio com fotos e descrições",
+    "Categorias de produtos",
+    "Pedidos por Instagram e Facebook link",
+    "Pedidos ilimitados",
+    "Acompanhamento de status do pedido",
+    "Impressão de pedidos",
+    "Envio de pedidos para cozinhas",
+    "Taxa de entrega calculada por distância",
+    "Cupons de desconto",
+    "Recuperador de vendas / carrinho abandonado",
+    "Fotos dos produtos",
+    "Complementos e opcionais",
+    "Grupos e categorias",
+    "Impressão térmica",
+    "Cadastro de entregadores",
+    "Relatórios de pedidos",
+    "Relatórios financeiros",
+    "Gestão de taxas (entrega, serviço etc.)",
+    "Dashboard de gestão",
+    "Relatórios gerenciais",
+    "Controle de acesso de usuários"
+  ];
+
+  const soonBenefits = [
+    "KDS — Display de Cozinha",
+    "App Garçom",
+    "Controle de Mesas e Comanda",
+    "Cupom Fiscal NFC-e",
+    "Cashback",
+    "Roteirização de Entregas",
+    "Impressão Automática de Pedidos"
+  ];
+
+  return (
+    <div className="min-h-screen bg-gray-900 text-white pb-20">
+      <header className="py-10 px-4 border-b border-white/10">
+        <div className="max-w-7xl mx-auto flex items-center justify-between">
+          <div className="flex items-center gap-2">
+            <img src={iconLogo} alt="Logo" className="w-8 h-8" />
+            <img src={textLogo} alt="Riberfood" className="h-6 filter brightness-0 invert" />
+          </div>
+          <button onClick={onBack} className="text-gray-400 hover:text-white font-bold flex items-center gap-2">
+            <X className="w-5 h-5" /> Voltar
+          </button>
+        </div>
+      </header>
+
+      <main className="max-w-7xl mx-auto px-4 pt-16">
+        <div className="text-center mb-16">
+          <h1 className="text-4xl md:text-5xl font-black mb-4">Escolha o plano ideal para você</h1>
+          <p className="text-xl text-gray-400">Transparência total e sem taxas ocultas.</p>
+        </div>
+
+        <div className="grid md:grid-cols-2 gap-8 max-w-5xl mx-auto">
+          {/* Plan Card 0.00 */}
+          <div className="bg-white rounded-[2rem] p-1 shadow-2xl">
+            <div className="bg-orange-600 rounded-[1.8rem] p-8 text-white mb-6">
+              <h2 className="text-3xl font-black mb-2">Plano Completo</h2>
+              <div className="flex items-baseline gap-1 mb-4">
+                <span className="text-lg opacity-80 line-through">R$ 299,00</span>
+                <div className="flex items-baseline">
+                  <span className="text-4xl font-black">R$ 0,00</span>
+                  <span className="text-sm opacity-80 ml-1">/mês</span>
+                </div>
+              </div>
+              <p className="text-sm font-medium opacity-90">Você não paga mensalidade. Simples assim.</p>
+            </div>
+            <div className="p-8 pt-0 text-gray-900 text-left">
+              <h3 className="font-bold mb-4 uppercase tracking-wider text-xs text-gray-400">Benefícios inclusos:</h3>
+              <ul className="grid grid-cols-1 gap-3 mb-10">
+                {freeBenefits.map((benefit, i) => (
+                  <li key={i} className="flex items-start gap-3 text-sm font-medium">
+                    <CheckCircle className="w-4 h-4 text-green-500 mt-0.5 flex-shrink-0" />
+                    {benefit}
+                  </li>
+                ))}
+              </ul>
+              <button
+                onClick={onSelectFree}
+                className="w-full bg-orange-600 hover:bg-orange-700 text-white py-4 rounded-xl font-black transition-all transform hover:scale-[1.02] shadow-xl shadow-orange-600/30"
+              >
+                Quero este plano
+              </button>
+            </div>
+          </div>
+
+          {/* Plan Card Soon */}
+          <div className="bg-gray-800 rounded-[2rem] p-1 border border-white/10 relative overflow-hidden">
+            <div className="absolute top-6 right-[-35px] bg-orange-600 text-white px-12 py-1 rotate-45 text-xs font-bold uppercase tracking-widest shadow-lg">
+              Desenvolvimento
+            </div>
+            <div className="p-8 mb-4">
+              <h2 className="text-3xl font-black mb-2">Em Breve</h2>
+              <p className="text-gray-400">Recursos incríveis chegando em breve</p>
+            </div>
+            <div className="p-8 pt-0 text-left">
+              <h3 className="font-bold mb-4 uppercase tracking-wider text-xs text-gray-500">Próximos lançamentos:</h3>
+              <ul className="space-y-3 mb-10">
+                {soonBenefits.map((benefit, i) => (
+                  <li key={i} className="flex items-start gap-3 text-sm font-medium">
+                    <CheckCircle className="w-4 h-4 text-orange-500 mt-0.5 flex-shrink-0" />
+                    {benefit}
+                  </li>
+                ))}
+              </ul>
+              <button
+                onClick={onSelectSoon}
+                className="w-full border-2 border-white/20 hover:border-white text-white py-4 rounded-xl font-black transition-all"
+              >
+                Entrar na lista de espera
+              </button>
+            </div>
+          </div>
+        </div>
+      </main>
+    </div>
+  );
+};
+
 const App: React.FC = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isWaitlistOpen, setIsWaitlistOpen] = useState(false);
+  const [view, setView] = useState<'landing' | 'plans'>('landing');
+
+  if (view === 'plans') {
+    return (
+      <>
+        <PlansPage
+          onBack={() => setView('landing')}
+          onSelectFree={() => setIsModalOpen(true)}
+          onSelectSoon={() => setIsWaitlistOpen(true)}
+        />
+        <TrialModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} />
+        <WaitlistModal isOpen={isWaitlistOpen} onClose={() => setIsWaitlistOpen(false)} />
+      </>
+    );
+  }
 
   return (
     <div className="min-h-screen">
-      <Navbar onOpenModal={() => setIsModalOpen(true)} />
+      <Navbar onOpenModal={() => setView('plans')} />
       <TrialModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} />
 
       {/* Hero Section */}
@@ -442,7 +683,7 @@ const App: React.FC = () => {
               <div className="flex flex-col sm:flex-row gap-4 justify-center md:justify-start">
                 <div className="flex flex-col items-center md:items-start gap-4">
                   <button
-                    onClick={() => setIsModalOpen(true)}
+                    onClick={() => setView('plans')}
                     className="bg-orange-600 hover:bg-orange-700 text-white px-10 py-5 rounded-full text-lg font-black transition-all transform hover:scale-105 active:scale-95 shadow-2xl shadow-orange-600/40 flex items-center justify-center gap-2"
                   >
                     Quero conhecer a plataforma <Zap className="w-5 h-5 fill-current" />
@@ -727,7 +968,7 @@ const App: React.FC = () => {
           </p>
           <div className="space-y-4 relative z-10">
             <button
-              onClick={() => setIsModalOpen(true)}
+              onClick={() => setView('plans')}
               className="bg-orange-600 hover:bg-orange-700 text-white px-12 py-6 rounded-full text-xl font-black transition-all transform hover:scale-105 active:scale-95 shadow-2xl shadow-orange-600/40 flex items-center justify-center gap-3 mx-auto"
             >
               Quero ver como funciona <Truck className="w-6 h-6" />
