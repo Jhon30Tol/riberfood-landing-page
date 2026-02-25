@@ -970,7 +970,7 @@ const App: React.FC = () => {
           <div className="grid lg:grid-cols-2 gap-16 items-center">
             <div>
               <h2 className="text-4xl md:text-5xl font-black text-gray-900 leading-tight mb-8">
-                O Riberfood ORGANIZA SEU DELIVERY EM UM SÓ LUGAR
+                O RIBERFOOD ORGANIZA SEU DELIVERY EM UM SÓ LUGAR
               </h2>
               <p className="text-xl text-gray-600 mb-8 leading-relaxed">
                 O Riberfood é uma plataforma completa para lanchonetes, marmitarias, bares e restaurantes que querem vender por delivery sem depender de comissões abusivas.
