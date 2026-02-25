@@ -671,13 +671,19 @@ const PlansPage: React.FC<{ onBack: () => void; onSelectFree: () => void; onSele
             <div className="flex flex-col sm:flex-row gap-4 pt-4">
               <button
                 onClick={() => scrollToSection('como-funciona')}
-                className="bg-orange-700 hover:bg-orange-800 text-white px-10 py-5 rounded-2xl text-lg font-black transition-all shadow-xl shadow-orange-700/20"
+                className="bg-orange-700 hover:bg-orange-800 text-white px-8 py-5 rounded-2xl text-lg font-black transition-all shadow-xl shadow-orange-700/20"
               >
                 Saiba mais
               </button>
               <button
+                onClick={() => scrollToSection('planos')}
+                className="bg-gray-900 hover:bg-black text-white px-8 py-5 rounded-2xl text-lg font-black transition-all shadow-xl shadow-gray-900/20"
+              >
+                Planos
+              </button>
+              <button
                 onClick={() => scrollToSection('simulador')}
-                className="border-2 border-orange-700 text-orange-700 hover:bg-orange-50 px-10 py-5 rounded-2xl text-lg font-black transition-all"
+                className="border-2 border-orange-700 text-orange-700 hover:bg-orange-50 px-8 py-5 rounded-2xl text-lg font-black transition-all"
               >
                 Calcule sua economia
               </button>
