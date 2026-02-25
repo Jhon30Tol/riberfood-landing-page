@@ -651,59 +651,75 @@ const PlansPage: React.FC<{ onBack: () => void; onSelectFree: () => void; onSele
       </header>
 
       {/* Intro Section - Prints 2 & 3 */}
-      <section className="pt-32 pb-20 bg-gray-50 text-gray-900 relative">
-        <div className="max-w-7xl mx-auto px-4 grid lg:grid-cols-2 gap-16 items-center">
-          <div className="text-center md:text-left space-y-8 animate-in fade-in slide-in-from-left-8 duration-1000">
-            <h1 className="text-4xl md:text-6xl font-black leading-tight">
-              Uma plataforma pensada para você <span className="text-orange-700">lucrar mais.</span>
-            </h1>
-            <div className="space-y-6 text-xl text-gray-600 max-w-2xl">
-              <p>
-                Sem mensalidade e sem precisar aumentar o preço dos seus produtos para pagar taxas abusivas para plataformas gigantes.
-              </p>
-              <p className="font-medium">
-                Se vender pouco, você não precisa se preocupar com mensalidade.
-              </p>
-              <p className="font-bold text-gray-900">
-                Se vender muito, o lucro é seu — nós apenas ajudamos você a crescer.
-              </p>
-            </div>
-            <div className="flex flex-col sm:flex-row gap-4 pt-4">
+      <section className="pt-40 pb-20 bg-gray-50 text-gray-900 relative">
+        <div className="max-w-7xl mx-auto px-4 flex flex-col items-center text-center">
+          <div className="space-y-12 animate-in fade-in slide-in-from-bottom-8 duration-1000 max-w-4xl">
+            {/* Buttons moved above title and centered */}
+            <div className="flex flex-wrap justify-center gap-4">
               <button
                 onClick={() => scrollToSection('como-funciona')}
-                className="bg-orange-700 hover:bg-orange-800 text-white px-8 py-5 rounded-2xl text-lg font-black transition-all shadow-xl shadow-orange-700/20"
+                className="bg-orange-700 hover:bg-orange-800 text-white px-8 py-4 rounded-2xl text-base font-black transition-all shadow-xl shadow-orange-700/20 whitespace-nowrap"
               >
                 Saiba mais
               </button>
               <button
                 onClick={() => scrollToSection('planos')}
-                className="bg-gray-900 hover:bg-black text-white px-8 py-5 rounded-2xl text-lg font-black transition-all shadow-xl shadow-gray-900/20"
+                className="bg-gray-900 hover:bg-black text-white px-8 py-4 rounded-2xl text-base font-black transition-all shadow-xl shadow-gray-900/20 whitespace-nowrap"
               >
                 Planos
               </button>
               <button
                 onClick={() => scrollToSection('simulador')}
-                className="border-2 border-orange-700 text-orange-700 hover:bg-orange-50 px-8 py-5 rounded-2xl text-lg font-black transition-all"
+                className="border-2 border-orange-700 text-orange-700 hover:bg-orange-50 px-8 py-4 rounded-2xl text-base font-black transition-all whitespace-nowrap"
               >
                 Calcule sua economia
               </button>
             </div>
+
+            <h1 className="text-4xl md:text-7xl font-black leading-tight">
+              Uma plataforma pensada para você <span className="text-orange-700 underline decoration-orange-200 decoration-8 underline-offset-8">lucrar mais.</span>
+            </h1>
+
+            <div className="space-y-6 text-xl md:text-2xl text-gray-600 max-w-3xl mx-auto">
+              <p>
+                Sem mensalidade e sem precisar aumentar o preço dos seus produtos para pagar taxas abusivas para plataformas gigantes.
+              </p>
+              <div className="flex flex-col md:flex-row justify-center gap-6 md:gap-12 pt-4">
+                <div className="bg-white p-6 rounded-3xl shadow-sm border border-gray-100 flex-1">
+                  <p className="font-medium text-gray-500 text-sm uppercase tracking-widest mb-2">Vendeu pouco?</p>
+                  <p className="font-bold text-gray-900">Não se preocupa com mensalidade.</p>
+                </div>
+                <div className="bg-orange-700 p-6 rounded-3xl shadow-lg border border-orange-600 flex-1 transform hover:scale-105 transition-transform">
+                  <p className="font-medium text-orange-200 text-sm uppercase tracking-widest mb-2">Vendeu muito?</p>
+                  <p className="font-bold text-white">O lucro é seu — nós apenas ajudamos.</p>
+                </div>
+              </div>
+            </div>
           </div>
-          <div className="relative animate-in fade-in slide-in-from-right-8 duration-1000">
-            <div className="bg-gray-900 rounded-[3rem] p-12 text-white shadow-3xl relative overflow-hidden">
-              <div className="absolute top-0 right-0 w-64 h-64 bg-orange-600/10 blur-[100px] -mr-32 -mt-32"></div>
-              <h2 className="text-3xl font-black mb-8 leading-tight">Comece a usar nossa plataforma hoje mesmo</h2>
-              <ul className="space-y-6 text-lg text-gray-400">
-                <li className="flex items-center gap-3">
-                  <CheckCircle className="w-6 h-6 text-orange-600" /> Sistema completo para restaurantes e delivery.
-                </li>
-                <li className="flex items-center gap-3">
-                  <CheckCircle className="w-6 h-6 text-orange-600" /> Sem mensalidade. Sem pegadinhas.
-                </li>
-                <li className="flex items-center gap-3">
-                  <CheckCircle className="w-6 h-6 text-orange-600" /> Sem prazo promocional.
-                </li>
-              </ul>
+
+          <div className="mt-24 w-full max-w-5xl animate-in fade-in slide-in-from-bottom-12 duration-1000 delay-300">
+            <div className="bg-gray-900 rounded-[3rem] p-12 text-white shadow-3xl relative overflow-hidden text-left border-4 border-orange-700/20">
+              <div className="absolute top-0 right-0 w-96 h-96 bg-orange-600/10 blur-[100px] -mr-48 -mt-48"></div>
+              <div className="grid md:grid-cols-2 gap-12 items-center relative z-10">
+                <div>
+                  <h2 className="text-4xl font-black mb-8 leading-tight">Comece a usar nossa plataforma hoje mesmo</h2>
+                  <p className="text-gray-400 text-lg mb-8">Junte-se a centenas de restaurantes que transformaram sua gestão digital sem custos fixos abusivos.</p>
+                </div>
+                <ul className="space-y-6 text-lg">
+                  <li className="flex items-center gap-4 bg-white/5 p-4 rounded-2xl">
+                    <CheckCircle className="w-8 h-8 text-orange-600 flex-shrink-0" />
+                    <span>Sistema completo para restaurantes e delivery.</span>
+                  </li>
+                  <li className="flex items-center gap-4 bg-white/5 p-4 rounded-2xl">
+                    <CheckCircle className="w-8 h-8 text-orange-600 flex-shrink-0" />
+                    <span>Sem mensalidade. Sem pegadinhas.</span>
+                  </li>
+                  <li className="flex items-center gap-4 bg-white/5 p-4 rounded-2xl">
+                    <CheckCircle className="w-8 h-8 text-orange-600 flex-shrink-0" />
+                    <span>Sem prazo promocional.</span>
+                  </li>
+                </ul>
+              </div>
             </div>
           </div>
         </div>
@@ -799,7 +815,7 @@ const PlansPage: React.FC<{ onBack: () => void; onSelectFree: () => void; onSele
 
           {/* Plan Card Soon */}
           <div className="bg-gray-800 rounded-[2rem] p-1 border border-white/10 relative overflow-hidden">
-            <div className="absolute top-6 right-[-35px] bg-orange-600 text-white px-12 py-1 rotate-45 text-xs font-bold uppercase tracking-widest shadow-lg">
+            <div className="absolute top-8 right-[-50px] bg-orange-600 text-white px-16 py-1.5 rotate-45 text-[10px] font-black uppercase tracking-[0.2em] shadow-lg z-20 flex justify-center items-center w-[200px]">
               Desenvolvimento
             </div>
             <div className="p-8 mb-4">
