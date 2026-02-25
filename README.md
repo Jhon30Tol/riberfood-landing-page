@@ -10,10 +10,10 @@ Landing page de marketing/conversao da Riberfood para apresentacao da plataforma
 - `lucide-react` para icones
 
 ## Estrutura atual
-- `/Users/paluanbatista/Documents/SafeTrust/riberfood/riberfood-landing-page/App.tsx`: UI principal (landing, planos e modais)
-- `/Users/paluanbatista/Documents/SafeTrust/riberfood/riberfood-landing-page/index.tsx`: bootstrap React
-- `/Users/paluanbatista/Documents/SafeTrust/riberfood/riberfood-landing-page/images/`: assets da landing
-- `/Users/paluanbatista/Documents/SafeTrust/riberfood/riberfood-landing-page/docs/specs/`: specs de implementacao
+- `riberfood-landing-page/App.tsx`: UI principal (landing, planos e modais)
+- `riberfood-landing-page/index.tsx`: bootstrap React
+- `riberfood-landing-page/images/`: assets da landing
+- `riberfood-landing-page/docs/specs/`: specs de implementacao
 
 ## Rodando localmente
 ```bash
@@ -28,7 +28,7 @@ Servidor local padrao:
 Copie os valores de referencia de `.env.example` para um `.env.local`.
 
 Variaveis suportadas:
-- `VITE_APP_ENV` (`local`, `stg`, `prod`)
+- `VITE_APP_ENV` (`local`, `preview`, `prod`)
 - `VITE_ONBOARDING_TENANTS_URL` (endpoint de onboarding publico)
 
 Exemplo para staging:
@@ -56,8 +56,6 @@ Fluxo alvo de staging:
 - Backend STG: `POST https://stg.riberfood.com/api/v1/onboarding/tenants`
 
 Documentacao relacionada:
-- Spec: `/Users/paluanbatista/Documents/SafeTrust/riberfood/riberfood-landing-page/docs/specs/stg-landing-cloudflare-onboarding.md`
-- Runbook operacional: `/Users/paluanbatista/Documents/SafeTrust/riberfood/riberfood-landing-page/docs/runbooks/cloudflare-pages-access-stg.md`
 
 ## Observacoes
 - O repositório ainda possui `wrangler.json`, mas o fluxo principal desta entrega STG sera via **Cloudflare Pages**.
