@@ -14,7 +14,7 @@ import {
   Check,
   PartyPopper
 } from 'lucide-react';
-import { FAQItem, BenefitItem } from './types';
+import { FAQItem, BenefitItem, OnboardingTenantPayload, SignupForm } from './types';
 import ownerImage from './images/dono_resturante_1.jpeg';
 import disorganizedKitchen from './images/cozinha_desorganizada_2.jpeg';
 import dashboardImage from './images/dasboard_3.jpg';
@@ -23,7 +23,36 @@ import orderScreen from './images/tela_pedidos_5.jpg';
 import employeePhoto from './images/foto_fun_6.png';
 import iconLogo from './images/Icon_sem_Fundo.png';
 import textLogo from './images/riberfood_logo-bg_null.png';
-import { SignupForm } from './types';
+const getOnboardingTenantsUrl = (): string => {
+  const url = import.meta.env.VITE_ONBOARDING_TENANTS_URL?.trim();
+  if (!url) {
+    throw new Error('Missing VITE_ONBOARDING_TENANTS_URL');
+  }
+  return url;
+};
+
+const slugifySubdomain = (value: string): string => {
+  const normalized = value
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/-+/g, '-')
+    .replace(/^-|-$/g, '')
+    .slice(0, 40);
+
+  return normalized || 'restaurante';
+};
+
+const parseApiMessage = (data: unknown): string | null => {
+  if (!data || typeof data !== 'object') return null;
+  const maybeData = data as Record<string, unknown>;
+  const candidates = [maybeData.message, maybeData.mensagem, maybeData.error];
+  for (const candidate of candidates) {
+    if (typeof candidate === 'string' && candidate.trim()) return candidate;
+  }
+  return null;
+};
 
 // Components
 const Navbar: React.FC<{ onOpenModal: () => void }> = ({ onOpenModal }) => {
@@ -89,7 +118,7 @@ const FAQSection: React.FC = () => {
 
   const faqs: FAQItem[] = [
     {
-      question: "A Riberfood cobra comissão por pedido?",
+      question: "O Riberfood cobra comissão por pedido?",
       answer: "Cobramos uma taxa fixa do cliente para custos de manter o sistema atualizado e funcionando, mas para a empresa não há custo nem mensalidade."
     },
     {
@@ -97,7 +126,7 @@ const FAQSection: React.FC = () => {
       answer: "Não. A plataforma é extremamente simples e intuitiva. Além disso, você recebe um treinamento básico personalizado para começar com total segurança."
     },
     {
-      question: "A Riberfood atende só Ribeirão Preto?",
+      question: "O Riberfood atende só Ribeirão Preto?",
       answer: "Nossa sede é em Ribeirão Preto/SP, mas a plataforma foi pensada para atender negócios de delivery em todo o Brasil."
     }
   ];
@@ -159,18 +188,29 @@ const BRAZILIAN_STATES = [
   { value: 'TO', label: 'Tocantins' }
 ];
 
+const INITIAL_SIGNUP_FORM: SignupForm = {
+  cnpj: '',
+  nomeEmpresa: '',
+  nomeAdmin: '',
+  email: '',
+  senha: '',
+  telefone: '',
+  estado: ''
+};
+
 const TrialModal: React.FC<{ isOpen: boolean; onClose: () => void }> = ({ isOpen, onClose }) => {
   const [step, setStep] = useState<'form' | 'success'>('form');
   const [loading, setLoading] = useState(false);
-  const [formData, setFormData] = useState<SignupForm>({
-    cnpj: '',
-    nomeEmpresa: '',
-    nomeAdmin: '',
-    email: '',
-    senha: '',
-    telefone: '',
-    estado: ''
-  });
+  const [submitError, setSubmitError] = useState<string | null>(null);
+  const [formData, setFormData] = useState<SignupForm>(INITIAL_SIGNUP_FORM);
+
+  useEffect(() => {
+    if (!isOpen) return;
+    setStep('form');
+    setLoading(false);
+    setSubmitError(null);
+    setFormData(INITIAL_SIGNUP_FORM);
+  }, [isOpen]);
 
   if (!isOpen) return null;
 
@@ -201,16 +241,19 @@ const TrialModal: React.FC<{ isOpen: boolean; onClose: () => void }> = ({ isOpen
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
+    setSubmitError(null);
 
     try {
-      // Clean data for API
-      const payload = {
-        ...formData,
+      const payload: OnboardingTenantPayload = {
+        person_type: 'company',
+        name: formData.nomeEmpresa.trim(),
         cnpj: formData.cnpj.replace(/\D/g, ''),
-        telefone: formData.telefone
+        owner_email: formData.email.trim(),
+        owner_name: formData.nomeAdmin.trim(),
+        subdomain: slugifySubdomain(formData.nomeEmpresa),
       };
 
-      const response = await fetch('https://riberfood.com.br/api/public/cadastro-trial', {
+      const response = await fetch(getOnboardingTenantsUrl(), {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -220,18 +263,39 @@ const TrialModal: React.FC<{ isOpen: boolean; onClose: () => void }> = ({ isOpen
         body: JSON.stringify(payload)
       });
 
-      const data = await response.json();
-
-      if (data.sucesso) {
-        setStep('success');
-      } else {
-        alert(data.mensagem || 'Erro ao criar conta. Tente novamente.');
+      let data: unknown = null;
+      const raw = await response.text();
+      if (raw) {
+        try {
+          data = JSON.parse(raw);
+        } catch {
+          data = raw;
+        }
       }
+
+      if (response.status === 201 || response.ok) {
+        setStep('success');
+        return;
+      }
+
+      if (response.status === 409) {
+        setSubmitError(parseApiMessage(data) || 'Ja existe uma empresa com estes dados (CNPJ ou subdominio).');
+        return;
+      }
+
+      if (response.status === 422) {
+        setSubmitError(parseApiMessage(data) || 'Dados invalidos. Revise as informacoes e tente novamente.');
+        return;
+      }
+
+      setSubmitError(parseApiMessage(data) || 'Nao foi possivel concluir o onboarding agora. Tente novamente em instantes.');
     } catch (error) {
       console.error('Error submitting form:', error);
-      // For demo/testing purposes, if CORS fails or server is down, we might want to simulate success?
-      // But let's stick to real implementation.
-      alert('Erro de conexão. Por favor, tente novamente mais tarde.');
+      if (error instanceof Error && error.message === 'Missing VITE_ONBOARDING_TENANTS_URL') {
+        setSubmitError('Configuracao ausente: defina VITE_ONBOARDING_TENANTS_URL para habilitar o onboarding.');
+      } else {
+        setSubmitError('Erro de conexao com o ambiente de staging. Tente novamente mais tarde.');
+      }
     } finally {
       setLoading(false);
     }
@@ -256,9 +320,14 @@ const TrialModal: React.FC<{ isOpen: boolean; onClose: () => void }> = ({ isOpen
           {step === 'form' ? (
             <div className="p-8 sm:p-10">
               <h2 className="text-2xl font-black text-gray-900 mb-2">Comece a usar imediatamente sem Custo</h2>
-              <p className="text-gray-600 mb-8">Preencha os dados abaixo para criar sua conta instantaneamente.</p>
+              <p className="text-gray-600 mb-8">Preencha os dados abaixo para iniciar seu onboarding.</p>
 
               <form onSubmit={handleSubmit} className="space-y-4">
+                {submitError && (
+                  <div className="rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm font-medium text-red-700">
+                    {submitError}
+                  </div>
+                )}
                 <div>
                   <label className="block text-sm font-bold text-gray-700 mb-1">CNPJ <span className="text-red-500">*</span></label>
                   <input
@@ -368,39 +437,29 @@ const TrialModal: React.FC<{ isOpen: boolean; onClose: () => void }> = ({ isOpen
               </div>
               <h2 className="text-3xl font-black text-gray-900 mb-4">✅ Tudo pronto!</h2>
               <div className="space-y-6 text-gray-600">
-                <p className="text-lg">Sua conta foi criada com sucesso!</p>
+                <p className="text-lg">Seu onboarding foi enviado com sucesso.</p>
 
                 <div className="bg-gray-50 p-6 rounded-2xl border border-gray-100">
-                  <p className="text-sm uppercase tracking-wider font-bold text-gray-400 mb-2">📧 Enviamos um email para:</p>
+                  <p className="text-sm uppercase tracking-wider font-bold text-gray-400 mb-2">Contato informado:</p>
                   <p className="text-lg font-bold text-gray-900">{formData.email}</p>
                 </div>
 
                 <div className="text-left space-y-4 max-w-xs mx-auto">
-                  <p className="font-medium">Dentro de alguns minutos você receberá:</p>
+                  <p className="font-medium">Proximos passos:</p>
                   <ul className="space-y-2">
                     <li className="flex items-center gap-2">
                       <div className="w-1.5 h-1.5 bg-orange-600 rounded-full"></div>
-                      <span>Link de acesso ao sistema</span>
+                      <span>Acompanhar o retorno do time Riberfood</span>
                     </li>
                     <li className="flex items-center gap-2">
                       <div className="w-1.5 h-1.5 bg-orange-600 rounded-full"></div>
-                      <span>Suas credenciais</span>
+                      <span>Confirmar dados enviados</span>
                     </li>
                     <li className="flex items-center gap-2">
                       <div className="w-1.5 h-1.5 bg-orange-600 rounded-full"></div>
-                      <span>Primeiros passos</span>
+                      <span>Prosseguir com ativacao quando orientado</span>
                     </li>
                   </ul>
-                </div>
-
-                <div className="pt-6">
-                  <p className="text-sm mb-4">Não recebeu?</p>
-                  <button
-                    onClick={() => alert('Email reenviado com sucesso!')}
-                    className="text-orange-600 font-bold hover:underline"
-                  >
-                    Reenviar email
-                  </button>
                 </div>
               </div>
             </div>
@@ -908,7 +967,7 @@ const App: React.FC = () => {
               <div className="relative z-10 rounded-2xl overflow-hidden shadow-2xl border border-white/10 group">
                 <img
                   src={ownerImage}
-                  alt="Dono de restaurante satisfeito usando sistema Riberfood"
+                  alt="Dono de restaurante satisfeito usando o sistema Riberfood"
                   className="w-full transition-transform duration-700 group-hover:scale-110"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-gray-900 via-transparent to-transparent opacity-60"></div>
@@ -986,10 +1045,10 @@ const App: React.FC = () => {
           <div className="grid lg:grid-cols-2 gap-16 items-center">
             <div>
               <h2 className="text-4xl md:text-5xl font-black text-gray-900 leading-tight mb-8">
-                A RIBERFOOD ORGANIZA SEU DELIVERY EM UM SÓ LUGAR
+                O RIBERFOOD ORGANIZA SEU DELIVERY EM UM SÓ LUGAR
               </h2>
               <p className="text-xl text-gray-600 mb-8 leading-relaxed">
-                A Riberfood é uma plataforma completa para lanchonetes, marmitarias, bares e restaurantes que querem vender por delivery sem depender de comissões abusivas.
+                O Riberfood é uma plataforma completa para lanchonetes, marmitarias, bares e restaurantes que querem vender por delivery sem depender de comissões abusivas.
               </p>
 
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-10">
@@ -1127,7 +1186,7 @@ const App: React.FC = () => {
                 UMA PLATAFORMA FEITA PARA QUEM VIVE O DIA A DIA DO DELIVERY
               </h2>
               <p className="text-xl text-gray-400 mb-10 leading-relaxed">
-                A Riberfood nasce com um objetivo claro: Ajudar pequenos e médios negócios a crescer sem aumentar os custos operacionais.
+                O Riberfood nasce com um objetivo claro: Ajudar pequenos e médios negócios a crescer sem aumentar os custos operacionais.
               </p>
               <div className="space-y-6">
                 {[
