@@ -89,7 +89,7 @@ const FAQSection: React.FC = () => {
 
   const faqs: FAQItem[] = [
     {
-      question: "A Riberfood cobra comissão por pedido?",
+      question: "O Riberfood cobra comissão por pedido?",
       answer: "Cobramos uma taxa fixa do cliente para custos de manter o sistema atualizado e funcionando, mas para a empresa não há custo nem mensalidade."
     },
     {
@@ -97,7 +97,7 @@ const FAQSection: React.FC = () => {
       answer: "Não. A plataforma é extremamente simples e intuitiva. Além disso, você recebe um treinamento básico personalizado para começar com total segurança."
     },
     {
-      question: "A Riberfood atende só Ribeirão Preto?",
+      question: "O Riberfood atende só Ribeirão Preto?",
       answer: "Nossa sede é em Ribeirão Preto/SP, mas a plataforma foi pensada para atender negócios de delivery em todo o Brasil."
     }
   ];
@@ -892,7 +892,7 @@ const App: React.FC = () => {
               <div className="relative z-10 rounded-2xl overflow-hidden shadow-2xl border border-white/10 group">
                 <img
                   src={ownerImage}
-                  alt="Dono de restaurante satisfeito usando sistema Riberfood"
+                  alt="Dono de restaurante satisfeito usando o sistema Riberfood"
                   className="w-full transition-transform duration-700 group-hover:scale-110"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-gray-900 via-transparent to-transparent opacity-60"></div>
@@ -970,10 +970,10 @@ const App: React.FC = () => {
           <div className="grid lg:grid-cols-2 gap-16 items-center">
             <div>
               <h2 className="text-4xl md:text-5xl font-black text-gray-900 leading-tight mb-8">
-                A RIBERFOOD ORGANIZA SEU DELIVERY EM UM SÓ LUGAR
+                O Riberfood ORGANIZA SEU DELIVERY EM UM SÓ LUGAR
               </h2>
               <p className="text-xl text-gray-600 mb-8 leading-relaxed">
-                A Riberfood é uma plataforma completa para lanchonetes, marmitarias, bares e restaurantes que querem vender por delivery sem depender de comissões abusivas.
+                O Riberfood é uma plataforma completa para lanchonetes, marmitarias, bares e restaurantes que querem vender por delivery sem depender de comissões abusivas.
               </p>
 
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-10">
@@ -1111,7 +1111,7 @@ const App: React.FC = () => {
                 UMA PLATAFORMA FEITA PARA QUEM VIVE O DIA A DIA DO DELIVERY
               </h2>
               <p className="text-xl text-gray-400 mb-10 leading-relaxed">
-                A Riberfood nasce com um objetivo claro: Ajudar pequenos e médios negócios a crescer sem aumentar os custos operacionais.
+                O Riberfood nasce com um objetivo claro: Ajudar pequenos e médios negócios a crescer sem aumentar os custos operacionais.
               </p>
               <div className="space-y-6">
                 {[
