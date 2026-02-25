@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - staging
+      - preview
   workflow_dispatch:
 
 permissions:
@@ -40,4 +41,4 @@ jobs:
           command: >
             pages deploy dist
             --project-name ${{ vars.CF_PAGES_PROJECT_STG }}
-            --branch staging
+            --branch ${{ github.ref_name }}
