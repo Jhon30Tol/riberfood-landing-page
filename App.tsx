@@ -19,7 +19,7 @@ import { FAQItem, BenefitItem, OnboardingTenantPayload, SignupForm } from './typ
 import ownerImage from './images/dono_resturante_1.jpeg';
 =======
 import { FAQItem, BenefitItem } from './types';
-import ownerImage from './images/Dono_restaurante.jpg';
+import ownerImage from './images/Imagem_principal_mulher.JPEG';
 >>>>>>> Stashed changes
 import disorganizedKitchen from './images/cozinha_desorganizada_2.jpeg';
 import dashboardImage from './images/dasboard_3.jpg';
@@ -669,11 +669,7 @@ const PlansPage: React.FC<{ onBack: () => void; onSelectFree: () => void; onSele
     "Envio de pedidos para cozinhas",
     "Taxa de entrega calculada por distância",
     "Cupons de desconto",
-    "Recuperador de vendas / carrinho abandonado",
-    "Fotos dos produtos",
     "Complementos e opcionais",
-    "Grupos e categorias",
-    "Impressão térmica",
     "Cadastro de entregadores",
     "Relatórios de pedidos",
     "Relatórios financeiros",
@@ -688,7 +684,6 @@ const PlansPage: React.FC<{ onBack: () => void; onSelectFree: () => void; onSele
     "App Garçom",
     "Controle de Mesas e Comanda",
     "Cupom Fiscal NFC-e",
-    "Cashback",
     "Roteirização de Entregas",
     "Impressão Automática de Pedidos"
   ];
@@ -1271,7 +1266,7 @@ const App: React.FC = () => {
             <a href="#" className="hover:text-white transition-colors">Área do Cliente</a>
           </div>
           <div className="text-sm">
-            © 2024 Riberfood. Todos os direitos reservados. Ribeirão Preto - SP.
+            © 2024 Safe Trust Tecnology. Todos os direitos reservados. Ribeirão Preto - SP.
           </div>
         </div>
       </footer>
