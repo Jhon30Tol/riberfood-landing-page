@@ -13,7 +13,10 @@ import {
   X,
   Smartphone,
   Check,
-  PartyPopper
+  PartyPopper,
+  Lock,
+  User,
+  Building
 } from 'lucide-react';
 import { FAQItem, BenefitItem, OnboardingTenantPayload, SignupForm } from './types';
 import ownerImage from './images/Imagem_principal_mulher.JPEG';
@@ -55,8 +58,77 @@ const parseApiMessage = (data: unknown): string | null => {
   return null;
 };
 
+// Types
+interface SignupFormExtended extends SignupForm {
+  documentType: 'CPF' | 'CNPJ';
+}
+
+const INITIAL_SIGNUP_FORM_EXTENDED: SignupFormExtended = {
+  cnpj: '',
+  nomeEmpresa: '',
+  nomeAdmin: '',
+  email: '',
+  senha: '',
+  telefone: '',
+  estado: '',
+  documentType: 'CNPJ'
+};
+
 // Components
-const Navbar: React.FC<{ onOpenModal: () => void }> = ({ onOpenModal }) => {
+const LoginModal: React.FC<{ isOpen: boolean; onClose: () => void }> = ({ isOpen, onClose }) => {
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+
+  if (!isOpen) return null;
+
+  return (
+    <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
+      <div className="absolute inset-0 bg-gray-900/80 backdrop-blur-sm" onClick={onClose}></div>
+      <div className="relative w-full max-w-md bg-white rounded-3xl shadow-2xl overflow-hidden animate-in zoom-in duration-300">
+        <button onClick={onClose} className="absolute top-4 right-4 p-2 text-gray-400 hover:text-gray-900 z-10">
+          <X className="h-6 w-6" />
+        </button>
+        <div className="p-8">
+          <div className="flex flex-col items-center mb-8">
+            <div className="w-16 h-16 bg-orange-100 rounded-2xl flex items-center justify-center mb-4">
+              <Lock className="w-8 h-8 text-orange-600" />
+            </div>
+            <h2 className="text-2xl font-black text-gray-900">Acesse sua conta</h2>
+          </div>
+          <form className="space-y-4">
+            <div>
+              <label className="block text-sm font-bold text-gray-700 mb-1">E-mail</label>
+              <input
+                type="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-orange-600/20 outline-none"
+                placeholder="seu@email.com"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-bold text-gray-700 mb-1">Senha</label>
+              <input
+                type="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-orange-600/20 outline-none"
+                placeholder="Sua senha"
+              />
+            </div>
+            <button className="w-full bg-orange-600 text-white py-4 rounded-xl font-black hover:bg-orange-700 transition-colors shadow-xl shadow-orange-600/30">
+              Entrar
+            </button>
+            <div className="text-center pt-2">
+              <a href="#" className="text-sm font-bold text-orange-600 hover:underline">Esqueci minha senha</a>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  );
+};
+const Navbar: React.FC<{ onOpenModal: () => void; onOpenLogin: () => void }> = ({ onOpenModal, onOpenLogin }) => {
   const [isOpen, setIsOpen] = useState(false);
 
   return (
@@ -64,16 +136,29 @@ const Navbar: React.FC<{ onOpenModal: () => void }> = ({ onOpenModal }) => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-20">
           <div className="flex-shrink-0 flex items-center gap-2">
-            <div className="p-1 rounded-lg">
+            <a
+              href="/"
+              onClick={(e) => {
+                e.preventDefault();
+                window.location.reload();
+              }}
+              className="flex items-center gap-2 hover:opacity-80 transition-opacity p-1"
+            >
               <img src={iconLogo} alt="Riberfood Icon" className="w-10 h-10 object-contain" />
-            </div>
-            <img src={textLogo} alt="RIBERFOOD" className="h-8 object-contain" />
+              <img src={textLogo} alt="RIBERFOOD" className="h-8 object-contain" />
+            </a>
           </div>
           <div className="hidden md:block">
             <div className="ml-10 flex items-baseline space-x-8">
               <a href="#solucao" className="text-gray-300 hover:text-white px-3 py-2 rounded-md text-sm font-medium transition-colors">Solução</a>
               <a href="#beneficios" className="text-gray-300 hover:text-white px-3 py-2 rounded-md text-sm font-medium transition-colors">Benefícios</a>
               <a href="#faq" className="text-gray-300 hover:text-white px-3 py-2 rounded-md text-sm font-medium transition-colors">FAQ</a>
+              <button
+                onClick={onOpenLogin}
+                className="text-white hover:text-orange-500 px-4 py-2 rounded-xl text-sm font-bold border border-white/10 hover:border-orange-600/30 transition-all flex items-center gap-2"
+              >
+                <Lock className="w-4 h-4" /> Login
+              </button>
 
             </div>
           </div>
@@ -95,6 +180,15 @@ const Navbar: React.FC<{ onOpenModal: () => void }> = ({ onOpenModal }) => {
             <a href="#solucao" onClick={() => setIsOpen(false)} className="text-gray-300 block px-3 py-2 rounded-md text-base font-medium">Solução</a>
             <a href="#beneficios" onClick={() => setIsOpen(false)} className="text-gray-300 block px-3 py-2 rounded-md text-base font-medium">Benefícios</a>
             <a href="#faq" onClick={() => setIsOpen(false)} className="text-gray-300 block px-3 py-2 rounded-md text-base font-medium">FAQ</a>
+            <button
+              onClick={() => {
+                setIsOpen(false);
+                onOpenLogin();
+              }}
+              className="w-full text-left text-gray-300 block px-3 py-2 rounded-md text-base font-medium"
+            >
+              Login
+            </button>
             <button
               onClick={() => {
                 setIsOpen(false);
@@ -203,27 +297,35 @@ const TrialModal: React.FC<{ isOpen: boolean; onClose: () => void }> = ({ isOpen
   const [step, setStep] = useState<'form' | 'success'>('form');
   const [loading, setLoading] = useState(false);
   const [submitError, setSubmitError] = useState<string | null>(null);
-  const [formData, setFormData] = useState<SignupForm>(INITIAL_SIGNUP_FORM);
+  const [formData, setFormData] = useState<SignupFormExtended>(INITIAL_SIGNUP_FORM_EXTENDED);
 
   useEffect(() => {
     if (!isOpen) return;
     setStep('form');
     setLoading(false);
     setSubmitError(null);
-    setFormData(INITIAL_SIGNUP_FORM);
+    setFormData(INITIAL_SIGNUP_FORM_EXTENDED);
   }, [isOpen]);
 
   if (!isOpen) return null;
 
-  const handleCnpjChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleDocumentChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     let value = e.target.value.replace(/\D/g, '');
-    if (value.length > 14) value = value.slice(0, 14);
 
-    // Mask: 00.000.000/0000-00
-    value = value.replace(/^(\d{2})(\d)/, '$1.$2');
-    value = value.replace(/^(\d{2})\.(\d{3})(\d)/, '$1.$2.$3');
-    value = value.replace(/\.(\d{3})(\d)/, '.$1/$2');
-    value = value.replace(/(\d{4})(\d)/, '$1-$2');
+    if (formData.documentType === 'CNPJ') {
+      if (value.length > 14) value = value.slice(0, 14);
+      // Mask: 00.000.000/0000-00
+      value = value.replace(/^(\d{2})(\d)/, '$1.$2');
+      value = value.replace(/^(\d{2})\.(\d{3})(\d)/, '$1.$2.$3');
+      value = value.replace(/\.(\d{3})(\d)/, '.$1/$2');
+      value = value.replace(/(\d{4})(\d)/, '$1-$2');
+    } else {
+      if (value.length > 11) value = value.slice(0, 11);
+      // Mask: 000.000.000-00
+      value = value.replace(/^(\d{3})(\d)/, '$1.$2');
+      value = value.replace(/^(\d{3})\.(\d{3})(\d)/, '$1.$2.$3');
+      value = value.replace(/\.(\d{3})(\d)/, '.$1-$2');
+    }
 
     setFormData({ ...formData, cnpj: value });
   };
@@ -329,16 +431,33 @@ const TrialModal: React.FC<{ isOpen: boolean; onClose: () => void }> = ({ isOpen
                     {submitError}
                   </div>
                 )}
+                <div className="flex gap-4 p-1 bg-gray-100 rounded-2xl mb-2">
+                  <button
+                    type="button"
+                    onClick={() => setFormData({ ...formData, documentType: 'CNPJ', cnpj: '' })}
+                    className={`flex-1 py-3 rounded-xl flex items-center justify-center gap-2 font-bold transition-all ${formData.documentType === 'CNPJ' ? 'bg-white text-orange-600 shadow-sm' : 'text-gray-500 hover:bg-white/50'}`}
+                  >
+                    <Building className="w-4 h-4" /> CNPJ
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setFormData({ ...formData, documentType: 'CPF', cnpj: '' })}
+                    className={`flex-1 py-3 rounded-xl flex items-center justify-center gap-2 font-bold transition-all ${formData.documentType === 'CPF' ? 'bg-white text-orange-600 shadow-sm' : 'text-gray-500 hover:bg-white/50'}`}
+                  >
+                    <User className="w-4 h-4" /> CPF
+                  </button>
+                </div>
+
                 <div>
-                  <label className="block text-sm font-bold text-gray-700 mb-1">CNPJ <span className="text-red-500">*</span></label>
+                  <label className="block text-sm font-bold text-gray-700 mb-1">{formData.documentType} <span className="text-red-500">*</span></label>
                   <input
                     required
                     type="text"
-                    placeholder="00.000.000/0000-00"
-                    minLength={18}
+                    placeholder={formData.documentType === 'CNPJ' ? "00.000.000/0000-00" : "000.000.000-00"}
+                    minLength={formData.documentType === 'CNPJ' ? 18 : 14}
                     className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-orange-600 focus:ring-2 focus:ring-orange-600/20 transition-all outline-none"
                     value={formData.cnpj}
-                    onChange={handleCnpjChange}
+                    onChange={handleDocumentChange}
                   />
                 </div>
                 <div>
@@ -438,7 +557,11 @@ const TrialModal: React.FC<{ isOpen: boolean; onClose: () => void }> = ({ isOpen
               </div>
               <h2 className="text-3xl font-black text-gray-900 mb-4">✅ Tudo pronto!</h2>
               <div className="space-y-6 text-gray-600">
-                <p className="text-lg">Seu onboarding foi enviado com sucesso.</p>
+                <p className="text-lg">
+                  {formData.documentType === 'CNPJ'
+                    ? 'Seu cadastro foi realizado com sucesso! Verifique seu e-mail para os próximos passos.'
+                    : 'Recebemos seus dados! Um consultor da Riberfood entrará em contato em breve.'}
+                </p>
 
                 <div className="bg-gray-50 p-6 rounded-2xl border border-gray-100">
                   <p className="text-sm uppercase tracking-wider font-bold text-gray-400 mb-2">Contato informado:</p>
@@ -792,7 +915,6 @@ const PlansPage: React.FC<{ onBack: () => void; onSelectFree: () => void; onSele
       <section id="como-funciona" className="py-24 bg-white text-gray-900">
         <div className="max-w-7xl mx-auto px-4 text-center">
           <h2 className="text-3xl md:text-5xl font-black text-gray-900 mb-4">Como funciona na prática?</h2>
-          <p className="text-xl text-gray-500 mb-16">Você define e repassa a taxa ao consumidor final.</p>
 
           <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
             {[
@@ -912,6 +1034,7 @@ const PlansPage: React.FC<{ onBack: () => void; onSelectFree: () => void; onSele
 const App: React.FC = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isWaitlistOpen, setIsWaitlistOpen] = useState(false);
+  const [isLoginOpen, setIsLoginOpen] = useState(false);
   const [view, setView] = useState<'landing' | 'plans'>('landing');
 
   useEffect(() => {
@@ -934,8 +1057,9 @@ const App: React.FC = () => {
 
   return (
     <div className="min-h-screen">
-      <Navbar onOpenModal={() => setView('plans')} />
+      <Navbar onOpenModal={() => setView('plans')} onOpenLogin={() => setIsLoginOpen(true)} />
       <TrialModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} />
+      <LoginModal isOpen={isLoginOpen} onClose={() => setIsLoginOpen(false)} />
 
       {/* Hero Section */}
       <section className="relative pt-32 pb-24 md:pt-48 md:pb-40 bg-gray-900 text-white overflow-hidden">
