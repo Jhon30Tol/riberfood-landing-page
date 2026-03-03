@@ -14,13 +14,8 @@ import {
   Check,
   PartyPopper
 } from 'lucide-react';
-<<<<<<< Updated upstream
 import { FAQItem, BenefitItem, OnboardingTenantPayload, SignupForm } from './types';
 import ownerImage from './images/dono_resturante_1.jpeg';
-=======
-import { FAQItem, BenefitItem } from './types';
-import ownerImage from './images/Imagem_principal_mulher.JPEG';
->>>>>>> Stashed changes
 import disorganizedKitchen from './images/cozinha_desorganizada_2.jpeg';
 import dashboardImage from './images/dasboard_3.jpg';
 import conversionRate from './images/taxa_conversao_4.jpg';
