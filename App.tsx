@@ -1,3 +1,4 @@
+// Build trigger: resolving merge conflicts for Cloudflare
 import React, { useState, useEffect } from 'react';
 import {
   CheckCircle,
