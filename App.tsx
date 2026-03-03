@@ -1,4 +1,4 @@
-// Build trigger: resolving merge conflicts for Cloudflare
+// Build trigger: v2026-03-03-15-06 - feature updates
 import React, { useState, useEffect } from 'react';
 import {
   CheckCircle,
