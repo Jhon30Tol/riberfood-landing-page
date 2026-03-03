@@ -594,6 +594,100 @@ const TrialModal: React.FC<{ isOpen: boolean; onClose: () => void }> = ({ isOpen
   );
 };
 
+const SupportModal: React.FC<{ isOpen: boolean; onClose: () => void }> = ({ isOpen, onClose }) => {
+  const [step, setStep] = useState<'form' | 'success'>('form');
+  const [loading, setLoading] = useState(false);
+  const [formData, setFormData] = useState({
+    nome: '',
+    email: '',
+    mensagem: ''
+  });
+
+  if (!isOpen) return null;
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setLoading(true);
+    // Simulate API call
+    setTimeout(() => {
+      setLoading(false);
+      setStep('success');
+    }, 1500);
+  };
+
+  return (
+    <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
+      <div className="absolute inset-0 bg-gray-900/80 backdrop-blur-sm" onClick={onClose}></div>
+      <div className="relative w-full max-w-md bg-white rounded-3xl shadow-2xl overflow-hidden animate-in zoom-in duration-300">
+        <button onClick={onClose} className="absolute top-4 right-4 p-2 text-gray-400 hover:text-gray-900 z-10">
+          <X className="h-6 w-6" />
+        </button>
+
+        <div className="p-8">
+          {step === 'form' ? (
+            <>
+              <h2 className="text-2xl font-black text-gray-900 mb-2">Suporte Riberfood</h2>
+              <p className="text-gray-600 mb-6">Como podemos ajudar você hoje?</p>
+              <form onSubmit={handleSubmit} className="space-y-4">
+                <div>
+                  <label className="block text-sm font-bold text-gray-700 mb-1">Nome</label>
+                  <input
+                    required
+                    type="text"
+                    className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-orange-600/20 outline-none"
+                    value={formData.nome}
+                    onChange={e => setFormData({ ...formData, nome: e.target.value })}
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-bold text-gray-700 mb-1">E-mail</label>
+                  <input
+                    required
+                    type="email"
+                    className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-orange-600/20 outline-none"
+                    value={formData.email}
+                    onChange={e => setFormData({ ...formData, email: e.target.value })}
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-bold text-gray-700 mb-1">Mensagem</label>
+                  <textarea
+                    required
+                    rows={4}
+                    className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-orange-600/20 outline-none resize-none"
+                    value={formData.mensagem}
+                    onChange={e => setFormData({ ...formData, mensagem: e.target.value })}
+                  />
+                </div>
+                <button
+                  disabled={loading}
+                  className="w-full bg-orange-600 hover:bg-orange-700 disabled:bg-orange-400 text-white py-4 rounded-xl text-lg font-black transition-all flex items-center justify-center gap-2 mt-4"
+                >
+                  {loading ? 'Enviando...' : 'Enviar Mensagem'} <TrendingUp className="w-5 h-5" />
+                </button>
+              </form>
+            </>
+          ) : (
+            <div className="text-center py-6">
+              <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                <Check className="w-8 h-8 text-green-600" />
+              </div>
+              <h2 className="text-2xl font-black text-gray-900 mb-2">Mensagem Enviada!</h2>
+              <p className="text-gray-600 mb-6">Recebemos sua solicitação. Nosso time entrará em contato em breve.</p>
+              <button
+                onClick={onClose}
+                className="w-full bg-gray-900 text-white py-4 rounded-xl font-bold"
+              >
+                Fechar
+              </button>
+            </div>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+};
+
 const WaitlistModal: React.FC<{ isOpen: boolean; onClose: () => void }> = ({ isOpen, onClose }) => {
   const [step, setStep] = useState<'form' | 'success'>('form');
   const [loading, setLoading] = useState(false);
@@ -1035,6 +1129,7 @@ const App: React.FC = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isWaitlistOpen, setIsWaitlistOpen] = useState(false);
   const [isLoginOpen, setIsLoginOpen] = useState(false);
+  const [isSupportOpen, setIsSupportOpen] = useState(false);
   const [view, setView] = useState<'landing' | 'plans'>('landing');
 
   useEffect(() => {
@@ -1051,6 +1146,8 @@ const App: React.FC = () => {
         />
         <TrialModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} />
         <WaitlistModal isOpen={isWaitlistOpen} onClose={() => setIsWaitlistOpen(false)} />
+        <SupportModal isOpen={isSupportOpen} onClose={() => setIsSupportOpen(false)} />
+        <LoginModal isOpen={isLoginOpen} onClose={() => setIsLoginOpen(false)} />
       </>
     );
   }
@@ -1060,6 +1157,7 @@ const App: React.FC = () => {
       <Navbar onOpenModal={() => setView('plans')} onOpenLogin={() => setIsLoginOpen(true)} />
       <TrialModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} />
       <LoginModal isOpen={isLoginOpen} onClose={() => setIsLoginOpen(false)} />
+      <SupportModal isOpen={isSupportOpen} onClose={() => setIsSupportOpen(false)} />
 
       {/* Hero Section */}
       <section className="relative pt-32 pb-24 md:pt-48 md:pb-40 bg-gray-900 text-white overflow-hidden">
@@ -1393,9 +1491,8 @@ const App: React.FC = () => {
             <img src={textLogo} alt="RIBERFOOD" className="h-6 object-contain filter brightness-0 invert opacity-80" />
           </div>
           <div className="flex gap-8 text-sm font-medium">
-            <a href="#" className="hover:text-white transition-colors">Políticas</a>
-            <a href="#" className="hover:text-white transition-colors">Suporte</a>
-            <a href="#" className="hover:text-white transition-colors">Área do Cliente</a>
+            <button onClick={() => setIsSupportOpen(true)} className="hover:text-white transition-colors">Suporte</button>
+            <button onClick={() => setIsLoginOpen(true)} className="hover:text-white transition-colors">Área do Cliente</button>
           </div>
           <div className="text-sm">
             © 2024 Safe Trust Tecnology. Todos os direitos reservados. Ribeirão Preto - SP.
