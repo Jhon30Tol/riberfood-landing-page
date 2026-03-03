@@ -662,15 +662,15 @@ const PlansPage: React.FC<{ onBack: () => void; onSelectFree: () => void; onSele
     "Pedidos ilimitados",
     "Acompanhamento de status do pedido",
     "Impressão de pedidos",
-    "Envio de pedidos para cozinhas",
-    "Taxa de entrega calculada por distância",
-    "Cupons de desconto",
-    "Complementos e opcionais",
-    "Cadastro de entregadores",
-    "Relatórios de pedidos",
-    "Relatórios financeiros",
-    "Gestão de taxas (entrega, serviço etc.)",
-    "Dashboard de gestão",
+    "Cardápio Digital",
+    "Gestão de Pedidos",
+    "Gestão de Entregas",
+    "Relatórios Básicos",
+    "Suporte via WhatsApp",
+    "Treinamento de Uso",
+    "Painel do Lojista",
+    "Sem Comissões",
+    "Sem limite de pedidos",
     "Relatórios gerenciais",
     "Controle de acesso de usuários"
   ];
@@ -696,8 +696,16 @@ const PlansPage: React.FC<{ onBack: () => void; onSelectFree: () => void; onSele
       <header className="fixed top-0 left-0 right-0 z-50 py-6 px-4 bg-gray-900/80 backdrop-blur-md border-b border-white/10">
         <div className="max-w-7xl mx-auto flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <img src={iconLogo} alt="Logo" className="w-8 h-8" />
-            <img src={textLogo} alt="Riberfood" className="h-6 filter brightness-0 invert" />
+            <a
+              href="/"
+              onClick={(e) => {
+                e.preventDefault();
+                window.location.reload();
+              }}
+              className="flex items-center gap-2"
+            >
+              <img src={textLogo} alt="RIBERFOOD" className="h-8 object-contain" />
+            </a>
           </div>
           <button onClick={onBack} className="text-gray-400 hover:text-white font-bold flex items-center gap-2 transition-colors">
             <X className="w-5 h-5" /> Voltar
@@ -783,7 +791,7 @@ const PlansPage: React.FC<{ onBack: () => void; onSelectFree: () => void; onSele
       {/* How it works - Print 4 */}
       <section id="como-funciona" className="py-24 bg-white text-gray-900">
         <div className="max-w-7xl mx-auto px-4 text-center">
-          <h2 className="text-4xl md:text-5xl font-black mb-4">Como funciona na prática?</h2>
+          <h2 className="text-3xl md:text-5xl font-black text-gray-900 mb-4">Como funciona na prática?</h2>
           <p className="text-xl text-gray-500 mb-16">Você define e repassa a taxa ao consumidor final.</p>
 
           <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
@@ -905,6 +913,10 @@ const App: React.FC = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isWaitlistOpen, setIsWaitlistOpen] = useState(false);
   const [view, setView] = useState<'landing' | 'plans'>('landing');
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [view]);
 
   if (view === 'plans') {
     return (
