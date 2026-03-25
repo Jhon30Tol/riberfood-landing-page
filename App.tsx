@@ -27,6 +27,38 @@ import orderScreen from './images/tela_pedidos_5.jpg';
 import employeePhoto from './images/foto_fun_6.png';
 import iconLogo from './images/Icon_sem_Fundo.png';
 import textLogo from './images/riberfood_logo-bg_null.png';
+
+const LEGACY_LOGIN_HASH_PREFIXES = ['#/login', '#/entrar', '#/auth/login', '#login', '#!/login'];
+
+const stripLegacyLoginHash = (): boolean => {
+  if (typeof window === 'undefined') return false;
+
+  const rawHash = window.location.hash.trim().toLowerCase();
+  if (!rawHash) return false;
+
+  let decodedHash = rawHash;
+  try {
+    decodedHash = decodeURIComponent(rawHash);
+  } catch {
+    decodedHash = rawHash;
+  }
+
+  const hashesToCheck = [rawHash, decodedHash];
+  const shouldStrip = hashesToCheck.some((hash) =>
+    LEGACY_LOGIN_HASH_PREFIXES.some(
+      (prefix) => hash === prefix || hash.startsWith(`${prefix}?`) || hash.startsWith(`${prefix}/`)
+    )
+  );
+
+  if (shouldStrip) {
+    window.history.replaceState(null, '', `${window.location.pathname}${window.location.search}`);
+  }
+
+  return shouldStrip;
+};
+
+stripLegacyLoginHash();
+
 const getOnboardingTenantsUrl = (): string => {
   const url = import.meta.env.VITE_ONBOARDING_TENANTS_URL?.trim();
   if (!url) {
@@ -1143,10 +1175,9 @@ const App: React.FC = () => {
   const [view, setView] = useState<'landing' | 'plans'>('landing');
 
   useEffect(() => {
-    const hash = window.location.hash.trim().toLowerCase();
-    if (hash === '#/login' || hash === '#/entrar' || hash === '#/auth/login') {
-      window.history.replaceState(null, '', `${window.location.pathname}${window.location.search}`);
-    }
+    stripLegacyLoginHash();
+    setView('landing');
+    setIsLoginOpen(false);
   }, []);
 
   useEffect(() => {
