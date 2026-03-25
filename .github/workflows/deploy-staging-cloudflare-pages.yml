@@ -3,6 +3,7 @@ name: Deploy STG Landing to Cloudflare Pages
 on:
   push:
     branches:
+      - main
       - staging
       - preview
   workflow_dispatch:
@@ -30,7 +31,7 @@ jobs:
       - name: Build landing (stg)
         env:
           VITE_APP_ENV: stg
-          VITE_ONBOARDING_TENANTS_URL: ${{ vars.VITE_ONBOARDING_TENANTS_URL_STG }}
+          VITE_ONBOARDING_TENANTS_URL: ${{ vars.VITE_ONBOARDING_TENANTS_URL_STG || 'https://stg.riberfood.com/api/v1/onboarding/tenants' }}
         run: npm run build
 
       - name: Deploy to Cloudflare Pages (stg)
@@ -41,4 +42,4 @@ jobs:
           command: >
             pages deploy dist
             --project-name ${{ vars.CF_PAGES_PROJECT_STG }}
-            --branch ${{ github.ref_name }}
+            --branch preview

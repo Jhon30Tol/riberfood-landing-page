@@ -347,14 +347,24 @@ const TrialModal: React.FC<{ isOpen: boolean; onClose: () => void }> = ({ isOpen
     setSubmitError(null);
 
     try {
-      const payload: OnboardingTenantPayload = {
-        person_type: 'company',
-        name: formData.nomeEmpresa.trim(),
-        cnpj: formData.cnpj.replace(/\D/g, ''),
-        owner_email: formData.email.trim(),
-        owner_name: formData.nomeAdmin.trim(),
-        subdomain: slugifySubdomain(formData.nomeEmpresa),
-      };
+      const normalizedDocument = formData.cnpj.replace(/\D/g, '');
+      const payload: OnboardingTenantPayload = formData.documentType === 'CNPJ'
+        ? {
+            person_type: 'company',
+            name: formData.nomeEmpresa.trim(),
+            cnpj: normalizedDocument,
+            owner_email: formData.email.trim(),
+            owner_name: formData.nomeAdmin.trim(),
+            subdomain: slugifySubdomain(formData.nomeEmpresa),
+          }
+        : {
+            person_type: 'individual',
+            name: formData.nomeEmpresa.trim(),
+            cpf: normalizedDocument,
+            owner_email: formData.email.trim(),
+            owner_name: formData.nomeAdmin.trim(),
+            subdomain: slugifySubdomain(formData.nomeEmpresa),
+          };
 
       const response = await fetch(getOnboardingTenantsUrl(), {
         method: 'POST',
@@ -1131,6 +1141,13 @@ const App: React.FC = () => {
   const [isLoginOpen, setIsLoginOpen] = useState(false);
   const [isSupportOpen, setIsSupportOpen] = useState(false);
   const [view, setView] = useState<'landing' | 'plans'>('landing');
+
+  useEffect(() => {
+    const hash = window.location.hash.trim().toLowerCase();
+    if (hash === '#/login' || hash === '#/entrar' || hash === '#/auth/login') {
+      window.history.replaceState(null, '', `${window.location.pathname}${window.location.search}`);
+    }
+  }, []);
 
   useEffect(() => {
     window.scrollTo(0, 0);

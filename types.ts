@@ -19,11 +19,21 @@ export interface SignupForm {
   estado: string;
 }
 
-export interface OnboardingTenantPayload {
-  person_type: 'company';
+interface OnboardingTenantBasePayload {
   name: string;
-  cnpj: string;
   owner_email: string;
   owner_name: string;
   subdomain: string;
 }
+
+export type OnboardingTenantPayload =
+  | (OnboardingTenantBasePayload & {
+      person_type: 'company';
+      cnpj: string;
+      cpf?: never;
+    })
+  | (OnboardingTenantBasePayload & {
+      person_type: 'individual';
+      cpf: string;
+      cnpj?: never;
+    });
