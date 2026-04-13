@@ -68,7 +68,6 @@ const INITIAL_SIGNUP_FORM_EXTENDED: SignupFormExtended = {
   nomeEmpresa: '',
   nomeAdmin: '',
   email: '',
-  senha: '',
   telefone: '',
   estado: '',
   documentType: 'CNPJ'
@@ -196,7 +195,7 @@ const Navbar: React.FC<{ onOpenModal: () => void; onOpenLogin: () => void }> = (
               }}
               className="w-full bg-orange-600 text-white px-3 py-3 rounded-md text-base font-bold"
             >
-              Quero conhecer a plataforma
+              Bora começar
             </button>
             <p className="text-orange-500 text-xs font-bold text-center mt-2 flex items-center justify-center gap-1">
               <CheckCircle className="w-3 h-3" /> Comece a usar imediatamente sem Custo
@@ -288,7 +287,6 @@ const INITIAL_SIGNUP_FORM: SignupForm = {
   nomeEmpresa: '',
   nomeAdmin: '',
   email: '',
-  senha: '',
   telefone: '',
   estado: ''
 };
@@ -527,18 +525,6 @@ const TrialModal: React.FC<{ isOpen: boolean; onClose: () => void }> = ({ isOpen
                     className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-orange-600 focus:ring-2 focus:ring-orange-600/20 transition-all outline-none"
                     value={formData.email}
                     onChange={e => setFormData({ ...formData, email: e.target.value })}
-                  />
-                </div>
-                <div>
-                  <label className="block text-sm font-bold text-gray-700 mb-1">Senha <span className="text-red-500">*</span></label>
-                  <input
-                    required
-                    type="password"
-                    placeholder="Mínimo 6 caracteres"
-                    minLength={6}
-                    className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-orange-600 focus:ring-2 focus:ring-orange-600/20 transition-all outline-none"
-                    value={formData.senha}
-                    onChange={e => setFormData({ ...formData, senha: e.target.value })}
                   />
                 </div>
 
@@ -895,6 +881,7 @@ const PlansPage: React.FC<{ onBack: () => void; onSelectFree: () => void; onSele
   const soonBenefits = [
     "KDS — Display de Cozinha",
     "App Garçom",
+    "App entregador",
     "Controle de Mesas e Comanda",
     "Cupom Fiscal NFC-e",
     "Roteirização de Entregas",
@@ -1185,7 +1172,7 @@ const App: React.FC = () => {
                     onClick={() => setView('plans')}
                     className="bg-orange-600 hover:bg-orange-700 text-white px-10 py-5 rounded-full text-lg font-black transition-all transform hover:scale-105 active:scale-95 shadow-2xl shadow-orange-600/40 flex items-center justify-center gap-2"
                   >
-                    Quero conhecer a plataforma <Zap className="w-5 h-5 fill-current" />
+                    Bora começar <Zap className="w-5 h-5 fill-current" />
                   </button>
                   <p className="text-orange-500 font-bold flex items-center gap-2">
                     <CheckCircle className="w-5 h-5" /> Comece a usar imediatamente sem Custo
