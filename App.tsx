@@ -58,6 +58,13 @@ const parseApiMessage = (data: unknown): string | null => {
   return null;
 };
 
+// Função para sanitizar inputs e prevenir injeção de caracteres maliciosos
+const sanitizeInput = (value: string): string => {
+  return value
+    .replace(/[;'"\\]/g, '') // Remove caracteres comuns de SQL Injection
+    .trim();
+};
+
 // Types
 interface SignupFormExtended extends SignupForm {
   documentType: 'CPF' | 'CNPJ';
@@ -347,10 +354,10 @@ const TrialModal: React.FC<{ isOpen: boolean; onClose: () => void }> = ({ isOpen
     try {
       const payload: OnboardingTenantPayload = {
         person_type: 'company',
-        name: formData.nomeEmpresa.trim(),
+        name: sanitizeInput(formData.nomeEmpresa),
         cnpj: formData.cnpj.replace(/\D/g, ''),
-        owner_email: formData.email.trim(),
-        owner_name: formData.nomeAdmin.trim(),
+        owner_email: sanitizeInput(formData.email),
+        owner_name: sanitizeInput(formData.nomeAdmin),
         subdomain: slugifySubdomain(formData.nomeEmpresa),
       };
 
@@ -594,6 +601,13 @@ const SupportModal: React.FC<{ isOpen: boolean; onClose: () => void }> = ({ isOp
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
+    
+    const payload = {
+      nome: sanitizeInput(formData.nome),
+      email: sanitizeInput(formData.email),
+      mensagem: sanitizeInput(formData.mensagem)
+    };
+
     // Simulate API call
     setTimeout(() => {
       setLoading(false);
@@ -696,6 +710,13 @@ const WaitlistModal: React.FC<{ isOpen: boolean; onClose: () => void }> = ({ isO
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
+
+    const payload = {
+      nome: sanitizeInput(formData.nome),
+      telefone: sanitizeInput(formData.telefone),
+      email: sanitizeInput(formData.email)
+    };
+
     // Simulate API call for waitlist
     setTimeout(() => {
       setLoading(false);
