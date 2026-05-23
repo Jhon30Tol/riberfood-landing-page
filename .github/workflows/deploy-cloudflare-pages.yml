@@ -1,0 +1,57 @@
+name: Deploy Landing to Cloudflare Pages
+
+on:
+  push:
+    branches:
+      - staging
+      - main
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  deploy:
+    name: Build and Deploy
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Resolve deploy settings
+        id: deploy_settings
+        run: |
+          if [ "${GITHUB_REF_NAME}" = "main" ]; then
+            echo "app_env=prod" >> "$GITHUB_OUTPUT"
+            echo "cf_branch=main" >> "$GITHUB_OUTPUT"
+            echo "onboarding_url=${{ vars.VITE_ONBOARDING_TENANTS_URL_PROD || 'https://api.riberfood.com/api/v1/onboarding/tenants' }}" >> "$GITHUB_OUTPUT"
+          else
+            echo "app_env=stg" >> "$GITHUB_OUTPUT"
+            echo "cf_branch=staging" >> "$GITHUB_OUTPUT"
+            echo "onboarding_url=${{ vars.VITE_ONBOARDING_TENANTS_URL_STG || 'https://stg.riberfood.com/api/v1/onboarding/tenants' }}" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Build landing
+        env:
+          VITE_APP_ENV: ${{ steps.deploy_settings.outputs.app_env }}
+          VITE_ONBOARDING_TENANTS_URL: ${{ steps.deploy_settings.outputs.onboarding_url }}
+        run: npm run build
+
+      - name: Deploy to Cloudflare Pages
+        uses: cloudflare/wrangler-action@v3
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          command: >
+            pages deploy dist
+            --project-name ${{ vars.CF_PAGES_PROJECT }}
+            --branch ${{ steps.deploy_settings.outputs.cf_branch }}

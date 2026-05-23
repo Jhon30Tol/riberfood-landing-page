@@ -1,25 +1,25 @@
-# Runbook: Cloudflare Pages + Access (Landing STG)
+# Runbook: Cloudflare Pages + Access (Landing STG/PROD)
 
 ## Objetivo
-Operar a landing STG em `landing.stg.riberfood.com` com:
-- deploy via GitHub Actions -> Cloudflare Pages
-- acesso protegido por Cloudflare Access
+Operar landing em dois ambientes:
+- STG: `landing.stg.riberfood` (branch `staging`)
+- PROD: `landing.riberfood` (branch `main`)
+
+Deploy via GitHub Actions -> Cloudflare Pages.
 
 ## Pre-requisitos
-- Projeto Cloudflare Pages criado (ex.: `riberfood-landing-stg`)
-- Dominio `landing.stg.riberfood.com` disponivel na zona Cloudflare
-- Cloudflare Zero Trust habilitado
-- Branch de deploy: `staging`
+- Projeto Cloudflare Pages criado (unico projeto para branches `staging` e `main`)
+- Rotas customizadas configuradas no Pages:
+  - `staging` -> `landing.stg.riberfood`
+  - `main` -> `landing.riberfood`
+- Cloudflare Zero Trust habilitado (se STG protegido)
 
-## GitHub (sem segredos no repo)
+## GitHub
 
 ### Repository Variables (Actions > Variables)
-- `CF_PAGES_PROJECT_STG` = nome do projeto Cloudflare Pages STG
-- `VITE_ONBOARDING_TENANTS_URL_STG` = endpoint publico de onboarding STG
-
-Observacao:
-- `VITE_ONBOARDING_TENANTS_URL_STG` e configuracao publica de frontend
-- nao e segredo, mas fica centralizada no CI para evitar hardcode no repo
+- `CF_PAGES_PROJECT` = nome projeto Cloudflare Pages
+- `VITE_ONBOARDING_TENANTS_URL_STG` = endpoint publico onboarding STG (opcional)
+- `VITE_ONBOARDING_TENANTS_URL_PROD` = endpoint publico onboarding PROD (opcional)
 
 ### Repository Secrets (Actions > Secrets)
 - `CLOUDFLARE_API_TOKEN`
@@ -27,43 +27,35 @@ Observacao:
 
 ## Workflow
 Arquivo:
-- `/Users/paluanbatista/Documents/SafeTrust/riberfood/riberfood-landing-page/.github/workflows/deploy-staging-cloudflare-pages.yml`
+- `.github/workflows/deploy-cloudflare-pages.yml`
 
 Disparo:
 - push na branch `staging`
+- push na branch `main`
 - `workflow_dispatch` manual
 
-## Cloudflare Pages
-1. Criar/confirmar projeto Pages STG
-2. Configurar dominio customizado `landing.stg.riberfood.com`
-3. Garantir SSL ativo
-4. Validar ultimo deploy do branch `staging`
+Comportamento:
+- `staging` -> build com `VITE_APP_ENV=stg` e deploy `--branch staging`
+- `main` -> build com `VITE_APP_ENV=prod` e deploy `--branch main`
 
-## Cloudflare Access (protecao)
-1. Cloudflare Zero Trust -> Access -> Applications
-2. Criar app `Self-hosted`
-3. Domain/URL:
-   - `landing.stg.riberfood.com`
-   - path `/*`
-4. Policy `Allow`:
-   - dominio corporativo (ex.: `@riberfood.com`) e/ou lista de emails QA
-5. Session duration:
-   - recomendado `8h`
-6. Salvar e validar acesso em janela anonima
+## Cloudflare Access (opcional, STG)
+Se STG for protegido:
+1. Zero Trust -> Access -> Applications
+2. App `Self-hosted`
+3. URL: `landing.stg.riberfood/*`
+4. Policy `Allow`: dominio corporativo/e-mails QA
+5. Session duration recomendada: `8h`
 
 ## Smoke tests (pos-deploy)
-1. `landing.stg.riberfood.com` exige login do Access
-2. Landing carrega apos autenticacao
+1. `landing.stg.riberfood` abre (ou exige Access, se ligado)
+2. `landing.riberfood` abre normalmente
 3. CTA abre modal
-4. Submit chama `POST /api/v1/onboarding/tenants` no backend STG
-5. Erros `409/422` exibem mensagem amigavel
+4. Submit chama `POST /api/v1/onboarding/tenants`
 
 ## Troubleshooting rapido
 - Deploy falha no GitHub:
-  - validar `CLOUDFLARE_API_TOKEN`, `CLOUDFLARE_ACCOUNT_ID`, `CF_PAGES_PROJECT_STG`
+  - validar `CLOUDFLARE_API_TOKEN`, `CLOUDFLARE_ACCOUNT_ID`, `CF_PAGES_PROJECT`
 - Build falha por env:
-  - validar `VITE_ONBOARDING_TENANTS_URL_STG`
-- CORS bloqueado:
-  - confirmar backend STG permite `https://landing.stg.riberfood.com`
-- Access bloqueando time:
-  - revisar policy `Allow` e identidade usada no login
+  - validar `VITE_ONBOARDING_TENANTS_URL_STG/PROD`
+- Rota errada no dominio:
+  - revisar mapeamento de custom domains por branch no Pages
