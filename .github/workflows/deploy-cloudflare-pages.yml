@@ -33,10 +33,12 @@ jobs:
           if [ "${GITHUB_REF_NAME}" = "main" ]; then
             echo "app_env=prod" >> "$GITHUB_OUTPUT"
             echo "cf_branch=main" >> "$GITHUB_OUTPUT"
+            echo "cf_project=${{ vars.CF_PAGES_PROJECT_PROD || vars.CF_PAGES_PROJECT }}" >> "$GITHUB_OUTPUT"
             echo "onboarding_url=${{ vars.VITE_ONBOARDING_TENANTS_URL_PROD || 'https://api.riberfood.com/api/v1/onboarding/tenants' }}" >> "$GITHUB_OUTPUT"
           else
             echo "app_env=stg" >> "$GITHUB_OUTPUT"
             echo "cf_branch=staging" >> "$GITHUB_OUTPUT"
+            echo "cf_project=${{ vars.CF_PAGES_PROJECT_STG || vars.CF_PAGES_PROJECT }}" >> "$GITHUB_OUTPUT"
             echo "onboarding_url=${{ vars.VITE_ONBOARDING_TENANTS_URL_STG || 'https://stg.riberfood.com/api/v1/onboarding/tenants' }}" >> "$GITHUB_OUTPUT"
           fi
 
@@ -53,7 +55,7 @@ jobs:
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
           command: >
             pages deploy dist
-            --project-name ${{ vars.CF_PAGES_PROJECT }}
+            --project-name ${{ steps.deploy_settings.outputs.cf_project }}
             --branch ${{ steps.deploy_settings.outputs.cf_branch }}
 
       - name: Notify Lark (Success)
