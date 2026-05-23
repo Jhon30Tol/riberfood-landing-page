@@ -55,3 +55,27 @@ jobs:
             pages deploy dist
             --project-name ${{ vars.CF_PAGES_PROJECT }}
             --branch ${{ steps.deploy_settings.outputs.cf_branch }}
+
+      - name: Notify Lark (Success)
+        if: success()
+        run: |
+          curl -sS -X POST "${{ secrets.LARK_WEBHOOK_URL }}" \
+            -H "Content-Type: application/json" \
+            -d "{
+              \"msg_type\": \"text\",
+              \"content\": {
+                \"text\": \"✅ Deploy LANDING sucesso: ${GITHUB_REPOSITORY} | branch ${GITHUB_REF_NAME} | commit ${GITHUB_SHA}\"
+              }
+            }"
+
+      - name: Notify Lark (Failure)
+        if: failure()
+        run: |
+          curl -sS -X POST "${{ secrets.LARK_WEBHOOK_URL }}" \
+            -H "Content-Type: application/json" \
+            -d "{
+              \"msg_type\": \"text\",
+              \"content\": {
+                \"text\": \"❌ Deploy LANDING falhou: ${GITHUB_REPOSITORY} | branch ${GITHUB_REF_NAME} | commit ${GITHUB_SHA} | run ${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID}\"
+              }
+            }"
