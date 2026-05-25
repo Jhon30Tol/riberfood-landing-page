@@ -14,7 +14,6 @@ export interface SignupForm {
   nomeEmpresa: string;
   nomeAdmin: string;
   email: string;
-  senha: string;
   telefone: string;
   estado: string;
 }

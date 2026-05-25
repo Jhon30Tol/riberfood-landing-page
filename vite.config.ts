@@ -9,6 +9,13 @@ export default defineConfig({
     host: '0.0.0.0',
   },
   plugins: [react()],
+  build: {
+    sourcemap: false,
+    minify: 'esbuild',
+  },
+  esbuild: {
+    drop: ['console', 'debugger'],
+  },
   resolve: {
     alias: {
       '@': path.resolve(__dirname, '.'),
