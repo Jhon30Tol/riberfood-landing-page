@@ -15,7 +15,29 @@
         background: linear-gradient(135deg, #ff6b00 0%, #ff8a3d 100%);
       }
     </style>
-  <script type="module" crossorigin src="/assets/index-Cj4o-3yQ.js"></script>
+    <script>
+      // Desativa o botão direito
+      document.addEventListener('contextmenu', event => event.preventDefault());
+
+      // Desativa atalhos comuns de inspeção (F12, Ctrl+Shift+I, Ctrl+Shift+J, Ctrl+U)
+      document.onkeydown = function(e) {
+        if (
+          e.keyCode === 123 || 
+          (e.ctrlKey && e.shiftKey && (e.keyCode === 73 || e.keyCode === 74 || e.keyCode === 67)) || 
+          (e.ctrlKey && e.keyCode === 85)
+        ) {
+          return false;
+        }
+      };
+
+      // Opcional: Debugger loop para atrapalhar quem abrir o console (use com cautela)
+      /*
+      setInterval(() => {
+        debugger;
+      }, 500);
+      */
+    </script>
+  <script type="module" crossorigin src="/assets/index-BvhNEgN-.js"></script>
 </head>
   <body class="bg-gray-50">
     <div id="root"></div>
