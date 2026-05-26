@@ -798,26 +798,43 @@ const WaitlistModal: React.FC<{ isOpen: boolean; onClose: () => void }> = ({ isO
   );
 };
 
+const formatCurrency = (value: string) => {
+  const digits = value.replace(/\D/g, '');
+  if (!digits) return '';
+  
+  let cleanDigits = digits;
+  if (cleanDigits.length < 3) {
+    cleanDigits = cleanDigits.padStart(3, '0');
+  }
+  
+  const integerPart = cleanDigits.slice(0, -2);
+  const decimalPart = cleanDigits.slice(-2);
+  
+  const formattedInteger = parseInt(integerPart, 10).toLocaleString('pt-BR');
+  return `${formattedInteger},${decimalPart}`;
+};
+
 const EconomySimulator: React.FC = () => {
   const [orders, setOrders] = useState<string>('1000');
-  const [ticket, setTicket] = useState<string>('30');
+  const [ticket, setTicket] = useState<string>('30,00');
   const [savings, setSavings] = useState<number>(0);
 
   const calculate = () => {
     const numOrders = parseFloat(orders) || 0;
-    const numTicket = parseFloat(ticket) || 0;
+    const cleanedTicket = ticket.replace(/\./g, '').replace(',', '.');
+    const numTicket = parseFloat(cleanedTicket) || 0;
     // Calculation: (orders * ticket) * 20% commission
     const totalSavings = (numOrders * numTicket) * 0.20;
     setSavings(totalSavings);
   };
 
-  // Run calculation on mount
+  // Run calculation on mount and whenever input changes
   useEffect(() => {
     calculate();
-  }, []);
+  }, [orders, ticket]);
 
   return (
-    <div className="bg-white rounded-[2.5rem] p-8 shadow-2xl max-w-2xl mx-auto border border-gray-100 animate-in fade-in slide-in-from-bottom-8 duration-700">
+    <div className="bg-white rounded-[2.5rem] p-6 sm:p-8 shadow-2xl max-w-2xl mx-auto border border-gray-100 animate-in fade-in slide-in-from-bottom-8 duration-700">
       <div className="text-center mb-8">
         <h2 className="text-3xl font-black text-gray-900 flex items-center justify-center gap-3">
           <span role="img" aria-label="money bags">💰</span> Simulador de Economia
@@ -830,9 +847,10 @@ const EconomySimulator: React.FC = () => {
             Quantos pedidos você faz por mês?
           </label>
           <input
-            type="number"
+            type="text"
+            inputMode="numeric"
             value={orders}
-            onChange={(e) => setOrders(e.target.value)}
+            onChange={(e) => setOrders(e.target.value.replace(/\D/g, ''))}
             className="w-full px-6 py-4 bg-gray-50 border-2 border-gray-100 rounded-2xl focus:border-orange-600 focus:outline-none text-xl font-bold text-gray-900 transition-all"
             placeholder="Ex: 1000"
           />
@@ -843,11 +861,12 @@ const EconomySimulator: React.FC = () => {
             Qual o ticket médio dos seus pedidos? (R$)
           </label>
           <input
-            type="number"
+            type="text"
+            inputMode="numeric"
             value={ticket}
-            onChange={(e) => setTicket(e.target.value)}
+            onChange={(e) => setTicket(formatCurrency(e.target.value))}
             className="w-full px-6 py-4 bg-gray-50 border-2 border-gray-100 rounded-2xl focus:border-orange-600 focus:outline-none text-xl font-bold text-gray-900 transition-all"
-            placeholder="Ex: 30"
+            placeholder="Ex: 30,00"
           />
         </div>
 
@@ -859,14 +878,14 @@ const EconomySimulator: React.FC = () => {
         </button>
       </div>
 
-      <div className="bg-green-600 rounded-3xl p-8 text-white relative overflow-hidden group">
+      <div className="bg-green-600 rounded-3xl p-6 sm:p-8 text-white relative overflow-hidden group">
         <div className="absolute top-0 right-0 p-4 opacity-20 transform group-hover:scale-110 transition-transform">
           <PartyPopper className="w-16 h-16" />
         </div>
         <p className="text-lg font-bold mb-2 opacity-90 flex items-center justify-center gap-2">
           🎉 Você economiza por mês:
         </p>
-        <div className="text-5xl font-black mb-4">
+        <div className="text-3xl sm:text-4xl md:text-5xl font-black mb-4 break-words">
           {new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(savings)}
         </div>
         <p className="text-sm opacity-80 max-w-xs mx-auto">
