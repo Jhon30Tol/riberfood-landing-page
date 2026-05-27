@@ -16,6 +16,7 @@ export interface SignupForm {
   email: string;
   telefone: string;
   estado: string;
+  subdomain: string;
 }
 
 export interface OnboardingTenantPayload {
