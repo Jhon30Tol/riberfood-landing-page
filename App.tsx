@@ -109,6 +109,7 @@ const INITIAL_SIGNUP_FORM_EXTENDED: SignupFormExtended = {
   email: '',
   telefone: '',
   estado: '',
+  subdomain: '',
   documentType: 'CNPJ'
 };
 
@@ -327,7 +328,8 @@ const INITIAL_SIGNUP_FORM: SignupForm = {
   nomeAdmin: '',
   email: '',
   telefone: '',
-  estado: ''
+  estado: '',
+  subdomain: ''
 };
 
 const TrialModal: React.FC<{ isOpen: boolean; onClose: () => void }> = ({ isOpen, onClose }) => {
@@ -335,6 +337,9 @@ const TrialModal: React.FC<{ isOpen: boolean; onClose: () => void }> = ({ isOpen
   const [loading, setLoading] = useState(false);
   const [submitError, setSubmitError] = useState<string | null>(null);
   const [formData, setFormData] = useState<SignupFormExtended>(INITIAL_SIGNUP_FORM_EXTENDED);
+  const [isSubdomainManuallyEdited, setIsSubdomainManuallyEdited] = useState(false);
+  const [subdomainStatus, setSubdomainStatus] = useState<'idle' | 'checking' | 'available' | 'unavailable' | 'invalid'>('idle');
+  const [subdomainError, setSubdomainError] = useState<string | null>(null);
 
   useEffect(() => {
     if (!isOpen) return;
@@ -342,7 +347,84 @@ const TrialModal: React.FC<{ isOpen: boolean; onClose: () => void }> = ({ isOpen
     setLoading(false);
     setSubmitError(null);
     setFormData(INITIAL_SIGNUP_FORM_EXTENDED);
+    setIsSubdomainManuallyEdited(false);
+    setSubdomainStatus('idle');
+    setSubdomainError(null);
   }, [isOpen]);
+
+  const validateSubdomainLocal = (sub: string): boolean => {
+    if (!sub) return false;
+    if (sub.length < 3) return false;
+    // Lowercase letters, numbers, and single hyphens, not starting/ending with hyphen
+    const regex = /^[a-z0-9]+(-[a-z0-9]+)*$/;
+    return regex.test(sub);
+  };
+
+  const checkSubdomainAvailability = async (sub: string) => {
+    if (!validateSubdomainLocal(sub)) {
+      setSubdomainStatus('invalid');
+      setSubdomainError('O subdomínio deve ter pelo menos 3 caracteres e conter apenas letras, números e hífen (ex: pizzaria-neves).');
+      return;
+    }
+
+    setSubdomainStatus('checking');
+    setSubdomainError(null);
+
+    try {
+      const baseUrl = getOnboardingTenantsUrl();
+      const response = await fetch(`${baseUrl}/exists?subdomain=${sub}`, {
+        method: 'GET',
+        headers: {
+          'Accept': 'application/json'
+        },
+        mode: 'cors'
+      });
+
+      if (response.status === 200) {
+        const data = await response.json();
+        const exists = data.exists === true || data.available === false || data.disponivel === false || data.sucesso === false;
+        if (exists) {
+          setSubdomainStatus('unavailable');
+          setSubdomainError('Este subdomínio já está em uso. Tente outro.');
+        } else {
+          setSubdomainStatus('available');
+        }
+      } else if (response.status === 409) {
+        setSubdomainStatus('unavailable');
+        setSubdomainError('Este subdomínio já está em uso. Tente outro.');
+      } else {
+        console.warn('Subdomain check endpoint returned status:', response.status);
+        setSubdomainStatus('available');
+      }
+    } catch (err) {
+      console.error('Error checking subdomain availability:', err);
+      setSubdomainStatus('available');
+    }
+  };
+
+  useEffect(() => {
+    const sub = formData.subdomain;
+    if (!sub || sub.length < 3) {
+      setSubdomainStatus('idle');
+      setSubdomainError(null);
+      return;
+    }
+
+    if (!validateSubdomainLocal(sub)) {
+      setSubdomainStatus('invalid');
+      setSubdomainError('O subdomínio deve ter pelo menos 3 caracteres e conter apenas letras, números e hífen (ex: pizzaria-neves).');
+      return;
+    }
+
+    setSubdomainStatus('checking');
+    setSubdomainError(null);
+
+    const timer = setTimeout(() => {
+      checkSubdomainAvailability(sub);
+    }, 600);
+
+    return () => clearTimeout(timer);
+  }, [formData.subdomain]);
 
   if (!isOpen) return null;
 
@@ -351,14 +433,12 @@ const TrialModal: React.FC<{ isOpen: boolean; onClose: () => void }> = ({ isOpen
 
     if (formData.documentType === 'CNPJ') {
       if (value.length > 14) value = value.slice(0, 14);
-      // Mask: 00.000.000/0000-00
       value = value.replace(/^(\d{2})(\d)/, '$1.$2');
       value = value.replace(/^(\d{2})\.(\d{3})(\d)/, '$1.$2.$3');
       value = value.replace(/\.(\d{3})(\d)/, '.$1/$2');
       value = value.replace(/(\d{4})(\d)/, '$1-$2');
     } else {
       if (value.length > 11) value = value.slice(0, 11);
-      // Mask: 000.000.000-00
       value = value.replace(/^(\d{3})(\d)/, '$1.$2');
       value = value.replace(/^(\d{3})\.(\d{3})(\d)/, '$1.$2.$3');
       value = value.replace(/\.(\d{3})(\d)/, '.$1-$2');
@@ -371,15 +451,49 @@ const TrialModal: React.FC<{ isOpen: boolean; onClose: () => void }> = ({ isOpen
     let value = e.target.value.replace(/\D/g, '');
     if (value.length > 11) value = value.slice(0, 11);
 
-    // Mask: (00) 00000-0000
     value = value.replace(/^(\d{2})(\d)/, '($1) $2');
     value = value.replace(/(\d{5})(\d)/, '$1-$2');
 
     setFormData({ ...formData, telefone: value });
   };
 
+  const handleCompanyChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const name = e.target.value;
+    const updateData: Partial<SignupFormExtended> = { nomeEmpresa: name };
+    
+    if (!isSubdomainManuallyEdited) {
+      const suggested = slugifySubdomain(name);
+      updateData.subdomain = suggested === 'restaurante' && !name ? '' : suggested;
+    }
+    
+    setFormData(prev => ({ ...prev, ...updateData }));
+  };
+
+  const handleSubdomainChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setIsSubdomainManuallyEdited(true);
+    const value = e.target.value
+      .normalize('NFD')
+      .replace(/[\u0300-\u036f]/g, '')
+      .toLowerCase()
+      .replace(/[^a-z0-9-]/g, '')
+      .replace(/-+/g, '-');
+    
+    setFormData(prev => ({ ...prev, subdomain: value }));
+  };
+
+  const handleSubdomainBlur = () => {
+    const sub = formData.subdomain;
+    if (sub && sub.length >= 3 && subdomainStatus === 'checking') {
+      checkSubdomainAvailability(sub);
+    }
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (subdomainStatus === 'unavailable' || subdomainStatus === 'invalid') {
+      setSubmitError('Por favor, corrija o subdomínio antes de prosseguir.');
+      return;
+    }
     setLoading(true);
     setSubmitError(null);
 
@@ -392,7 +506,7 @@ const TrialModal: React.FC<{ isOpen: boolean; onClose: () => void }> = ({ isOpen
             cnpj: normalizedDocument,
             owner_email: sanitizeInput(formData.email),
             owner_name: sanitizeInput(formData.nomeAdmin),
-            subdomain: slugifySubdomain(formData.nomeEmpresa),
+            subdomain: slugifySubdomain(formData.subdomain || formData.nomeEmpresa),
           }
         : {
             person_type: 'individual',
@@ -400,7 +514,7 @@ const TrialModal: React.FC<{ isOpen: boolean; onClose: () => void }> = ({ isOpen
             cpf: normalizedDocument,
             owner_email: sanitizeInput(formData.email),
             owner_name: sanitizeInput(formData.nomeAdmin),
-            subdomain: slugifySubdomain(formData.nomeEmpresa),
+            subdomain: slugifySubdomain(formData.subdomain || formData.nomeEmpresa),
           };
 
       const response = await fetch(getOnboardingTenantsUrl(), {
@@ -515,8 +629,46 @@ const TrialModal: React.FC<{ isOpen: boolean; onClose: () => void }> = ({ isOpen
                     placeholder="Ex: Pizzaria do João"
                     className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-orange-600 focus:ring-2 focus:ring-orange-600/20 transition-all outline-none"
                     value={formData.nomeEmpresa}
-                    onChange={e => setFormData({ ...formData, nomeEmpresa: e.target.value })}
+                    onChange={handleCompanyChange}
                   />
+                </div>
+
+                <div>
+                  <label className="block text-sm font-bold text-gray-700 mb-1">Subdomínio <span className="text-red-500">*</span></label>
+                  <div className="relative">
+                    <input
+                      required
+                      type="text"
+                      placeholder="Ex: pizzaria-neves"
+                      className={`w-full px-4 py-3 rounded-xl border transition-all outline-none ${
+                        subdomainStatus === 'available'
+                          ? 'border-green-500 focus:border-green-600 focus:ring-2 focus:ring-green-500/20'
+                          : subdomainStatus === 'unavailable' || subdomainStatus === 'invalid'
+                          ? 'border-red-500 focus:border-red-600 focus:ring-2 focus:ring-red-500/20'
+                          : 'border-gray-200 focus:border-orange-600 focus:ring-2 focus:ring-orange-600/20'
+                      }`}
+                      value={formData.subdomain}
+                      onChange={handleSubdomainChange}
+                      onBlur={handleSubdomainBlur}
+                    />
+                    <div className="absolute inset-y-0 right-0 flex items-center px-4 pointer-events-none">
+                      {subdomainStatus === 'checking' && (
+                        <div className="w-5 h-5 border-2 border-orange-600 border-t-transparent rounded-full animate-spin"></div>
+                      )}
+                      {subdomainStatus === 'available' && (
+                        <span className="text-green-500 font-bold text-lg">✓</span>
+                      )}
+                      {(subdomainStatus === 'unavailable' || subdomainStatus === 'invalid') && (
+                        <span className="text-red-500 font-bold text-lg">✗</span>
+                      )}
+                    </div>
+                  </div>
+                  <p className="text-xs text-gray-500 mt-1">
+                    Seu link será: <strong className="text-gray-700">{formData.subdomain || 'seu-nome'}.riberfood.com</strong>. Use letras minúsculas, números e hífens para separar (ex: pizzaria-neves).
+                  </p>
+                  {subdomainError && (
+                    <p className="text-xs text-red-500 mt-1 font-medium">{subdomainError}</p>
+                  )}
                 </div>
 
                 <div>
@@ -1567,10 +1719,10 @@ const App: React.FC = () => {
           </div>
           <div className="flex gap-8 text-sm font-medium">
             <button onClick={() => setIsSupportOpen(true)} className="hover:text-white transition-colors">Suporte</button>
-            <button onClick={() => setIsLoginOpen(true)} className="hover:text-white transition-colors">Área do Cliente</button>
+            <a href="https://lojista.riberfood.com" className="hover:text-white transition-colors">Área do Lojista</a>
           </div>
           <div className="text-sm">
-            © 2024 Safe Trust Tecnology. Todos os direitos reservados. Ribeirão Preto - SP.
+            © {new Date().getFullYear()} Safe Trust Tecnology. Todos os direitos reservados. Ribeirão Preto - SP.
           </div>
         </div>
       </footer>
