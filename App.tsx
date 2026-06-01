@@ -1,6 +1,7 @@
 // Build trigger: v2026-03-03-15-06 - feature updates
 import React, { useState, useEffect } from 'react';
 import {
+  ArrowLeft,
   CheckCircle,
   ChevronDown,
   ChefHat,
@@ -1064,7 +1065,7 @@ const DashboardNavbar: React.FC<{ onOpenModal: () => void; onOpenLogin: () => vo
         <img src={textLogo} alt="RIBERFOOD" className="h-8 object-contain" />
       </a>
       <div className="flex items-center gap-4">
-        <button onClick={onOpenLogin} className="text-sm font-bold text-gray-400 hover:text-white transition-colors">Login</button>
+        <button onClick={onOpenLogin} className="bg-orange-600 hover:bg-orange-700 text-white px-6 py-2 rounded-full font-bold transition-all transform hover:scale-105">Login</button>
       </div>
     </div>
   </nav>
@@ -1073,7 +1074,7 @@ const DashboardNavbar: React.FC<{ onOpenModal: () => void; onOpenLogin: () => vo
 type ActiveSection = 'solucao' | 'beneficios' | 'faq' | 'calculadora' | 'como-funciona' | 'planos' | 'metodologia' | null;
 
 const SolucaoSection: React.FC = () => (
-  <div className="animate-in slide-in-from-right-8 fade-in duration-500">
+  <div className="animate-in slide-in-from-bottom-8 fade-in duration-500">
     <div className="text-left mb-12">
       <h2 className="text-4xl md:text-5xl font-black text-white uppercase tracking-tight mb-4">
         MAIS CONTROLE. MENOS CUSTO.
@@ -1107,7 +1108,7 @@ const SolucaoSection: React.FC = () => (
 );
 
 const BeneficiosSection: React.FC = () => (
-  <div className="animate-in slide-in-from-right-8 fade-in duration-500">
+  <div className="animate-in slide-in-from-bottom-8 fade-in duration-500">
      <div className="text-left mb-12">
       <h2 className="text-4xl md:text-5xl font-black text-white uppercase tracking-tight mb-4">
         DORES DO DELIVERY
@@ -1140,7 +1141,7 @@ const BeneficiosSection: React.FC = () => (
 );
 
 const ComoFuncionaSection: React.FC = () => (
-  <div className="animate-in slide-in-from-right-8 fade-in duration-500">
+  <div className="animate-in slide-in-from-bottom-8 fade-in duration-500">
     <div className="text-left mb-12">
       <h2 className="text-4xl md:text-5xl font-black text-white uppercase tracking-tight mb-4">
         COMO FUNCIONA
@@ -1166,7 +1167,7 @@ const ComoFuncionaSection: React.FC = () => (
 );
 
 const MetodologiaSection: React.FC = () => (
-  <div className="animate-in slide-in-from-right-8 fade-in duration-500 space-y-12">
+  <div className="animate-in slide-in-from-bottom-8 fade-in duration-500 space-y-12">
     <div className="text-left">
       <h1 className="text-4xl md:text-6xl font-black leading-tight text-white mb-6">
         Uma plataforma pensada para você <span className="text-orange-600">lucrar mais.</span>
@@ -1231,7 +1232,7 @@ const PlansSection: React.FC<{ onSelectFree: () => void; onSelectSoon: () => voi
   ];
 
   return (
-    <div className="animate-in slide-in-from-right-8 fade-in duration-500">
+    <div className="animate-in slide-in-from-bottom-8 fade-in duration-500">
       <div className="text-left mb-12">
         <h1 className="text-4xl md:text-5xl font-black mb-4 text-white">PLANOS</h1>
         <p className="text-xl text-gray-400">Transparência total e sem taxas ocultas.</p>
@@ -1333,10 +1334,10 @@ const App: React.FC = () => {
         <div className="absolute top-0 right-0 -mr-20 -mt-20 w-96 h-96 bg-orange-600/10 blur-[100px] rounded-full pointer-events-none"></div>
         <div className="absolute bottom-0 left-0 -ml-20 -mb-20 w-96 h-96 bg-orange-600/10 blur-[100px] rounded-full pointer-events-none"></div>
 
-        <div className={`w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col lg:flex-row gap-8 transition-all duration-700 ease-in-out`}>
+        <div className={`w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col gap-8 transition-all duration-700 ease-in-out`}>
           
           {/* Navigation Area */}
-          <div className={`transition-all duration-700 ease-in-out flex flex-col ${activeSection ? 'lg:w-1/4 w-full' : 'w-full items-center justify-center'}`}>
+          <div className="transition-all duration-700 ease-in-out flex flex-col w-full items-center justify-center z-20">
             
             {!activeSection && (
               <div className="text-center mb-16 animate-in fade-in zoom-in duration-700">
@@ -1349,21 +1350,31 @@ const App: React.FC = () => {
               </div>
             )}
 
-            <div className={`grid gap-4 w-full transition-all duration-700 ${activeSection ? 'grid-cols-2 lg:grid-cols-1' : 'grid-cols-2 sm:grid-cols-3 md:grid-cols-4 max-w-4xl mx-auto'}`}>
+            <div className={`transition-all duration-700 w-full ${activeSection ? 'flex flex-wrap justify-center gap-3 mb-8' : 'grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4 max-w-4xl mx-auto'}`}>
+              {activeSection && (
+                  <button
+                    onClick={() => setActiveSection(null)}
+                    className="flex flex-col items-center justify-center transition-all duration-300 p-4 rounded-[1.5rem] border-2 bg-gray-800/80 border-white/10 hover:border-white/30 text-gray-400 hover:text-white hover:scale-105 min-w-[100px]"
+                  >
+                    <div className="mb-2 scale-75 text-white"><ArrowLeft className="w-8 h-8" /></div>
+                    <span className="font-bold tracking-wide text-xs">Voltar</span>
+                  </button>
+              )}
               {navItems.map((item) => {
                 const isActive = activeSection === item.id;
                 return (
                   <button
                     key={item.id}
                     onClick={() => setActiveSection(isActive ? null : item.id as ActiveSection)}
-                    className={`flex flex-col items-center justify-center p-6 rounded-[2rem] border transition-all duration-300 
+                    className={`flex flex-col items-center justify-center transition-all duration-300 
+                      ${activeSection ? 'p-4 rounded-[1.5rem] border min-w-[110px]' : 'p-6 rounded-[2rem] border'}
                       ${isActive 
                         ? 'bg-orange-600 border-orange-500 shadow-xl shadow-orange-600/30 text-white scale-105 z-10' 
                         : 'bg-gray-800/80 border-white/5 hover:border-orange-500/50 hover:bg-gray-800 text-gray-400 hover:text-white hover:scale-105 hover:-translate-y-1'
                       }`}
                   >
-                    <div className="mb-4">{item.icon}</div>
-                    <span className="font-bold text-sm tracking-wide">{item.label}</span>
+                    <div className={activeSection ? 'mb-2 scale-75' : 'mb-4'}>{item.icon}</div>
+                    <span className={`font-bold tracking-wide ${activeSection ? 'text-xs' : 'text-sm'}`}>{item.label}</span>
                   </button>
                 )
               })}
@@ -1372,18 +1383,18 @@ const App: React.FC = () => {
 
           {/* Content Area */}
           {activeSection && (
-            <div className="w-full lg:w-3/4 animate-in slide-in-from-right-12 fade-in duration-500 bg-gray-800/30 backdrop-blur-md border border-white/5 p-6 lg:p-12 rounded-[3rem] shadow-2xl relative z-10 min-h-[60vh] flex flex-col justify-center overflow-y-auto custom-scrollbar max-h-[80vh]">
-              {activeSection === 'solucao' && <div className="w-full"><SolucaoSection /></div>}
-              {activeSection === 'beneficios' && <div className="w-full"><BeneficiosSection /></div>}
+            <div className="w-full animate-in slide-in-from-bottom-12 fade-in duration-500 bg-gray-800/30 backdrop-blur-md border border-white/5 p-6 lg:p-12 rounded-[3rem] shadow-2xl relative z-10 min-h-[50vh] flex flex-col justify-center">
+              {activeSection === 'solucao' && <div className="w-full max-w-5xl mx-auto"><SolucaoSection /></div>}
+              {activeSection === 'beneficios' && <div className="w-full max-w-5xl mx-auto"><BeneficiosSection /></div>}
               {activeSection === 'faq' && (
-                <div className="w-full bg-white rounded-[2.5rem] overflow-hidden -m-4 sm:-m-8 p-4 sm:p-8 shadow-xl">
+                <div className="w-full max-w-5xl mx-auto bg-white rounded-[2.5rem] overflow-hidden -m-4 sm:-m-8 p-4 sm:p-8 shadow-xl text-gray-900">
                   <FAQSection />
                 </div>
               )}
-              {activeSection === 'calculadora' && <div className="w-full"><EconomySimulator /></div>}
-              {activeSection === 'como-funciona' && <div className="w-full"><ComoFuncionaSection /></div>}
-              {activeSection === 'metodologia' && <div className="w-full"><MetodologiaSection /></div>}
-              {activeSection === 'planos' && <div className="w-full"><PlansSection onSelectFree={() => setIsModalOpen(true)} onSelectSoon={() => setIsWaitlistOpen(true)} /></div>}
+              {activeSection === 'calculadora' && <div className="w-full max-w-5xl mx-auto"><EconomySimulator /></div>}
+              {activeSection === 'como-funciona' && <div className="w-full max-w-5xl mx-auto"><ComoFuncionaSection /></div>}
+              {activeSection === 'metodologia' && <div className="w-full max-w-5xl mx-auto"><MetodologiaSection /></div>}
+              {activeSection === 'planos' && <div className="w-full max-w-5xl mx-auto"><PlansSection onSelectFree={() => setIsModalOpen(true)} onSelectSoon={() => setIsWaitlistOpen(true)} /></div>}
             </div>
           )}
 
