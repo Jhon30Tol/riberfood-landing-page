@@ -19,12 +19,7 @@ import {
   Building
 } from 'lucide-react';
 import { FAQItem, BenefitItem, OnboardingTenantPayload, SignupForm } from './types';
-import ownerImage from './images/Imagem_principal_mulher.JPEG';
-import disorganizedKitchen from './images/cozinha_desorganizada_2.jpeg';
-import dashboardImage from './images/dasboard_3.jpg';
-import conversionRate from './images/taxa_conversao_4.jpg';
-import orderScreen from './images/tela_pedidos_5.jpg';
-import employeePhoto from './images/foto_fun_6.png';
+
 import iconLogo from './images/Icon_sem_Fundo.png';
 import textLogo from './images/riberfood_logo-bg_null.png';
 
@@ -1028,63 +1023,34 @@ const EconomySimulator: React.FC = () => {
   }, [orders, ticket]);
 
   return (
-    <div className="bg-white rounded-[2.5rem] p-6 sm:p-8 shadow-2xl max-w-2xl mx-auto border border-gray-100 animate-in fade-in slide-in-from-bottom-8 duration-700">
-      <div className="text-center mb-8">
-        <h2 className="text-3xl font-black text-gray-900 flex items-center justify-center gap-3">
-          <span role="img" aria-label="money bags">💰</span> Simulador de Economia
-        </h2>
-      </div>
-
-      <div className="space-y-6 mb-8">
-        <div>
-          <label className="block text-sm font-bold text-gray-700 mb-2 text-left">
-            Quantos pedidos você faz por mês?
-          </label>
-          <input
-            type="text"
-            inputMode="numeric"
-            value={orders}
-            onChange={(e) => setOrders(e.target.value.replace(/\D/g, ''))}
-            className="w-full px-6 py-4 bg-gray-50 border-2 border-gray-100 rounded-2xl focus:border-orange-600 focus:outline-none text-xl font-bold text-gray-900 transition-all"
-            placeholder="Ex: 1000"
-          />
+    <div className="bg-white rounded-[2.5rem] p-6 sm:p-8 shadow-2xl max-w-4xl mx-auto border border-gray-100 animate-in fade-in slide-in-from-bottom-8 duration-700">
+      <div className="flex flex-col md:flex-row gap-8 items-center">
+        <div className="flex-1 w-full space-y-4">
+          <h2 className="text-2xl font-black text-gray-900 flex items-center gap-3 mb-6">
+            <span role="img" aria-label="money bags">💰</span> Simulador de Economia
+          </h2>
+          <div>
+            <label className="block text-sm font-bold text-gray-700 mb-2 text-left">Pedidos por mês</label>
+            <input type="text" inputMode="numeric" value={orders} onChange={(e) => setOrders(e.target.value.replace(/\D/g, ''))} className="w-full px-5 py-3 bg-gray-50 border-2 border-gray-100 rounded-xl focus:border-orange-600 focus:outline-none text-lg font-bold text-gray-900 transition-all" placeholder="Ex: 1000" />
+          </div>
+          <div>
+            <label className="block text-sm font-bold text-gray-700 mb-2 text-left">Ticket Médio (R$)</label>
+            <input type="text" inputMode="numeric" value={ticket} onChange={(e) => setTicket(formatCurrency(e.target.value))} className="w-full px-5 py-3 bg-gray-50 border-2 border-gray-100 rounded-xl focus:border-orange-600 focus:outline-none text-lg font-bold text-gray-900 transition-all" placeholder="Ex: 30,00" />
+          </div>
+          <button onClick={calculate} className="w-full bg-orange-700 hover:bg-orange-800 text-white py-4 rounded-xl font-black text-lg transition-all shadow-xl shadow-orange-700/20 transform active:scale-95 mt-4">
+            Calcular Economia
+          </button>
         </div>
-
-        <div>
-          <label className="block text-sm font-bold text-gray-700 mb-2 text-left">
-            Qual o ticket médio dos seus pedidos? (R$)
-          </label>
-          <input
-            type="text"
-            inputMode="numeric"
-            value={ticket}
-            onChange={(e) => setTicket(formatCurrency(e.target.value))}
-            className="w-full px-6 py-4 bg-gray-50 border-2 border-gray-100 rounded-2xl focus:border-orange-600 focus:outline-none text-xl font-bold text-gray-900 transition-all"
-            placeholder="Ex: 30,00"
-          />
+        <div className="flex-1 w-full">
+          <div className="bg-green-600 rounded-3xl p-8 text-white relative overflow-hidden h-full flex flex-col justify-center min-h-[250px] group">
+            <div className="absolute top-0 right-0 p-4 opacity-20 transform group-hover:scale-110 transition-transform"><PartyPopper className="w-20 h-20" /></div>
+            <p className="text-sm font-bold opacity-90 mb-2 uppercase tracking-wide flex items-center gap-2">🎉 Você economiza por mês:</p>
+            <div className="text-4xl md:text-5xl font-black mb-4 break-words">
+              {new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(savings)}
+            </div>
+            <p className="text-xs opacity-80 mt-2">*Em comparação com plataformas que cobram 20%.</p>
+          </div>
         </div>
-
-        <button
-          onClick={calculate}
-          className="w-full bg-orange-700 hover:bg-orange-800 text-white py-5 rounded-2xl font-black text-xl transition-all shadow-xl shadow-orange-700/20 transform active:scale-95"
-        >
-          Calcular Economia
-        </button>
-      </div>
-
-      <div className="bg-green-600 rounded-3xl p-6 sm:p-8 text-white relative overflow-hidden group">
-        <div className="absolute top-0 right-0 p-4 opacity-20 transform group-hover:scale-110 transition-transform">
-          <PartyPopper className="w-16 h-16" />
-        </div>
-        <p className="text-lg font-bold mb-2 opacity-90 flex items-center justify-center gap-2">
-          🎉 Você economiza por mês:
-        </p>
-        <div className="text-3xl sm:text-4xl md:text-5xl font-black mb-4 break-words">
-          {new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(savings)}
-        </div>
-        <p className="text-sm opacity-80 max-w-xs mx-auto">
-          em comparação com plataformas que cobram 20% de comissão sobre cada pedido
-        </p>
       </div>
     </div>
   );
@@ -1387,322 +1353,102 @@ const App: React.FC = () => {
       <SupportModal isOpen={isSupportOpen} onClose={() => setIsSupportOpen(false)} />
 
       {/* Hero Section */}
-      <section className="relative pt-32 pb-24 md:pt-48 md:pb-40 bg-gray-900 text-white overflow-hidden">
-        {/* Background blobs */}
-        <div className="absolute top-0 right-0 -mr-20 -mt-20 w-96 h-96 bg-orange-600/10 blur-[100px] rounded-full"></div>
-        <div className="absolute bottom-0 left-0 -ml-20 -mb-20 w-96 h-96 bg-orange-600/10 blur-[100px] rounded-full"></div>
+      <section className="relative pt-32 pb-24 md:pt-40 md:pb-32 bg-gray-900 text-white overflow-hidden flex flex-col justify-center min-h-[90vh]">
+        <div className="absolute top-0 right-0 -mr-20 -mt-20 w-96 h-96 bg-orange-600/20 blur-[120px] rounded-full"></div>
+        <div className="absolute bottom-0 left-0 -ml-20 -mb-20 w-96 h-96 bg-orange-600/20 blur-[120px] rounded-full"></div>
 
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-          <div className="grid md:grid-cols-2 gap-12 items-center">
-            <div className="text-center md:text-left">
-              <span className="inline-block px-4 py-1.5 mb-6 text-sm font-bold bg-orange-600/20 text-orange-400 rounded-full tracking-wider uppercase border border-orange-600/30">
-                CONTROLE TOTAL DO SEU DELIVERY
-              </span>
-              <h1 className="text-4xl md:text-6xl font-black leading-tight mb-6">
-                Tudo o que seu delivery precisa. <br />
-                <span className="text-orange-600">Sem comissão.</span><br />
-                Sem complicação.
-              </h1>
-              <p className="text-lg md:text-xl text-gray-400 mb-10 max-w-xl mx-auto md:mx-0">
-                Pare de perder pedidos, organize suas entregas e tenha tudo em um só lugar — livre de mensalidades.
-              </p>
-              <div className="flex flex-col sm:flex-row gap-4 justify-center md:justify-start">
-                <div className="flex flex-col items-center md:items-start gap-4">
-                  <button
-                    onClick={() => setView('plans')}
-                    className="bg-orange-600 hover:bg-orange-700 text-white px-10 py-5 rounded-full text-lg font-black transition-all transform hover:scale-105 active:scale-95 shadow-2xl shadow-orange-600/40 flex items-center justify-center gap-2"
-                  >
-                    Bora começar <Zap className="w-5 h-5 fill-current" />
-                  </button>
-                  <p className="text-orange-500 font-bold flex items-center gap-2">
-                    <CheckCircle className="w-5 h-5" /> Comece a usar imediatamente sem Custo
-                  </p>
-                </div>
-              </div>
-            </div>
-            <div className="relative">
-              <div className="relative z-10 rounded-2xl overflow-hidden shadow-2xl border border-white/10 group">
-                <img
-                  src={ownerImage}
-                  alt="Dono de restaurante satisfeito usando o sistema Riberfood"
-                  className="w-full transition-transform duration-700 group-hover:scale-110"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-gray-900 via-transparent to-transparent opacity-60"></div>
-              </div>
-              {/* Floating element removed */}
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Pain Points Section */}
-      <section className="py-24 bg-white relative">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-20">
-            <h2 className="text-3xl md:text-4xl font-black text-gray-900 mb-6">
-              O DELIVERY CRESCE… MAS A CONFUSÃO TAMBÉM?
-            </h2>
-            <p className="text-xl text-gray-600 max-w-2xl mx-auto">
-              Você só queria controle e simplicidade, mas a realidade tem sido estressante.
+        <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 text-center">
+          <span className="inline-block px-4 py-1.5 mb-8 text-sm font-bold bg-orange-600/10 text-orange-500 rounded-full tracking-widest uppercase border border-orange-600/20">
+            CONTROLE TOTAL DO SEU DELIVERY
+          </span>
+          <h1 className="text-5xl md:text-7xl lg:text-[5rem] font-black leading-[1.1] tracking-tight mb-8">
+            TUDO O QUE SEU DELIVERY PRECISA. <br />
+            <span className="text-orange-600">SEM COMISSÃO.</span>
+          </h1>
+          <p className="text-xl md:text-2xl text-gray-400 mb-12 max-w-3xl mx-auto">
+            Pare de perder pedidos, organize suas entregas e tenha tudo em um só lugar — livre de mensalidades.
+          </p>
+          <div className="flex flex-col items-center gap-6">
+            <button
+              onClick={() => setView('plans')}
+              className="bg-orange-600 hover:bg-orange-700 text-white px-12 py-5 rounded-full text-lg font-black transition-all transform hover:scale-105 active:scale-95 shadow-2xl shadow-orange-600/40 flex items-center gap-3"
+            >
+              Bora começar <Zap className="w-5 h-5 fill-current" />
+            </button>
+            <p className="text-orange-500 font-bold flex items-center gap-2 text-sm uppercase tracking-wide">
+              <CheckCircle className="w-4 h-4" /> Uso Imediato • Custo Zero
             </p>
           </div>
-
-          <div className="grid lg:grid-cols-2 gap-16 items-center">
-            <div className="order-2 lg:order-1">
-              <div className="relative rounded-2xl overflow-hidden shadow-2xl">
-                <img
-                  src={disorganizedKitchen}
-                  alt="Cozinha movimentada e desorganizada"
-                  className="w-full"
-                />
-                <div className="absolute inset-0 bg-red-900/10"></div>
-              </div>
-            </div>
-            <div className="order-1 lg:order-2 space-y-8">
-              <div className="space-y-4">
-                <h3 className="text-2xl font-bold text-gray-900">Você já passou por isso:</h3>
-                <ul className="space-y-4">
-                  {[
-                    "Pedidos chegando de vários lados",
-                    "Horário de pico e alguém diz: 'Esse pedido já saiu?'",
-                    "Taxas altas e no fim do mês quase não sobra lucro"
-                  ].map((item, i) => (
-                    <li key={i} className="flex items-start gap-3">
-                      <div className="mt-1 bg-red-100 p-1 rounded-full">
-                        <X className="w-4 h-4 text-red-600" />
-                      </div>
-                      <span className="text-gray-700 text-lg">{item}</span>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-              <div className="bg-orange-50 p-8 rounded-3xl border border-orange-100">
-                <h3 className="text-xl font-bold text-orange-900 mb-6">Muitos donos dizem:</h3>
-                <div className="space-y-6">
-                  {[
-                    "Pago taxa demais e quase não sobra lucro",
-                    "É tudo separado: pedido de um lado, entrega de outro",
-                    "O app é confuso, meu funcionário se perde"
-                  ].map((quote, i) => (
-                    <div key={i} className="flex items-center gap-4">
-                      <div className="h-2 w-2 bg-orange-600 rounded-full flex-shrink-0"></div>
-                      <p className="text-gray-800 italic font-medium">"{quote}"</p>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            </div>
-          </div>
         </div>
       </section>
 
-      {/* Solution Section */}
-      <section id="solucao" className="py-24 bg-gray-50 overflow-hidden">
+      {/* Como Funciona & Benefícios (Synthesized) */}
+      <section id="solucao" className="py-24 bg-white relative">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid lg:grid-cols-2 gap-16 items-center">
-            <div>
-              <h2 className="text-4xl md:text-5xl font-black text-gray-900 leading-tight mb-8">
-                O RIBERFOOD ORGANIZA SEU DELIVERY EM UM SÓ LUGAR
-              </h2>
-              <p className="text-xl text-gray-600 mb-8 leading-relaxed">
-                O Riberfood é uma plataforma completa para lanchonetes, marmitarias, bares e restaurantes que querem vender por delivery sem depender de comissões abusivas.
-              </p>
-
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-10">
-                {["Pedidos", "Entregas", "Operação"].map((item, i) => (
-                  <div key={i} className="bg-white p-4 rounded-2xl shadow-sm border border-gray-100 text-center flex flex-col items-center gap-2 group hover:border-orange-500 transition-colors">
-                    <div className="p-3 bg-orange-100 rounded-xl group-hover:bg-orange-600 transition-colors">
-                      {i === 0 ? <Smartphone className="w-6 h-6 text-orange-600 group-hover:text-white" /> :
-                        i === 1 ? <Truck className="w-6 h-6 text-orange-600 group-hover:text-white" /> :
-                          <Monitor className="w-6 h-6 text-orange-600 group-hover:text-white" />}
-                    </div>
-                    <span className="font-bold text-gray-900">{item}</span>
-                  </div>
-                ))}
-              </div>
-
-              <div className="space-y-4 mb-10">
-                <div className="flex items-center gap-3">
-                  <CheckCircle className="w-6 h-6 text-green-500" />
-                  <span className="text-lg text-gray-700 font-medium">Tudo em uma única plataforma</span>
-                </div>
-                <div className="flex items-center gap-3">
-                  <CheckCircle className="w-6 h-6 text-green-500" />
-                  <span className="text-lg text-gray-700 font-medium">Livre de mensalidades e taxas</span>
-                </div>
-                <div className="flex items-center gap-3">
-                  <CheckCircle className="w-6 h-6 text-green-500" />
-                  <span className="text-lg text-gray-700 font-medium">Suporte humano de verdade</span>
-                </div>
-              </div>
-
-              <div className="bg-blue-50 border-l-4 border-blue-500 p-6 rounded-r-2xl">
-                <p className="text-blue-900 font-bold">
-                  💡 E não se preocupe: Você recebe um treinamento básico para começar com segurança.
-                </p>
-              </div>
-            </div>
-            <div className="relative">
-              <div className="relative z-10 rounded-2xl overflow-hidden shadow-2xl border-4 border-white">
-                {/* Simulated Dashboard Screenshot Placeholder */}
-                <div className="bg-gray-900 p-4 border-b border-white/10 flex gap-2">
-                  <div className="w-3 h-3 rounded-full bg-red-500"></div>
-                  <div className="w-3 h-3 rounded-full bg-yellow-500"></div>
-                  <div className="w-3 h-3 rounded-full bg-green-500"></div>
-                </div>
-                <img
-                  src={dashboardImage}
-                  alt="Painel de controle Riberfood"
-                  className="w-full"
-                />
-              </div>
-              <div className="absolute -z-10 -bottom-10 -right-10 w-full h-full bg-orange-600/10 rounded-3xl blur-2xl"></div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Main Benefits Section */}
-      <section id="beneficios" className="py-24 bg-white">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-20">
-            <h2 className="text-3xl md:text-5xl font-black text-gray-900 mb-4 uppercase">MAIS CONTROLE, MENOS CUSTO</h2>
-            <p className="text-xl text-orange-600 font-bold tracking-tight">MAIS TRANQUILIDADE PARA O SEU NEGÓCIO</p>
+          <div className="text-center mb-16">
+            <h2 className="text-4xl md:text-5xl font-black text-gray-900 uppercase tracking-tight mb-4">
+              MAIS CONTROLE. MENOS CUSTO.
+            </h2>
+            <p className="text-xl text-gray-500">O Riberfood organiza seu delivery em um só lugar.</p>
           </div>
 
           <div className="grid md:grid-cols-3 gap-8">
-            {/* Benefit 1 */}
-            <div className="group bg-gray-50 rounded-3xl overflow-hidden border border-gray-100 hover:border-orange-500 transition-all hover:shadow-2xl hover:-translate-y-2">
-              <div className="aspect-video relative overflow-hidden bg-gray-200">
-                <img
-                  src={conversionRate}
-                  alt="Tela de pedidos Riberfood"
-                  className="w-full h-full object-contain p-2 transition-transform group-hover:scale-105"
-                />
-                <div className="absolute inset-0 bg-orange-600/10 group-hover:bg-transparent transition-colors"></div>
+            <div className="bg-gray-50 p-10 rounded-[2rem] border border-gray-100 hover:border-orange-500 transition-colors">
+              <div className="w-14 h-14 bg-orange-100 text-orange-600 rounded-2xl flex items-center justify-center mb-6">
+                <Smartphone className="w-7 h-7" />
               </div>
-              <div className="p-8">
-                <h3 className="text-2xl font-black text-gray-900 mb-4 flex items-center gap-2">
-                  <Monitor className="w-6 h-6 text-orange-600" /> Tudo em um só lugar
-                </h3>
-                <p className="text-gray-600 leading-relaxed">
-                  Chega de sistemas separados. Pedidos e entregas organizados em uma única tela para sua equipe não se perder.
-                </p>
+              <h3 className="text-2xl font-black text-gray-900 mb-4">Pedidos Centralizados</h3>
+              <p className="text-gray-600 text-lg">
+                Chega de sistemas separados. Pedidos e entregas organizados em uma única tela para sua equipe não se perder.
+              </p>
+            </div>
+            
+            <div className="bg-gray-50 p-10 rounded-[2rem] border border-gray-100 hover:border-orange-500 transition-colors">
+              <div className="w-14 h-14 bg-orange-100 text-orange-600 rounded-2xl flex items-center justify-center mb-6">
+                <DollarSign className="w-7 h-7" />
               </div>
+              <h3 className="text-2xl font-black text-gray-900 mb-4">Lucro 100% Seu</h3>
+              <p className="text-gray-600 text-lg">
+                Sem comissão por pedido. Você vende mais e não paga taxas abusivas por cada lanche ou marmita vendida.
+              </p>
             </div>
 
-            {/* Benefit 2 */}
-            <div className="group bg-gray-50 rounded-3xl overflow-hidden border border-gray-100 hover:border-orange-500 transition-all hover:shadow-2xl hover:-translate-y-2">
-              <div className="aspect-video relative overflow-hidden bg-gray-200">
-                <img
-                  src={orderScreen}
-                  alt="Taxa de conversão e lucro"
-                  className="w-full h-full object-contain p-2 transition-transform group-hover:scale-105"
-                />
-                <div className="absolute inset-0 bg-orange-600/10 group-hover:bg-transparent transition-colors"></div>
+            <div className="bg-gray-50 p-10 rounded-[2rem] border border-gray-100 hover:border-orange-500 transition-colors">
+              <div className="w-14 h-14 bg-orange-100 text-orange-600 rounded-2xl flex items-center justify-center mb-6">
+                <Zap className="w-7 h-7" />
               </div>
-              <div className="p-8">
-                <h3 className="text-2xl font-black text-gray-900 mb-4 flex items-center gap-2">
-                  <DollarSign className="w-6 h-6 text-orange-600" /> Sem comissão por pedido
-                </h3>
-                <p className="text-gray-600 leading-relaxed">
-                  Você vende mais e o lucro continua sendo 100% seu. Nada de taxas abusivas por cada lanche ou marmita vendida.
-                </p>
-              </div>
-            </div>
-
-            {/* Benefit 3 */}
-            <div className="group bg-gray-50 rounded-3xl overflow-hidden border border-gray-100 hover:border-orange-500 transition-all hover:shadow-2xl hover:-translate-y-2">
-              <div className="aspect-video relative overflow-hidden bg-gray-200">
-                <img
-                  src={employeePhoto}
-                  alt="Funcionário usando o sistema"
-                  className="w-full h-full object-cover transition-transform group-hover:scale-110"
-                />
-                <div className="absolute inset-0 bg-orange-600/10 group-hover:bg-transparent transition-colors"></div>
-              </div>
-              <div className="p-8">
-                <h3 className="text-2xl font-black text-gray-900 mb-4 flex items-center gap-2">
-                  <Zap className="w-6 h-6 text-orange-600" /> Simples de usar, de verdade
-                </h3>
-                <p className="text-gray-600 leading-relaxed">
-                  “Quero algo simples, que qualquer um saiba usar.” É exatamente isso que entregamos. Design focado na velocidade.
-                </p>
-              </div>
+              <h3 className="text-2xl font-black text-gray-900 mb-4">Simples e Direto</h3>
+              <p className="text-gray-600 text-lg">
+                Design focado na velocidade. Treinamento básico incluso para que qualquer um da sua equipe saiba usar.
+              </p>
             </div>
           </div>
         </div>
       </section>
 
-      {/* Target Audience Section */}
-      <section className="py-24 bg-gray-900 text-white">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid lg:grid-cols-2 gap-16 items-center">
-            <div>
-              <h2 className="text-3xl md:text-5xl font-black leading-tight mb-8">
-                UMA PLATAFORMA FEITA PARA QUEM VIVE O DIA A DIA DO DELIVERY
-              </h2>
-              <p className="text-xl text-gray-400 mb-10 leading-relaxed">
-                O Riberfood nasce com um objetivo claro: Ajudar pequenos e médios negócios a crescer sem aumentar os custos operacionais.
-              </p>
-              <div className="space-y-6">
-                {[
-                  "Parar de depender dos aplicativos grandes",
-                  "Passar uma imagem mais profissional para o cliente",
-                  "Crescer sem bagunçar a operação interna"
-                ].map((item, i) => (
-                  <div key={i} className="flex items-center gap-4 group">
-                    <div className="bg-orange-600/20 p-2 rounded-lg group-hover:bg-orange-600 transition-colors">
-                      <Check className="w-6 h-6 text-orange-600 group-hover:text-white" />
-                    </div>
-                    <span className="text-xl font-bold italic">"{item}"</span>
-                  </div>
-                ))}
-              </div>
-              <p className="mt-12 text-2xl font-black text-orange-500">Você está no lugar certo.</p>
-            </div>
-            <div className="relative">
-              <div className="relative rounded-2xl overflow-hidden shadow-2xl">
-                <img
-                  src="https://images.unsplash.com/photo-1512152272829-e3139592d56f?auto=format&fit=crop&q=80&w=1200"
-                  alt="Restaurante moderno e organizado"
-                  className="w-full"
-                />
-                <div className="absolute inset-0 bg-orange-900/10"></div>
-              </div>
-              {/* Proof badges */}
-              <div className="absolute -top-6 -right-6 bg-white text-gray-900 px-6 py-4 rounded-2xl shadow-xl border border-gray-100 font-black flex flex-col items-center">
-                <span className="text-orange-600 text-3xl">100%</span>
-                <span className="text-xs uppercase tracking-widest">Nacional</span>
-              </div>
-            </div>
-          </div>
+      {/* Simulator - Condensed */}
+      <section id="simulador" className="py-24 bg-gray-50">
+        <div className="max-w-7xl mx-auto px-4">
+          <EconomySimulator />
         </div>
       </section>
 
       {/* Final CTA Section */}
-      <section className="py-24 bg-white">
-        <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 text-center bg-gray-50 rounded-[3rem] py-20 border border-gray-200 shadow-xl overflow-hidden relative">
-          <div className="absolute top-0 right-0 w-64 h-64 bg-orange-600/5 blur-3xl -mr-32 -mt-32"></div>
-          <div className="absolute bottom-0 left-0 w-64 h-64 bg-orange-600/5 blur-3xl -ml-32 -mb-32"></div>
-
-          <h2 className="text-3xl md:text-5xl font-black text-gray-900 mb-8 leading-tight relative z-10">
-            PRONTO PARA ORGANIZAR <br /> SEU DELIVERY?
+      <section className="py-32 bg-gray-900 text-white relative text-center">
+        <div className="absolute top-0 right-0 w-full h-full bg-orange-600/5 blur-[100px]"></div>
+        <div className="max-w-4xl mx-auto px-4 relative z-10">
+          <h2 className="text-4xl md:text-6xl font-black mb-8 leading-tight uppercase">
+            PRONTO PARA ORGANIZAR SEU DELIVERY?
           </h2>
-          <p className="text-xl text-gray-600 mb-12 max-w-2xl mx-auto relative z-10">
-            Comece agora e veja como é possível ter controle, simplicidade e livre de mensalidades em um só lugar. O lucro das suas vendas pertence a você.
+          <p className="text-2xl text-gray-400 mb-12">
+            Ajudamos pequenos e médios negócios a crescer sem aumentar os custos operacionais.
           </p>
-          <div className="space-y-4 relative z-10">
-            <button
-              onClick={() => setView('plans')}
-              className="bg-orange-600 hover:bg-orange-700 text-white px-12 py-6 rounded-full text-xl font-black transition-all transform hover:scale-105 active:scale-95 shadow-2xl shadow-orange-600/40 flex items-center justify-center gap-3 mx-auto"
-            >
-              Quero ver como funciona <Truck className="w-6 h-6" />
-            </button>
-            <p className="text-orange-600 font-bold flex items-center justify-center gap-2">
-              <CheckCircle className="w-5 h-5" /> Comece a usar imediatamente sem Custo
-            </p>
-          </div>
+          <button
+            onClick={() => setView('plans')}
+            className="bg-orange-600 hover:bg-orange-700 text-white px-12 py-6 rounded-full text-xl font-black transition-all transform hover:scale-105 active:scale-95 shadow-2xl shadow-orange-600/40 inline-flex items-center justify-center gap-3"
+          >
+            Começar Gratuitamente <Truck className="w-6 h-6" />
+          </button>
         </div>
       </section>
 
