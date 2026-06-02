@@ -1,5 +1,11 @@
 // Build trigger: v2026-03-03-15-06 - feature updates
 import React, { useState, useEffect } from 'react';
+import { HashRouter, Routes, Route } from 'react-router-dom';
+import Home from './pages/Home';
+import Funcionalidades from './pages/Funcionalidades';
+import Calcule from './pages/Calcule';
+import Planos from './pages/Planos';
+
 import {
   ArrowLeft,
   CheckCircle,
@@ -185,9 +191,10 @@ const Navbar: React.FC<{ onOpenModal: () => void; onOpenLogin: () => void }> = (
           </div>
           <div className="hidden md:block">
             <div className="ml-10 flex items-baseline space-x-8">
-              <a href="#solucao" className="text-gray-300 hover:text-white px-3 py-2 rounded-md text-sm font-medium transition-colors">Solução</a>
-              <a href="#beneficios" className="text-gray-300 hover:text-white px-3 py-2 rounded-md text-sm font-medium transition-colors">Benefícios</a>
-              <a href="#faq" className="text-gray-300 hover:text-white px-3 py-2 rounded-md text-sm font-medium transition-colors">FAQ</a>
+              <a href="#/" className="text-gray-300 hover:text-white px-3 py-2 rounded-md text-sm font-medium transition-colors">Início</a>
+              <a href="#/funcionalidades" className="text-gray-300 hover:text-white px-3 py-2 rounded-md text-sm font-medium transition-colors">Funcionalidades</a>
+              <a href="#/calcule" className="text-gray-300 hover:text-white px-3 py-2 rounded-md text-sm font-medium transition-colors">Calcule</a>
+              <a href="#/planos" className="text-gray-300 hover:text-white px-3 py-2 rounded-md text-sm font-medium transition-colors">Planos</a>
               <button
                 onClick={onOpenLogin}
                 className="bg-orange-600 hover:bg-orange-700 text-white px-6 py-2.5 rounded-full text-sm font-black transition-all shadow-lg shadow-orange-600/30 flex items-center gap-2 transform hover:scale-105 active:scale-95"
@@ -212,9 +219,10 @@ const Navbar: React.FC<{ onOpenModal: () => void; onOpenLogin: () => void }> = (
       {isOpen && (
         <div className="md:hidden bg-gray-900 border-b border-white/10 animate-in fade-in slide-in-from-top-4 duration-300">
           <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3">
-            <a href="#solucao" onClick={() => setIsOpen(false)} className="text-gray-300 block px-3 py-2 rounded-md text-base font-medium">Solução</a>
-            <a href="#beneficios" onClick={() => setIsOpen(false)} className="text-gray-300 block px-3 py-2 rounded-md text-base font-medium">Benefícios</a>
-            <a href="#faq" onClick={() => setIsOpen(false)} className="text-gray-300 block px-3 py-2 rounded-md text-base font-medium">FAQ</a>
+            <a href="#/" onClick={() => setIsOpen(false)} className="text-gray-300 block px-3 py-2 rounded-md text-base font-medium">Início</a>
+            <a href="#/funcionalidades" onClick={() => setIsOpen(false)} className="text-gray-300 block px-3 py-2 rounded-md text-base font-medium">Funcionalidades</a>
+            <a href="#/calcule" onClick={() => setIsOpen(false)} className="text-gray-300 block px-3 py-2 rounded-md text-base font-medium">Calcule</a>
+            <a href="#/planos" onClick={() => setIsOpen(false)} className="text-gray-300 block px-3 py-2 rounded-md text-base font-medium">Planos</a>
             <button
               onClick={() => {
                 setIsOpen(false);
@@ -1304,122 +1312,56 @@ const App: React.FC = () => {
   const [isWaitlistOpen, setIsWaitlistOpen] = useState(false);
   const [isLoginOpen, setIsLoginOpen] = useState(false);
   const [isSupportOpen, setIsSupportOpen] = useState(false);
-  const [activeSection, setActiveSection] = useState<ActiveSection>(null);
 
   useEffect(() => {
     stripLegacyLoginHash();
     setIsLoginOpen(false);
   }, []);
 
-  const navItems = [
-    { id: 'solucao', label: 'Solução', icon: <Monitor className="w-8 h-8" /> },
-    { id: 'beneficios', label: 'Benefícios', icon: <TrendingUp className="w-8 h-8" /> },
-    { id: 'faq', label: 'FAQ / Perguntas', icon: <CheckCircle className="w-8 h-8" /> },
-    { id: 'calculadora', label: 'Calculadora', icon: <DollarSign className="w-8 h-8" /> },
-    { id: 'como-funciona', label: 'Como Funciona', icon: <Smartphone className="w-8 h-8" /> },
-    { id: 'planos', label: 'Planos', icon: <Truck className="w-8 h-8" /> },
-    { id: 'metodologia', label: 'Metodologia', icon: <Zap className="w-8 h-8" /> },
-  ];
-
   return (
-    <div className="min-h-screen bg-gray-900 text-white flex flex-col font-sans overflow-x-hidden">
-      <DashboardNavbar onOpenModal={() => setActiveSection('planos')} onOpenLogin={() => setIsLoginOpen(true)} />
-      
-      <TrialModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} />
-      <WaitlistModal isOpen={isWaitlistOpen} onClose={() => setIsWaitlistOpen(false)} />
-      <LoginModal isOpen={isLoginOpen} onClose={() => setIsLoginOpen(false)} />
-      <SupportModal isOpen={isSupportOpen} onClose={() => setIsSupportOpen(false)} />
+    <HashRouter>
+      <div className="min-h-screen bg-gray-900 text-white flex flex-col font-sans overflow-x-hidden">
+        {/* We use an existing navigation component, links might need adjustment to Route paths */}
+        <Navbar onOpenModal={() => setIsModalOpen(true)} onOpenLogin={() => setIsLoginOpen(true)} />
+        
+        <TrialModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} />
+        <WaitlistModal isOpen={isWaitlistOpen} onClose={() => setIsWaitlistOpen(false)} />
+        <LoginModal isOpen={isLoginOpen} onClose={() => setIsLoginOpen(false)} />
+        <SupportModal isOpen={isSupportOpen} onClose={() => setIsSupportOpen(false)} />
 
-      <main className="flex-1 flex flex-col pt-32 pb-12 relative items-center justify-center min-h-[80vh]">
-        <div className="absolute top-0 right-0 -mr-20 -mt-20 w-96 h-96 bg-orange-600/10 blur-[100px] rounded-full pointer-events-none"></div>
-        <div className="absolute bottom-0 left-0 -ml-20 -mb-20 w-96 h-96 bg-orange-600/10 blur-[100px] rounded-full pointer-events-none"></div>
+        <main className="flex-1 flex flex-col pt-32 pb-12 relative min-h-[80vh]">
+          <div className="absolute top-0 right-0 -mr-20 -mt-20 w-96 h-96 bg-orange-600/10 blur-[100px] rounded-full pointer-events-none z-0"></div>
+          <div className="absolute bottom-0 left-0 -ml-20 -mb-20 w-96 h-96 bg-orange-600/10 blur-[100px] rounded-full pointer-events-none z-0"></div>
 
-        <div className={`w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col gap-8 transition-all duration-700 ease-in-out`}>
-          
-          {/* Navigation Area */}
-          <div className="transition-all duration-700 ease-in-out flex flex-col w-full items-center justify-center z-20">
-            
-            {!activeSection && (
-              <div className="text-center mb-16 animate-in fade-in zoom-in duration-700">
-                <span className="inline-block px-4 py-1.5 mb-6 text-sm font-bold bg-orange-600/20 text-orange-400 rounded-full tracking-wider uppercase border border-orange-600/30">
-                  SELECIONE UMA OPÇÃO
-                </span>
-                <h1 className="text-4xl md:text-6xl font-black leading-tight mb-4">
-                  O que você quer ver <span className="text-orange-600">hoje?</span>
-                </h1>
+          <div className="relative z-10">
+            <Routes>
+              <Route path="/" element={<Home onOpenTrial={() => setIsModalOpen(true)} />} />
+              <Route path="/funcionalidades" element={<Funcionalidades onOpenTrial={() => setIsModalOpen(true)} />} />
+              <Route path="/calcule" element={<Calcule onOpenTrial={() => setIsModalOpen(true)} />} />
+              <Route path="/planos" element={<Planos onOpenTrial={() => setIsModalOpen(true)} onOpenWaitlist={() => setIsWaitlistOpen(true)} />} />
+            </Routes>
+          </div>
+        </main>
+
+        <footer className="bg-gray-900 text-gray-400 py-12 border-t border-white/5 mt-auto relative z-10">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row justify-between items-center gap-8">
+            <div className="flex items-center gap-2">
+              <div className="p-1 rounded-md">
+                <img src={iconLogo} alt="Riberfood Icon" className="w-8 h-8 object-contain" />
               </div>
-            )}
-
-            <div className={`transition-all duration-700 w-full ${activeSection ? 'flex flex-wrap justify-center gap-3 mb-8' : 'grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4 max-w-4xl mx-auto'}`}>
-              {activeSection && (
-                  <button
-                    onClick={() => setActiveSection(null)}
-                    className="flex flex-col items-center justify-center transition-all duration-300 p-4 rounded-[1.5rem] border-2 bg-gray-800/80 border-white/10 hover:border-white/30 text-gray-400 hover:text-white hover:scale-105 min-w-[100px]"
-                  >
-                    <div className="mb-2 scale-75 text-white"><ArrowLeft className="w-8 h-8" /></div>
-                    <span className="font-bold tracking-wide text-xs">Voltar</span>
-                  </button>
-              )}
-              {navItems.map((item) => {
-                const isActive = activeSection === item.id;
-                return (
-                  <button
-                    key={item.id}
-                    onClick={() => setActiveSection(isActive ? null : item.id as ActiveSection)}
-                    className={`flex flex-col items-center justify-center transition-all duration-300 
-                      ${activeSection ? 'p-4 rounded-[1.5rem] border min-w-[110px]' : 'p-6 rounded-[2rem] border'}
-                      ${isActive 
-                        ? 'bg-orange-600 border-orange-500 shadow-xl shadow-orange-600/30 text-white scale-105 z-10' 
-                        : 'bg-gray-800/80 border-white/5 hover:border-orange-500/50 hover:bg-gray-800 text-gray-400 hover:text-white hover:scale-105 hover:-translate-y-1'
-                      }`}
-                  >
-                    <div className={activeSection ? 'mb-2 scale-75' : 'mb-4'}>{item.icon}</div>
-                    <span className={`font-bold tracking-wide ${activeSection ? 'text-xs' : 'text-sm'}`}>{item.label}</span>
-                  </button>
-                )
-              })}
+              <img src={textLogo} alt="RIBERFOOD" className="h-6 object-contain filter brightness-0 invert opacity-80" />
+            </div>
+            <div className="flex gap-8 text-sm font-medium">
+              <button onClick={() => setIsSupportOpen(true)} className="hover:text-white transition-colors">Suporte</button>
+              <a href="https://lojista.riberfood.com" className="hover:text-white transition-colors">Área do Lojista</a>
+            </div>
+            <div className="text-sm">
+              © {new Date().getFullYear()} Safe Trust Tecnology. Todos os direitos reservados. Ribeirão Preto - SP.
             </div>
           </div>
-
-          {/* Content Area */}
-          {activeSection && (
-            <div className="w-full animate-in slide-in-from-bottom-12 fade-in duration-500 bg-gray-800/30 backdrop-blur-md border border-white/5 p-6 lg:p-12 rounded-[3rem] shadow-2xl relative z-10 min-h-[50vh] flex flex-col justify-center">
-              {activeSection === 'solucao' && <div className="w-full max-w-5xl mx-auto"><SolucaoSection /></div>}
-              {activeSection === 'beneficios' && <div className="w-full max-w-5xl mx-auto"><BeneficiosSection /></div>}
-              {activeSection === 'faq' && (
-                <div className="w-full max-w-5xl mx-auto bg-white rounded-[2.5rem] overflow-hidden -m-4 sm:-m-8 p-4 sm:p-8 shadow-xl text-gray-900">
-                  <FAQSection />
-                </div>
-              )}
-              {activeSection === 'calculadora' && <div className="w-full max-w-5xl mx-auto"><EconomySimulator /></div>}
-              {activeSection === 'como-funciona' && <div className="w-full max-w-5xl mx-auto"><ComoFuncionaSection /></div>}
-              {activeSection === 'metodologia' && <div className="w-full max-w-5xl mx-auto"><MetodologiaSection /></div>}
-              {activeSection === 'planos' && <div className="w-full max-w-5xl mx-auto"><PlansSection onSelectFree={() => setIsModalOpen(true)} onSelectSoon={() => setIsWaitlistOpen(true)} /></div>}
-            </div>
-          )}
-
-        </div>
-      </main>
-
-      {/* Footer */}
-      <footer className="bg-gray-900 text-gray-400 py-12 border-t border-white/5 mt-auto relative z-10">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row justify-between items-center gap-8">
-          <div className="flex items-center gap-2">
-            <div className="p-1 rounded-md">
-              <img src={iconLogo} alt="Riberfood Icon" className="w-8 h-8 object-contain" />
-            </div>
-            <img src={textLogo} alt="RIBERFOOD" className="h-6 object-contain filter brightness-0 invert opacity-80" />
-          </div>
-          <div className="flex gap-8 text-sm font-medium">
-            <button onClick={() => setIsSupportOpen(true)} className="hover:text-white transition-colors">Suporte</button>
-            <a href="https://lojista.riberfood.com" className="hover:text-white transition-colors">Área do Lojista</a>
-          </div>
-          <div className="text-sm">
-            © {new Date().getFullYear()} Safe Trust Tecnology. Todos os direitos reservados. Ribeirão Preto - SP.
-          </div>
-        </div>
-      </footer>
-    </div>
+        </footer>
+      </div>
+    </HashRouter>
   );
 };
 
