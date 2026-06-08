@@ -1,6 +1,13 @@
 // Build trigger: v2026-03-03-15-06 - feature updates
 import React, { useState, useEffect } from 'react';
+import { HashRouter, Routes, Route } from 'react-router-dom';
+import Home from './pages/Home';
+import Funcionalidades from './pages/Funcionalidades';
+import Calcule from './pages/Calcule';
+import Planos from './pages/Planos';
+
 import {
+  ArrowLeft,
   CheckCircle,
   ChevronDown,
   ChefHat,
@@ -19,12 +26,7 @@ import {
   Building
 } from 'lucide-react';
 import { FAQItem, BenefitItem, OnboardingTenantPayload, SignupForm } from './types';
-import ownerImage from './images/Imagem_principal_mulher.JPEG';
-import disorganizedKitchen from './images/cozinha_desorganizada_2.jpeg';
-import dashboardImage from './images/dasboard_3.jpg';
-import conversionRate from './images/taxa_conversao_4.jpg';
-import orderScreen from './images/tela_pedidos_5.jpg';
-import employeePhoto from './images/foto_fun_6.png';
+
 import iconLogo from './images/Icon_sem_Fundo.png';
 import textLogo from './images/riberfood_logo-bg_null.png';
 
@@ -189,9 +191,10 @@ const Navbar: React.FC<{ onOpenModal: () => void; onOpenLogin: () => void }> = (
           </div>
           <div className="hidden md:block">
             <div className="ml-10 flex items-baseline space-x-8">
-              <a href="#solucao" className="text-gray-300 hover:text-white px-3 py-2 rounded-md text-sm font-medium transition-colors">Solução</a>
-              <a href="#beneficios" className="text-gray-300 hover:text-white px-3 py-2 rounded-md text-sm font-medium transition-colors">Benefícios</a>
-              <a href="#faq" className="text-gray-300 hover:text-white px-3 py-2 rounded-md text-sm font-medium transition-colors">FAQ</a>
+              <a href="#/" className="text-gray-300 hover:text-white px-3 py-2 rounded-md text-sm font-medium transition-colors">Início</a>
+              <a href="#/funcionalidades" className="text-gray-300 hover:text-white px-3 py-2 rounded-md text-sm font-medium transition-colors">Funcionalidades</a>
+              <a href="#/calcule" className="text-gray-300 hover:text-white px-3 py-2 rounded-md text-sm font-medium transition-colors">Calcule</a>
+              <a href="#/planos" className="text-gray-300 hover:text-white px-3 py-2 rounded-md text-sm font-medium transition-colors">Planos</a>
               <button
                 onClick={onOpenLogin}
                 className="bg-orange-600 hover:bg-orange-700 text-white px-6 py-2.5 rounded-full text-sm font-black transition-all shadow-lg shadow-orange-600/30 flex items-center gap-2 transform hover:scale-105 active:scale-95"
@@ -216,9 +219,10 @@ const Navbar: React.FC<{ onOpenModal: () => void; onOpenLogin: () => void }> = (
       {isOpen && (
         <div className="md:hidden bg-gray-900 border-b border-white/10 animate-in fade-in slide-in-from-top-4 duration-300">
           <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3">
-            <a href="#solucao" onClick={() => setIsOpen(false)} className="text-gray-300 block px-3 py-2 rounded-md text-base font-medium">Solução</a>
-            <a href="#beneficios" onClick={() => setIsOpen(false)} className="text-gray-300 block px-3 py-2 rounded-md text-base font-medium">Benefícios</a>
-            <a href="#faq" onClick={() => setIsOpen(false)} className="text-gray-300 block px-3 py-2 rounded-md text-base font-medium">FAQ</a>
+            <a href="#/" onClick={() => setIsOpen(false)} className="text-gray-300 block px-3 py-2 rounded-md text-base font-medium">Início</a>
+            <a href="#/funcionalidades" onClick={() => setIsOpen(false)} className="text-gray-300 block px-3 py-2 rounded-md text-base font-medium">Funcionalidades</a>
+            <a href="#/calcule" onClick={() => setIsOpen(false)} className="text-gray-300 block px-3 py-2 rounded-md text-base font-medium">Calcule</a>
+            <a href="#/planos" onClick={() => setIsOpen(false)} className="text-gray-300 block px-3 py-2 rounded-md text-base font-medium">Planos</a>
             <button
               onClick={() => {
                 setIsOpen(false);
@@ -1028,320 +1032,277 @@ const EconomySimulator: React.FC = () => {
   }, [orders, ticket]);
 
   return (
-    <div className="bg-white rounded-[2.5rem] p-6 sm:p-8 shadow-2xl max-w-2xl mx-auto border border-gray-100 animate-in fade-in slide-in-from-bottom-8 duration-700">
-      <div className="text-center mb-8">
-        <h2 className="text-3xl font-black text-gray-900 flex items-center justify-center gap-3">
-          <span role="img" aria-label="money bags">💰</span> Simulador de Economia
-        </h2>
-      </div>
-
-      <div className="space-y-6 mb-8">
-        <div>
-          <label className="block text-sm font-bold text-gray-700 mb-2 text-left">
-            Quantos pedidos você faz por mês?
-          </label>
-          <input
-            type="text"
-            inputMode="numeric"
-            value={orders}
-            onChange={(e) => setOrders(e.target.value.replace(/\D/g, ''))}
-            className="w-full px-6 py-4 bg-gray-50 border-2 border-gray-100 rounded-2xl focus:border-orange-600 focus:outline-none text-xl font-bold text-gray-900 transition-all"
-            placeholder="Ex: 1000"
-          />
+    <div className="bg-white rounded-[2.5rem] p-6 sm:p-8 shadow-2xl max-w-4xl mx-auto border border-gray-100 animate-in fade-in slide-in-from-bottom-8 duration-700">
+      <div className="flex flex-col md:flex-row gap-8 items-center">
+        <div className="flex-1 w-full space-y-4">
+          <h2 className="text-2xl font-black text-gray-900 flex items-center gap-3 mb-6">
+            <span role="img" aria-label="money bags">💰</span> Simulador de Economia
+          </h2>
+          <div>
+            <label className="block text-sm font-bold text-gray-700 mb-2 text-left">Pedidos por mês</label>
+            <input type="text" inputMode="numeric" value={orders} onChange={(e) => setOrders(e.target.value.replace(/\D/g, ''))} className="w-full px-5 py-3 bg-gray-50 border-2 border-gray-100 rounded-xl focus:border-orange-600 focus:outline-none text-lg font-bold text-gray-900 transition-all" placeholder="Ex: 1000" />
+          </div>
+          <div>
+            <label className="block text-sm font-bold text-gray-700 mb-2 text-left">Ticket Médio (R$)</label>
+            <input type="text" inputMode="numeric" value={ticket} onChange={(e) => setTicket(formatCurrency(e.target.value))} className="w-full px-5 py-3 bg-gray-50 border-2 border-gray-100 rounded-xl focus:border-orange-600 focus:outline-none text-lg font-bold text-gray-900 transition-all" placeholder="Ex: 30,00" />
+          </div>
+          <button onClick={calculate} className="w-full bg-orange-700 hover:bg-orange-800 text-white py-4 rounded-xl font-black text-lg transition-all shadow-xl shadow-orange-700/20 transform active:scale-95 mt-4">
+            Calcular Economia
+          </button>
         </div>
-
-        <div>
-          <label className="block text-sm font-bold text-gray-700 mb-2 text-left">
-            Qual o ticket médio dos seus pedidos? (R$)
-          </label>
-          <input
-            type="text"
-            inputMode="numeric"
-            value={ticket}
-            onChange={(e) => setTicket(formatCurrency(e.target.value))}
-            className="w-full px-6 py-4 bg-gray-50 border-2 border-gray-100 rounded-2xl focus:border-orange-600 focus:outline-none text-xl font-bold text-gray-900 transition-all"
-            placeholder="Ex: 30,00"
-          />
+        <div className="flex-1 w-full">
+          <div className="bg-green-600 rounded-3xl p-8 text-white relative overflow-hidden h-full flex flex-col justify-center min-h-[250px] group">
+            <div className="absolute top-0 right-0 p-4 opacity-20 transform group-hover:scale-110 transition-transform"><PartyPopper className="w-20 h-20" /></div>
+            <p className="text-sm font-bold opacity-90 mb-2 uppercase tracking-wide flex items-center gap-2">🎉 Você economiza por mês:</p>
+            <div className="text-4xl md:text-5xl font-black mb-4 break-words">
+              {new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(savings)}
+            </div>
+            <p className="text-xs opacity-80 mt-2">*Em comparação com plataformas que cobram 20%.</p>
+          </div>
         </div>
-
-        <button
-          onClick={calculate}
-          className="w-full bg-orange-700 hover:bg-orange-800 text-white py-5 rounded-2xl font-black text-xl transition-all shadow-xl shadow-orange-700/20 transform active:scale-95"
-        >
-          Calcular Economia
-        </button>
-      </div>
-
-      <div className="bg-green-600 rounded-3xl p-6 sm:p-8 text-white relative overflow-hidden group">
-        <div className="absolute top-0 right-0 p-4 opacity-20 transform group-hover:scale-110 transition-transform">
-          <PartyPopper className="w-16 h-16" />
-        </div>
-        <p className="text-lg font-bold mb-2 opacity-90 flex items-center justify-center gap-2">
-          🎉 Você economiza por mês:
-        </p>
-        <div className="text-3xl sm:text-4xl md:text-5xl font-black mb-4 break-words">
-          {new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(savings)}
-        </div>
-        <p className="text-sm opacity-80 max-w-xs mx-auto">
-          em comparação com plataformas que cobram 20% de comissão sobre cada pedido
-        </p>
       </div>
     </div>
   );
 };
 
-const PlansPage: React.FC<{ onBack: () => void; onSelectFree: () => void; onSelectSoon: () => void }> = ({ onBack, onSelectFree, onSelectSoon }) => {
+
+const DashboardNavbar: React.FC<{ onOpenModal: () => void; onOpenLogin: () => void }> = ({ onOpenModal, onOpenLogin }) => (
+  <nav className="fixed top-0 left-0 right-0 z-[60] py-6 px-4 bg-gray-900/50 backdrop-blur-md border-b border-white/10">
+    <div className="max-w-7xl mx-auto flex items-center justify-between">
+      <a href="/" onClick={(e) => { e.preventDefault(); window.location.reload(); }} className="flex items-center gap-2">
+        <img src={textLogo} alt="RIBERFOOD" className="h-8 object-contain" />
+      </a>
+      <div className="flex items-center gap-4">
+        <button onClick={onOpenLogin} className="bg-orange-600 hover:bg-orange-700 text-white px-6 py-2 rounded-full font-bold transition-all transform hover:scale-105">Login</button>
+      </div>
+    </div>
+  </nav>
+);
+
+type ActiveSection = 'solucao' | 'beneficios' | 'faq' | 'calculadora' | 'como-funciona' | 'planos' | 'metodologia' | null;
+
+const SolucaoSection: React.FC = () => (
+  <div className="animate-in slide-in-from-bottom-8 fade-in duration-500">
+    <div className="text-left mb-12">
+      <h2 className="text-4xl md:text-5xl font-black text-white uppercase tracking-tight mb-4">
+        MAIS CONTROLE. MENOS CUSTO.
+      </h2>
+      <p className="text-xl text-gray-400">O Riberfood organiza seu delivery em um só lugar.</p>
+    </div>
+    <div className="grid md:grid-cols-2 gap-8">
+      <div className="bg-gray-800 p-8 rounded-3xl border border-white/10 hover:border-orange-500 transition-colors">
+        <div className="w-14 h-14 bg-orange-500/20 text-orange-500 rounded-2xl flex items-center justify-center mb-6">
+          <Smartphone className="w-7 h-7" />
+        </div>
+        <h3 className="text-2xl font-black text-white mb-4">Pedidos Centralizados</h3>
+        <p className="text-gray-400 text-lg">Chega de sistemas separados. Pedidos e entregas organizados em uma única tela.</p>
+      </div>
+      <div className="bg-gray-800 p-8 rounded-3xl border border-white/10 hover:border-orange-500 transition-colors">
+        <div className="w-14 h-14 bg-orange-500/20 text-orange-500 rounded-2xl flex items-center justify-center mb-6">
+          <DollarSign className="w-7 h-7" />
+        </div>
+        <h3 className="text-2xl font-black text-white mb-4">Lucro 100% Seu</h3>
+        <p className="text-gray-400 text-lg">Sem comissão por pedido. Você vende mais e não paga taxas abusivas.</p>
+      </div>
+      <div className="bg-gray-800 p-8 rounded-3xl border border-white/10 hover:border-orange-500 transition-colors md:col-span-2">
+        <div className="w-14 h-14 bg-orange-500/20 text-orange-500 rounded-2xl flex items-center justify-center mb-6">
+          <Zap className="w-7 h-7" />
+        </div>
+        <h3 className="text-2xl font-black text-white mb-4">Simples e Direto</h3>
+        <p className="text-gray-400 text-lg">Design focado na velocidade. Treinamento básico incluso para sua equipe.</p>
+      </div>
+    </div>
+  </div>
+);
+
+const BeneficiosSection: React.FC = () => (
+  <div className="animate-in slide-in-from-bottom-8 fade-in duration-500">
+     <div className="text-left mb-12">
+      <h2 className="text-4xl md:text-5xl font-black text-white uppercase tracking-tight mb-4">
+        DORES DO DELIVERY
+      </h2>
+      <p className="text-xl text-gray-400">Você só queria controle, mas a realidade tem sido estressante.</p>
+    </div>
+    <div className="space-y-6">
+      {[
+        "Pedidos chegando de vários lados e se perdendo",
+        "Horário de pico e alguém diz: 'Esse pedido já saiu?'",
+        "Taxas altas dos apps sugando todo o seu lucro"
+      ].map((item, i) => (
+        <div key={i} className="bg-gray-800 p-6 rounded-2xl border border-red-500/20 flex items-center gap-4">
+          <div className="bg-red-500/20 p-3 rounded-full flex-shrink-0">
+            <X className="w-6 h-6 text-red-500" />
+          </div>
+          <span className="text-white text-lg font-medium">{item}</span>
+        </div>
+      ))}
+    </div>
+    <div className="mt-12 bg-orange-500/10 p-8 rounded-3xl border border-orange-500/20">
+      <h3 className="text-xl font-bold text-orange-400 mb-6">Nossa promessa:</h3>
+      <div className="space-y-4 text-gray-300 font-medium">
+        <p>• Centralizamos tudo em uma tela.</p>
+        <p>• Acabamos com as taxas abusivas.</p>
+        <p>• Interface super simples para funcionários.</p>
+      </div>
+    </div>
+  </div>
+);
+
+const ComoFuncionaSection: React.FC = () => (
+  <div className="animate-in slide-in-from-bottom-8 fade-in duration-500">
+    <div className="text-left mb-12">
+      <h2 className="text-4xl md:text-5xl font-black text-white uppercase tracking-tight mb-4">
+        COMO FUNCIONA
+      </h2>
+    </div>
+    <div className="grid sm:grid-cols-2 gap-6">
+      {[
+        { step: "1", title: "Cliente faz o pedido", desc: "Ele acessa seu cardápio digital e finaliza a compra." },
+        { step: "2", title: "Pedido vai direto para você", desc: "O pedido chega automaticamente na sua operação." },
+        { step: "3", title: "Taxa repassada", desc: "A taxa operacional é cobrada do cliente consumidor." },
+        { step: "4", title: "Sem mensalidade", desc: "Você não paga mensalidade e mantém sua margem." }
+      ].map((item, i) => (
+        <div key={i} className="bg-gray-800 p-8 rounded-3xl border border-white/10">
+          <div className="w-12 h-12 bg-orange-600 text-white rounded-full flex items-center justify-center text-xl font-black mb-6">
+            {item.step}
+          </div>
+          <h3 className="text-xl font-bold text-white mb-2">{item.title}</h3>
+          <p className="text-gray-400">{item.desc}</p>
+        </div>
+      ))}
+    </div>
+  </div>
+);
+
+const MetodologiaSection: React.FC = () => (
+  <div className="animate-in slide-in-from-bottom-8 fade-in duration-500 space-y-12">
+    <div className="text-left">
+      <h1 className="text-4xl md:text-6xl font-black leading-tight text-white mb-6">
+        Uma plataforma pensada para você <span className="text-orange-600">lucrar mais.</span>
+      </h1>
+      <p className="text-xl text-gray-400 max-w-3xl">
+        Sem mensalidade e sem precisar aumentar o preço dos seus produtos para pagar taxas abusivas.
+      </p>
+    </div>
+
+    <div className="grid md:grid-cols-2 gap-6">
+      <div className="bg-white p-8 rounded-3xl shadow-lg border border-gray-100 flex-1">
+        <p className="font-bold text-gray-500 text-sm uppercase tracking-widest mb-4">Vendeu pouco?</p>
+        <p className="text-2xl font-black text-gray-900 leading-snug">Não se preocupa com mensalidade.</p>
+      </div>
+      <div className="bg-orange-700 p-8 rounded-3xl shadow-lg flex-1 transform hover:scale-105 transition-transform">
+        <p className="font-bold text-orange-200 text-sm uppercase tracking-widest mb-4">Vendeu muito?</p>
+        <p className="text-2xl font-black text-white leading-snug">O lucro é seu — nós apenas ajudamos.</p>
+      </div>
+    </div>
+
+    <div className="bg-gray-800 rounded-[3rem] p-8 md:p-12 text-white border border-white/10 relative overflow-hidden">
+      <div className="grid lg:grid-cols-2 gap-12 items-center relative z-10">
+        <div>
+          <h2 className="text-3xl md:text-4xl font-black mb-6 leading-tight">Comece a usar nossa plataforma hoje mesmo</h2>
+          <p className="text-gray-400 text-lg">Junte-se a centenas de restaurantes que transformaram sua gestão digital sem custos fixos abusivos.</p>
+        </div>
+        <ul className="space-y-6 text-lg font-medium">
+          <li className="flex items-center gap-4 bg-white/5 p-4 rounded-2xl border border-white/5">
+            <CheckCircle className="w-8 h-8 text-orange-600 flex-shrink-0" />
+            <span>Sistema completo para restaurantes e delivery.</span>
+          </li>
+          <li className="flex items-center gap-4 bg-white/5 p-4 rounded-2xl border border-white/5">
+            <CheckCircle className="w-8 h-8 text-orange-600 flex-shrink-0" />
+            <span>Sem mensalidade. Sem pegadinhas.</span>
+          </li>
+          <li className="flex items-center gap-4 bg-white/5 p-4 rounded-2xl border border-white/5">
+            <CheckCircle className="w-8 h-8 text-orange-600 flex-shrink-0" />
+            <span>Sem prazo promocional.</span>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+);
+
+const PlansSection: React.FC<{ onSelectFree: () => void; onSelectSoon: () => void }> = ({ onSelectFree, onSelectSoon }) => {
   const freeBenefits = [
     "Cardápio digital via Link e QR Code",
     "Cardápio com fotos e descrições",
-    "Categorias de produtos",
-    "Pedidos por Instagram e Facebook link",
-    "Pedidos ilimitados",
-    "Acompanhamento de status do pedido",
-    "Impressão de pedidos",
-    "Cardápio Digital",
-    "Gestão de Pedidos",
-    "Gestão de Entregas",
-    "Relatórios Básicos",
+    "Pedidos ilimitados sem comissão",
+    "Gestão de Pedidos e Entregas",
+    "Painel do Lojista e Relatórios",
     "Suporte via WhatsApp",
-    "Treinamento de Uso",
-    "Painel do Lojista",
-    "Sem Comissões",
-    "Sem limite de pedidos",
-    "Relatórios gerenciais",
-    "Controle de acesso de usuários"
   ];
 
   const soonBenefits = [
     "KDS — Display de Cozinha",
-    "App Garçom",
-    "App entregador",
+    "App Garçom e Entregador",
     "Controle de Mesas e Comanda",
     "Cupom Fiscal NFC-e",
-    "Roteirização de Entregas",
-    "Impressão Automática de Pedidos"
+    "Roteirização de Entregas"
   ];
 
-  const scrollToSection = (id: string) => {
-    const element = document.getElementById(id);
-    if (element) {
-      element.scrollIntoView({ behavior: 'smooth' });
-    }
-  };
-
   return (
-    <div className="min-h-screen bg-gray-900 text-white pb-20 overflow-x-hidden">
-      <header className="fixed top-0 left-0 right-0 z-50 py-6 px-4 bg-gray-900/80 backdrop-blur-md border-b border-white/10">
-        <div className="max-w-7xl mx-auto flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            <a
-              href="/"
-              onClick={(e) => {
-                e.preventDefault();
-                window.location.reload();
-              }}
-              className="flex items-center gap-2"
+    <div className="animate-in slide-in-from-bottom-8 fade-in duration-500">
+      <div className="text-left mb-12">
+        <h1 className="text-4xl md:text-5xl font-black mb-4 text-white">PLANOS</h1>
+        <p className="text-xl text-gray-400">Transparência total e sem taxas ocultas.</p>
+      </div>
+
+      <div className="grid md:grid-cols-2 gap-8">
+        <div className="bg-white rounded-[2rem] p-1 shadow-2xl">
+          <div className="bg-orange-600 rounded-[1.8rem] p-6 text-white mb-6">
+            <h2 className="text-2xl font-black mb-2">Plano Completo</h2>
+            <div className="flex items-baseline gap-1 mb-2">
+              <span className="text-lg opacity-80 line-through">R$ 299,00</span>
+              <div className="flex items-baseline">
+                <span className="text-4xl font-black">R$ 0,00</span>
+                <span className="text-sm opacity-80 ml-1">/mês</span>
+              </div>
+            </div>
+            <p className="text-sm font-medium opacity-90">Sem mensalidade. Simples assim.</p>
+          </div>
+          <div className="p-6 pt-0 text-gray-900 text-left">
+            <ul className="grid grid-cols-1 gap-3 mb-8 overflow-y-auto max-h-[300px] pr-2 custom-scrollbar">
+              {freeBenefits.map((benefit, i) => (
+                <li key={i} className="flex items-start gap-3 text-sm font-medium">
+                  <CheckCircle className="w-4 h-4 text-green-500 mt-0.5 flex-shrink-0" />
+                  {benefit}
+                </li>
+              ))}
+            </ul>
+            <button
+              onClick={onSelectFree}
+              className="w-full bg-orange-600 hover:bg-orange-700 text-white py-4 rounded-xl font-black transition-all transform hover:scale-[1.02] shadow-xl shadow-orange-600/30"
             >
-              <img src={textLogo} alt="RIBERFOOD" className="h-8 object-contain" />
-            </a>
-          </div>
-          <button onClick={onBack} className="text-gray-400 hover:text-white font-bold flex items-center gap-2 transition-colors">
-            <X className="w-5 h-5" /> Voltar
-          </button>
-        </div>
-      </header>
-
-      {/* Intro Section - Prints 2 & 3 */}
-      <section className="pt-40 pb-20 bg-gray-50 text-gray-900 relative">
-        <div className="max-w-7xl mx-auto px-4 flex flex-col items-center text-center">
-          <div className="space-y-12 animate-in fade-in slide-in-from-bottom-8 duration-1000 max-w-4xl">
-            {/* Buttons moved above title and centered */}
-            <div className="flex flex-wrap justify-center gap-4">
-              <button
-                onClick={() => scrollToSection('como-funciona')}
-                className="bg-orange-700 hover:bg-orange-800 text-white px-8 py-4 rounded-2xl text-base font-black transition-all shadow-xl shadow-orange-700/20 whitespace-nowrap"
-              >
-                Saiba mais
-              </button>
-              <button
-                onClick={() => scrollToSection('planos')}
-                className="bg-gray-900 hover:bg-black text-white px-8 py-4 rounded-2xl text-base font-black transition-all shadow-xl shadow-gray-900/20 whitespace-nowrap"
-              >
-                Planos
-              </button>
-              <button
-                onClick={() => scrollToSection('simulador')}
-                className="border-2 border-orange-700 text-orange-700 hover:bg-orange-50 px-8 py-4 rounded-2xl text-base font-black transition-all whitespace-nowrap"
-              >
-                Calcule sua economia
-              </button>
-            </div>
-
-            <h1 className="text-4xl md:text-7xl font-black leading-tight">
-              Uma plataforma pensada para você <span className="text-orange-700 underline decoration-orange-200 decoration-8 underline-offset-8">lucrar mais.</span>
-            </h1>
-
-            <div className="space-y-6 text-xl md:text-2xl text-gray-600 max-w-3xl mx-auto">
-              <p>
-                Sem mensalidade e sem precisar aumentar o preço dos seus produtos para pagar taxas abusivas para plataformas gigantes.
-              </p>
-              <div className="flex flex-col md:flex-row justify-center gap-6 md:gap-12 pt-4">
-                <div className="bg-white p-6 rounded-3xl shadow-sm border border-gray-100 flex-1">
-                  <p className="font-medium text-gray-500 text-sm uppercase tracking-widest mb-2">Vendeu pouco?</p>
-                  <p className="font-bold text-gray-900">Não se preocupa com mensalidade.</p>
-                </div>
-                <div className="bg-orange-700 p-6 rounded-3xl shadow-lg border border-orange-600 flex-1 transform hover:scale-105 transition-transform">
-                  <p className="font-medium text-orange-200 text-sm uppercase tracking-widest mb-2">Vendeu muito?</p>
-                  <p className="font-bold text-white">O lucro é seu — nós apenas ajudamos.</p>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div className="mt-24 w-full max-w-5xl animate-in fade-in slide-in-from-bottom-12 duration-1000 delay-300">
-            <div className="bg-gray-900 rounded-[3rem] p-12 text-white shadow-3xl relative overflow-hidden text-left border-4 border-orange-700/20">
-              <div className="absolute top-0 right-0 w-96 h-96 bg-orange-600/10 blur-[100px] -mr-48 -mt-48"></div>
-              <div className="grid md:grid-cols-2 gap-12 items-center relative z-10">
-                <div>
-                  <h2 className="text-4xl font-black mb-8 leading-tight">Comece a usar nossa plataforma hoje mesmo</h2>
-                  <p className="text-gray-400 text-lg mb-8">Junte-se a centenas de restaurantes que transformaram sua gestão digital sem custos fixos abusivos.</p>
-                </div>
-                <ul className="space-y-6 text-lg">
-                  <li className="flex items-center gap-4 bg-white/5 p-4 rounded-2xl">
-                    <CheckCircle className="w-8 h-8 text-orange-600 flex-shrink-0" />
-                    <span>Sistema completo para restaurantes e delivery.</span>
-                  </li>
-                  <li className="flex items-center gap-4 bg-white/5 p-4 rounded-2xl">
-                    <CheckCircle className="w-8 h-8 text-orange-600 flex-shrink-0" />
-                    <span>Sem mensalidade. Sem pegadinhas.</span>
-                  </li>
-                  <li className="flex items-center gap-4 bg-white/5 p-4 rounded-2xl">
-                    <CheckCircle className="w-8 h-8 text-orange-600 flex-shrink-0" />
-                    <span>Sem prazo promocional.</span>
-                  </li>
-                </ul>
-              </div>
-            </div>
+              Quero este plano
+            </button>
           </div>
         </div>
-      </section>
 
-      {/* How it works - Print 4 */}
-      <section id="como-funciona" className="py-24 bg-white text-gray-900">
-        <div className="max-w-7xl mx-auto px-4 text-center">
-          <h2 className="text-3xl md:text-5xl font-black text-gray-900 mb-4">Como funciona na prática?</h2>
-
-          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
-            {[
-              {
-                step: "1",
-                title: "Cliente faz o pedido",
-                desc: "Ele acessa seu cardápio digital e finaliza a compra."
-              },
-              {
-                step: "2",
-                title: "Pedido vai direto para você",
-                desc: "O pedido chega automaticamente na sua operação."
-              },
-              {
-                step: "3",
-                title: "Taxa repassada pelo lojista",
-                desc: "A taxa operacional é cobrada do cliente consumidor e repassada por você, lojista."
-              },
-              {
-                step: "4",
-                title: "Sem mensalidade",
-                desc: "Você não paga mensalidade e mantém sua margem."
-              }
-            ].map((item, i) => (
-              <div key={i} className="bg-gray-50 p-8 rounded-[2.5rem] border border-gray-100 relative group hover:border-orange-500 transition-all">
-                <div className="w-12 h-12 bg-orange-700 text-white rounded-full flex items-center justify-center text-xl font-black mx-auto mb-6">
-                  {item.step}
-                </div>
-                <h3 className="text-xl font-bold mb-4">{item.title}</h3>
-                <p className="text-gray-600">{item.desc}</p>
-              </div>
-            ))}
+        <div className="bg-gray-800 rounded-[2rem] p-1 border border-white/10 relative overflow-hidden">
+          <div className="absolute top-8 right-[-50px] bg-orange-600 text-white px-16 py-1.5 rotate-45 text-[10px] font-black uppercase tracking-[0.2em] shadow-lg z-20 flex justify-center items-center w-[200px]">
+            Em Breve
+          </div>
+          <div className="p-6 mb-4">
+            <h2 className="text-2xl font-black mb-2 text-white">Futuro</h2>
+            <p className="text-gray-400">Recursos incríveis chegando</p>
+          </div>
+          <div className="p-6 pt-0 text-left">
+            <ul className="space-y-3 mb-8">
+              {soonBenefits.map((benefit, i) => (
+                <li key={i} className="flex items-start gap-3 text-sm font-medium text-white">
+                  <CheckCircle className="w-4 h-4 text-orange-500 mt-0.5 flex-shrink-0" />
+                  {benefit}
+                </li>
+              ))}
+            </ul>
+            <button
+              onClick={onSelectSoon}
+              className="w-full border-2 border-white/20 hover:border-white text-white py-4 rounded-xl font-black transition-all"
+            >
+              Entrar na lista de espera
+            </button>
           </div>
         </div>
-      </section>
-
-      {/* Simulator - Print 5 */}
-      <section id="simulador" className="py-24 bg-gray-50 text-gray-900">
-        <div className="max-w-7xl mx-auto px-4 text-center">
-          <EconomySimulator />
-        </div>
-      </section>
-
-      {/* Existing Plans Section */}
-      <main id="planos" className="max-w-7xl mx-auto px-4 pt-24">
-        <div className="text-center mb-16">
-          <h1 className="text-4xl md:text-5xl font-black mb-4">Escolha o plano ideal para você</h1>
-          <p className="text-xl text-gray-400">Transparência total e sem taxas ocultas.</p>
-        </div>
-
-        <div className="grid md:grid-cols-2 gap-8 max-w-5xl mx-auto">
-          {/* Plan Card 0.00 */}
-          <div className="bg-white rounded-[2rem] p-1 shadow-2xl">
-            <div className="bg-orange-600 rounded-[1.8rem] p-8 text-white mb-6">
-              <h2 className="text-3xl font-black mb-2">Plano Completo</h2>
-              <div className="flex items-baseline gap-1 mb-4">
-                <span className="text-lg opacity-80 line-through">R$ 299,00</span>
-                <div className="flex items-baseline">
-                  <span className="text-4xl font-black">R$ 0,00</span>
-                  <span className="text-sm opacity-80 ml-1">/mês</span>
-                </div>
-              </div>
-              <p className="text-sm font-medium opacity-90">Você não paga mensalidade. Simples assim.</p>
-            </div>
-            <div className="p-8 pt-0 text-gray-900 text-left">
-              <h3 className="font-bold mb-4 uppercase tracking-wider text-xs text-gray-400">Benefícios inclusos:</h3>
-              <ul className="grid grid-cols-1 gap-3 mb-10 overflow-y-auto max-h-[400px] pr-2 custom-scrollbar">
-                {freeBenefits.map((benefit, i) => (
-                  <li key={i} className="flex items-start gap-3 text-sm font-medium">
-                    <CheckCircle className="w-4 h-4 text-green-500 mt-0.5 flex-shrink-0" />
-                    {benefit}
-                  </li>
-                ))}
-              </ul>
-              <button
-                onClick={onSelectFree}
-                className="w-full bg-orange-600 hover:bg-orange-700 text-white py-4 rounded-xl font-black transition-all transform hover:scale-[1.02] shadow-xl shadow-orange-600/30"
-              >
-                Quero este plano
-              </button>
-            </div>
-          </div>
-
-          {/* Plan Card Soon */}
-          <div className="bg-gray-800 rounded-[2rem] p-1 border border-white/10 relative overflow-hidden">
-            <div className="absolute top-8 right-[-50px] bg-orange-600 text-white px-16 py-1.5 rotate-45 text-[10px] font-black uppercase tracking-[0.2em] shadow-lg z-20 flex justify-center items-center w-[200px]">
-              Desenvolvimento
-            </div>
-            <div className="p-8 mb-4">
-              <h2 className="text-3xl font-black mb-2">Em Breve</h2>
-              <p className="text-gray-400">Recursos incríveis chegando em breve</p>
-            </div>
-            <div className="p-8 pt-0 text-left">
-              <h3 className="font-bold mb-4 uppercase tracking-wider text-xs text-gray-500">Próximos lançamentos:</h3>
-              <ul className="space-y-3 mb-10">
-                {soonBenefits.map((benefit, i) => (
-                  <li key={i} className="flex items-start gap-3 text-sm font-medium">
-                    <CheckCircle className="w-4 h-4 text-orange-500 mt-0.5 flex-shrink-0" />
-                    {benefit}
-                  </li>
-                ))}
-              </ul>
-              <button
-                onClick={onSelectSoon}
-                className="w-full border-2 border-white/20 hover:border-white text-white py-4 rounded-xl font-black transition-all"
-              >
-                Entrar na lista de espera
-              </button>
-            </div>
-          </div>
-        </div>
-      </main>
+      </div>
     </div>
   );
 };
@@ -1351,382 +1312,56 @@ const App: React.FC = () => {
   const [isWaitlistOpen, setIsWaitlistOpen] = useState(false);
   const [isLoginOpen, setIsLoginOpen] = useState(false);
   const [isSupportOpen, setIsSupportOpen] = useState(false);
-  const [view, setView] = useState<'landing' | 'plans'>('landing');
 
   useEffect(() => {
     stripLegacyLoginHash();
-    setView('landing');
     setIsLoginOpen(false);
   }, []);
 
-  useEffect(() => {
-    window.scrollTo(0, 0);
-  }, [view]);
-
-  if (view === 'plans') {
-    return (
-      <>
-        <PlansPage
-          onBack={() => setView('landing')}
-          onSelectFree={() => setIsModalOpen(true)}
-          onSelectSoon={() => setIsWaitlistOpen(true)}
-        />
+  return (
+    <HashRouter>
+      <div className="min-h-screen bg-gray-900 text-white flex flex-col font-sans overflow-x-hidden">
+        {/* We use an existing navigation component, links might need adjustment to Route paths */}
+        <Navbar onOpenModal={() => setIsModalOpen(true)} onOpenLogin={() => setIsLoginOpen(true)} />
+        
         <TrialModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} />
         <WaitlistModal isOpen={isWaitlistOpen} onClose={() => setIsWaitlistOpen(false)} />
-        <SupportModal isOpen={isSupportOpen} onClose={() => setIsSupportOpen(false)} />
         <LoginModal isOpen={isLoginOpen} onClose={() => setIsLoginOpen(false)} />
-      </>
-    );
-  }
+        <SupportModal isOpen={isSupportOpen} onClose={() => setIsSupportOpen(false)} />
 
-  return (
-    <div className="min-h-screen">
-      <Navbar onOpenModal={() => setView('plans')} onOpenLogin={() => setIsLoginOpen(true)} />
-      <TrialModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} />
-      <LoginModal isOpen={isLoginOpen} onClose={() => setIsLoginOpen(false)} />
-      <SupportModal isOpen={isSupportOpen} onClose={() => setIsSupportOpen(false)} />
+        <main className="flex-1 flex flex-col pt-32 pb-12 relative min-h-[80vh]">
+          <div className="absolute top-0 right-0 -mr-20 -mt-20 w-96 h-96 bg-orange-600/10 blur-[100px] rounded-full pointer-events-none z-0"></div>
+          <div className="absolute bottom-0 left-0 -ml-20 -mb-20 w-96 h-96 bg-orange-600/10 blur-[100px] rounded-full pointer-events-none z-0"></div>
 
-      {/* Hero Section */}
-      <section className="relative pt-32 pb-24 md:pt-48 md:pb-40 bg-gray-900 text-white overflow-hidden">
-        {/* Background blobs */}
-        <div className="absolute top-0 right-0 -mr-20 -mt-20 w-96 h-96 bg-orange-600/10 blur-[100px] rounded-full"></div>
-        <div className="absolute bottom-0 left-0 -ml-20 -mb-20 w-96 h-96 bg-orange-600/10 blur-[100px] rounded-full"></div>
+          <div className="relative z-10">
+            <Routes>
+              <Route path="/" element={<Home onOpenTrial={() => setIsModalOpen(true)} />} />
+              <Route path="/funcionalidades" element={<Funcionalidades onOpenTrial={() => setIsModalOpen(true)} />} />
+              <Route path="/calcule" element={<Calcule onOpenTrial={() => setIsModalOpen(true)} />} />
+              <Route path="/planos" element={<Planos onOpenTrial={() => setIsModalOpen(true)} onOpenWaitlist={() => setIsWaitlistOpen(true)} />} />
+            </Routes>
+          </div>
+        </main>
 
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-          <div className="grid md:grid-cols-2 gap-12 items-center">
-            <div className="text-center md:text-left">
-              <span className="inline-block px-4 py-1.5 mb-6 text-sm font-bold bg-orange-600/20 text-orange-400 rounded-full tracking-wider uppercase border border-orange-600/30">
-                CONTROLE TOTAL DO SEU DELIVERY
-              </span>
-              <h1 className="text-4xl md:text-6xl font-black leading-tight mb-6">
-                Tudo o que seu delivery precisa. <br />
-                <span className="text-orange-600">Sem comissão.</span><br />
-                Sem complicação.
-              </h1>
-              <p className="text-lg md:text-xl text-gray-400 mb-10 max-w-xl mx-auto md:mx-0">
-                Pare de perder pedidos, organize suas entregas e tenha tudo em um só lugar — livre de mensalidades.
-              </p>
-              <div className="flex flex-col sm:flex-row gap-4 justify-center md:justify-start">
-                <div className="flex flex-col items-center md:items-start gap-4">
-                  <button
-                    onClick={() => setView('plans')}
-                    className="bg-orange-600 hover:bg-orange-700 text-white px-10 py-5 rounded-full text-lg font-black transition-all transform hover:scale-105 active:scale-95 shadow-2xl shadow-orange-600/40 flex items-center justify-center gap-2"
-                  >
-                    Bora começar <Zap className="w-5 h-5 fill-current" />
-                  </button>
-                  <p className="text-orange-500 font-bold flex items-center gap-2">
-                    <CheckCircle className="w-5 h-5" /> Comece a usar imediatamente sem Custo
-                  </p>
-                </div>
+        <footer className="bg-gray-900 text-gray-400 py-12 border-t border-white/5 mt-auto relative z-10">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row justify-between items-center gap-8">
+            <div className="flex items-center gap-2">
+              <div className="p-1 rounded-md">
+                <img src={iconLogo} alt="Riberfood Icon" className="w-8 h-8 object-contain" />
               </div>
+              <img src={textLogo} alt="RIBERFOOD" className="h-6 object-contain filter brightness-0 invert opacity-80" />
             </div>
-            <div className="relative">
-              <div className="relative z-10 rounded-2xl overflow-hidden shadow-2xl border border-white/10 group">
-                <img
-                  src={ownerImage}
-                  alt="Dono de restaurante satisfeito usando o sistema Riberfood"
-                  className="w-full transition-transform duration-700 group-hover:scale-110"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-gray-900 via-transparent to-transparent opacity-60"></div>
-              </div>
-              {/* Floating element removed */}
+            <div className="flex gap-8 text-sm font-medium">
+              <button onClick={() => setIsSupportOpen(true)} className="hover:text-white transition-colors">Suporte</button>
+              <a href="https://lojista.riberfood.com" className="hover:text-white transition-colors">Área do Lojista</a>
+            </div>
+            <div className="text-sm">
+              © {new Date().getFullYear()} Safe Trust Tecnology. Todos os direitos reservados. Ribeirão Preto - SP.
             </div>
           </div>
-        </div>
-      </section>
-
-      {/* Pain Points Section */}
-      <section className="py-24 bg-white relative">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-20">
-            <h2 className="text-3xl md:text-4xl font-black text-gray-900 mb-6">
-              O DELIVERY CRESCE… MAS A CONFUSÃO TAMBÉM?
-            </h2>
-            <p className="text-xl text-gray-600 max-w-2xl mx-auto">
-              Você só queria controle e simplicidade, mas a realidade tem sido estressante.
-            </p>
-          </div>
-
-          <div className="grid lg:grid-cols-2 gap-16 items-center">
-            <div className="order-2 lg:order-1">
-              <div className="relative rounded-2xl overflow-hidden shadow-2xl">
-                <img
-                  src={disorganizedKitchen}
-                  alt="Cozinha movimentada e desorganizada"
-                  className="w-full"
-                />
-                <div className="absolute inset-0 bg-red-900/10"></div>
-              </div>
-            </div>
-            <div className="order-1 lg:order-2 space-y-8">
-              <div className="space-y-4">
-                <h3 className="text-2xl font-bold text-gray-900">Você já passou por isso:</h3>
-                <ul className="space-y-4">
-                  {[
-                    "Pedidos chegando de vários lados",
-                    "Horário de pico e alguém diz: 'Esse pedido já saiu?'",
-                    "Taxas altas e no fim do mês quase não sobra lucro"
-                  ].map((item, i) => (
-                    <li key={i} className="flex items-start gap-3">
-                      <div className="mt-1 bg-red-100 p-1 rounded-full">
-                        <X className="w-4 h-4 text-red-600" />
-                      </div>
-                      <span className="text-gray-700 text-lg">{item}</span>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-              <div className="bg-orange-50 p-8 rounded-3xl border border-orange-100">
-                <h3 className="text-xl font-bold text-orange-900 mb-6">Muitos donos dizem:</h3>
-                <div className="space-y-6">
-                  {[
-                    "Pago taxa demais e quase não sobra lucro",
-                    "É tudo separado: pedido de um lado, entrega de outro",
-                    "O app é confuso, meu funcionário se perde"
-                  ].map((quote, i) => (
-                    <div key={i} className="flex items-center gap-4">
-                      <div className="h-2 w-2 bg-orange-600 rounded-full flex-shrink-0"></div>
-                      <p className="text-gray-800 italic font-medium">"{quote}"</p>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Solution Section */}
-      <section id="solucao" className="py-24 bg-gray-50 overflow-hidden">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid lg:grid-cols-2 gap-16 items-center">
-            <div>
-              <h2 className="text-4xl md:text-5xl font-black text-gray-900 leading-tight mb-8">
-                O RIBERFOOD ORGANIZA SEU DELIVERY EM UM SÓ LUGAR
-              </h2>
-              <p className="text-xl text-gray-600 mb-8 leading-relaxed">
-                O Riberfood é uma plataforma completa para lanchonetes, marmitarias, bares e restaurantes que querem vender por delivery sem depender de comissões abusivas.
-              </p>
-
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-10">
-                {["Pedidos", "Entregas", "Operação"].map((item, i) => (
-                  <div key={i} className="bg-white p-4 rounded-2xl shadow-sm border border-gray-100 text-center flex flex-col items-center gap-2 group hover:border-orange-500 transition-colors">
-                    <div className="p-3 bg-orange-100 rounded-xl group-hover:bg-orange-600 transition-colors">
-                      {i === 0 ? <Smartphone className="w-6 h-6 text-orange-600 group-hover:text-white" /> :
-                        i === 1 ? <Truck className="w-6 h-6 text-orange-600 group-hover:text-white" /> :
-                          <Monitor className="w-6 h-6 text-orange-600 group-hover:text-white" />}
-                    </div>
-                    <span className="font-bold text-gray-900">{item}</span>
-                  </div>
-                ))}
-              </div>
-
-              <div className="space-y-4 mb-10">
-                <div className="flex items-center gap-3">
-                  <CheckCircle className="w-6 h-6 text-green-500" />
-                  <span className="text-lg text-gray-700 font-medium">Tudo em uma única plataforma</span>
-                </div>
-                <div className="flex items-center gap-3">
-                  <CheckCircle className="w-6 h-6 text-green-500" />
-                  <span className="text-lg text-gray-700 font-medium">Livre de mensalidades e taxas</span>
-                </div>
-                <div className="flex items-center gap-3">
-                  <CheckCircle className="w-6 h-6 text-green-500" />
-                  <span className="text-lg text-gray-700 font-medium">Suporte humano de verdade</span>
-                </div>
-              </div>
-
-              <div className="bg-blue-50 border-l-4 border-blue-500 p-6 rounded-r-2xl">
-                <p className="text-blue-900 font-bold">
-                  💡 E não se preocupe: Você recebe um treinamento básico para começar com segurança.
-                </p>
-              </div>
-            </div>
-            <div className="relative">
-              <div className="relative z-10 rounded-2xl overflow-hidden shadow-2xl border-4 border-white">
-                {/* Simulated Dashboard Screenshot Placeholder */}
-                <div className="bg-gray-900 p-4 border-b border-white/10 flex gap-2">
-                  <div className="w-3 h-3 rounded-full bg-red-500"></div>
-                  <div className="w-3 h-3 rounded-full bg-yellow-500"></div>
-                  <div className="w-3 h-3 rounded-full bg-green-500"></div>
-                </div>
-                <img
-                  src={dashboardImage}
-                  alt="Painel de controle Riberfood"
-                  className="w-full"
-                />
-              </div>
-              <div className="absolute -z-10 -bottom-10 -right-10 w-full h-full bg-orange-600/10 rounded-3xl blur-2xl"></div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Main Benefits Section */}
-      <section id="beneficios" className="py-24 bg-white">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-20">
-            <h2 className="text-3xl md:text-5xl font-black text-gray-900 mb-4 uppercase">MAIS CONTROLE, MENOS CUSTO</h2>
-            <p className="text-xl text-orange-600 font-bold tracking-tight">MAIS TRANQUILIDADE PARA O SEU NEGÓCIO</p>
-          </div>
-
-          <div className="grid md:grid-cols-3 gap-8">
-            {/* Benefit 1 */}
-            <div className="group bg-gray-50 rounded-3xl overflow-hidden border border-gray-100 hover:border-orange-500 transition-all hover:shadow-2xl hover:-translate-y-2">
-              <div className="aspect-video relative overflow-hidden bg-gray-200">
-                <img
-                  src={conversionRate}
-                  alt="Tela de pedidos Riberfood"
-                  className="w-full h-full object-contain p-2 transition-transform group-hover:scale-105"
-                />
-                <div className="absolute inset-0 bg-orange-600/10 group-hover:bg-transparent transition-colors"></div>
-              </div>
-              <div className="p-8">
-                <h3 className="text-2xl font-black text-gray-900 mb-4 flex items-center gap-2">
-                  <Monitor className="w-6 h-6 text-orange-600" /> Tudo em um só lugar
-                </h3>
-                <p className="text-gray-600 leading-relaxed">
-                  Chega de sistemas separados. Pedidos e entregas organizados em uma única tela para sua equipe não se perder.
-                </p>
-              </div>
-            </div>
-
-            {/* Benefit 2 */}
-            <div className="group bg-gray-50 rounded-3xl overflow-hidden border border-gray-100 hover:border-orange-500 transition-all hover:shadow-2xl hover:-translate-y-2">
-              <div className="aspect-video relative overflow-hidden bg-gray-200">
-                <img
-                  src={orderScreen}
-                  alt="Taxa de conversão e lucro"
-                  className="w-full h-full object-contain p-2 transition-transform group-hover:scale-105"
-                />
-                <div className="absolute inset-0 bg-orange-600/10 group-hover:bg-transparent transition-colors"></div>
-              </div>
-              <div className="p-8">
-                <h3 className="text-2xl font-black text-gray-900 mb-4 flex items-center gap-2">
-                  <DollarSign className="w-6 h-6 text-orange-600" /> Sem comissão por pedido
-                </h3>
-                <p className="text-gray-600 leading-relaxed">
-                  Você vende mais e o lucro continua sendo 100% seu. Nada de taxas abusivas por cada lanche ou marmita vendida.
-                </p>
-              </div>
-            </div>
-
-            {/* Benefit 3 */}
-            <div className="group bg-gray-50 rounded-3xl overflow-hidden border border-gray-100 hover:border-orange-500 transition-all hover:shadow-2xl hover:-translate-y-2">
-              <div className="aspect-video relative overflow-hidden bg-gray-200">
-                <img
-                  src={employeePhoto}
-                  alt="Funcionário usando o sistema"
-                  className="w-full h-full object-cover transition-transform group-hover:scale-110"
-                />
-                <div className="absolute inset-0 bg-orange-600/10 group-hover:bg-transparent transition-colors"></div>
-              </div>
-              <div className="p-8">
-                <h3 className="text-2xl font-black text-gray-900 mb-4 flex items-center gap-2">
-                  <Zap className="w-6 h-6 text-orange-600" /> Simples de usar, de verdade
-                </h3>
-                <p className="text-gray-600 leading-relaxed">
-                  “Quero algo simples, que qualquer um saiba usar.” É exatamente isso que entregamos. Design focado na velocidade.
-                </p>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Target Audience Section */}
-      <section className="py-24 bg-gray-900 text-white">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid lg:grid-cols-2 gap-16 items-center">
-            <div>
-              <h2 className="text-3xl md:text-5xl font-black leading-tight mb-8">
-                UMA PLATAFORMA FEITA PARA QUEM VIVE O DIA A DIA DO DELIVERY
-              </h2>
-              <p className="text-xl text-gray-400 mb-10 leading-relaxed">
-                O Riberfood nasce com um objetivo claro: Ajudar pequenos e médios negócios a crescer sem aumentar os custos operacionais.
-              </p>
-              <div className="space-y-6">
-                {[
-                  "Parar de depender dos aplicativos grandes",
-                  "Passar uma imagem mais profissional para o cliente",
-                  "Crescer sem bagunçar a operação interna"
-                ].map((item, i) => (
-                  <div key={i} className="flex items-center gap-4 group">
-                    <div className="bg-orange-600/20 p-2 rounded-lg group-hover:bg-orange-600 transition-colors">
-                      <Check className="w-6 h-6 text-orange-600 group-hover:text-white" />
-                    </div>
-                    <span className="text-xl font-bold italic">"{item}"</span>
-                  </div>
-                ))}
-              </div>
-              <p className="mt-12 text-2xl font-black text-orange-500">Você está no lugar certo.</p>
-            </div>
-            <div className="relative">
-              <div className="relative rounded-2xl overflow-hidden shadow-2xl">
-                <img
-                  src="https://images.unsplash.com/photo-1512152272829-e3139592d56f?auto=format&fit=crop&q=80&w=1200"
-                  alt="Restaurante moderno e organizado"
-                  className="w-full"
-                />
-                <div className="absolute inset-0 bg-orange-900/10"></div>
-              </div>
-              {/* Proof badges */}
-              <div className="absolute -top-6 -right-6 bg-white text-gray-900 px-6 py-4 rounded-2xl shadow-xl border border-gray-100 font-black flex flex-col items-center">
-                <span className="text-orange-600 text-3xl">100%</span>
-                <span className="text-xs uppercase tracking-widest">Nacional</span>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Final CTA Section */}
-      <section className="py-24 bg-white">
-        <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 text-center bg-gray-50 rounded-[3rem] py-20 border border-gray-200 shadow-xl overflow-hidden relative">
-          <div className="absolute top-0 right-0 w-64 h-64 bg-orange-600/5 blur-3xl -mr-32 -mt-32"></div>
-          <div className="absolute bottom-0 left-0 w-64 h-64 bg-orange-600/5 blur-3xl -ml-32 -mb-32"></div>
-
-          <h2 className="text-3xl md:text-5xl font-black text-gray-900 mb-8 leading-tight relative z-10">
-            PRONTO PARA ORGANIZAR <br /> SEU DELIVERY?
-          </h2>
-          <p className="text-xl text-gray-600 mb-12 max-w-2xl mx-auto relative z-10">
-            Comece agora e veja como é possível ter controle, simplicidade e livre de mensalidades em um só lugar. O lucro das suas vendas pertence a você.
-          </p>
-          <div className="space-y-4 relative z-10">
-            <button
-              onClick={() => setView('plans')}
-              className="bg-orange-600 hover:bg-orange-700 text-white px-12 py-6 rounded-full text-xl font-black transition-all transform hover:scale-105 active:scale-95 shadow-2xl shadow-orange-600/40 flex items-center justify-center gap-3 mx-auto"
-            >
-              Quero ver como funciona <Truck className="w-6 h-6" />
-            </button>
-            <p className="text-orange-600 font-bold flex items-center justify-center gap-2">
-              <CheckCircle className="w-5 h-5" /> Comece a usar imediatamente sem Custo
-            </p>
-          </div>
-        </div>
-      </section>
-
-      <FAQSection />
-
-      {/* Footer */}
-      <footer className="bg-gray-900 text-gray-400 py-12 border-t border-white/5">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row justify-between items-center gap-8">
-          <div className="flex items-center gap-2">
-            <div className="p-1 rounded-md">
-              <img src={iconLogo} alt="Riberfood Icon" className="w-8 h-8 object-contain" />
-            </div>
-            <img src={textLogo} alt="RIBERFOOD" className="h-6 object-contain filter brightness-0 invert opacity-80" />
-          </div>
-          <div className="flex gap-8 text-sm font-medium">
-            <button onClick={() => setIsSupportOpen(true)} className="hover:text-white transition-colors">Suporte</button>
-            <a href="https://lojista.riberfood.com" className="hover:text-white transition-colors">Área do Lojista</a>
-          </div>
-          <div className="text-sm">
-            © {new Date().getFullYear()} Safe Trust Tecnology. Todos os direitos reservados. Ribeirão Preto - SP.
-          </div>
-        </div>
-      </footer>
-    </div>
+        </footer>
+      </div>
+    </HashRouter>
   );
 };
 
