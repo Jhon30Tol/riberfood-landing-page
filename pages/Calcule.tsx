@@ -256,7 +256,7 @@ export default function Calcule() {
           <h2 className="reveal visible">Pare de calcular. Comece a economizar.</h2>
           <p className="reveal visible d1">Cadastre seu restaurante agora e mantenha 100% do seu lucro.</p>
           <Link to="/#onboarding" className="btn-primary reveal visible d2">
-            Cadastrar meu restaurante →
+            Cadastrar meu negócio →
           </Link>
           <p className="cta-note reveal visible d3">Sem mensalidade · Começa agora</p>
         </div>

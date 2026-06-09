@@ -13,7 +13,7 @@ export default function Footer() {
             <p>Sistema completo para restaurantes e delivery.</p>
           </div>
           <div className="footer-info">
-            Ribeirão Preto/SP · Atendemos todo o Brasil<br />
+            Ribeirão Preto/SP<br />
             <a href="mailto:suporte@riberfood.com" style={{ color: 'rgba(255,107,0,.7)' }}>suporte@riberfood.com</a>
           </div>
           <div className="footer-copy">© {new Date().getFullYear()} Riberfood.<br />Desenvolvido por SafeTrust Technology.</div>

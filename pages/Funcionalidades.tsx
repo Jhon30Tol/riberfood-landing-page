@@ -122,9 +122,11 @@ export default function Funcionalidades() {
     <>
       <section className="hero">
         <div className="container">
-          <div className="hero-label"><span className="label">Plataforma completa</span></div>
-          <h1>Tudo que você precisa.<br /><span className="accent">Tudo incluso.</span></h1>
-          <p>Explore cada funcionalidade e veja como funciona na prática.</p>
+          <div className="hero-inner">
+            <div className="hero-badge reveal" style={{ marginBottom: 16 }}><span className="label">Plataforma completa</span></div>
+            <h1 className="reveal reveal-delay-1">Tudo que você precisa.<br /><span className="accent">Tudo incluso.</span></h1>
+            <p className="hero-sub reveal reveal-delay-2">Explore cada funcionalidade e veja como funciona na prática.</p>
+          </div>
         </div>
       </section>
 
@@ -306,7 +308,7 @@ export default function Funcionalidades() {
         <div className="container">
           <h2>Plataforma completa. R$&nbsp;0/mês.</h2>
           <p>Comece hoje. Configure em minutos e já comece a receber pedidos.</p>
-          <Link to="/#onboarding" className="btn-primary">Cadastrar meu restaurante →</Link>
+          <Link to="/#onboarding" className="btn-primary">Cadastrar meu negócio →</Link>
           <p className="cta-note">Sem mensalidade · Começa agora</p>
         </div>
       </section>

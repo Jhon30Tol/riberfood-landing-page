@@ -30,7 +30,7 @@ export default function Home() {
   const handleSubdomainChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setAutoGenerateSubdomain(false);
     const raw = e.target.value.toLowerCase().replace(/[^a-z0-9-]/g, '');
-    const clean = raw.replace(/-+/g, '-').replace(/^-+|-+$/g, '');
+    const clean = raw.replace(/-+/g, '-').replace(/^-+/g, '');
     setSubdomain(clean);
     
     setSubdomainStatus('idle');
@@ -142,10 +142,6 @@ export default function Home() {
             <div className="trust-item">
               <svg width="16" height="16" fill="currentColor" viewBox="0 0 20 20"><path d="M2 5a2 2 0 012-2h7a2 2 0 012 2v4a2 2 0 01-2 2H9l-3 3v-3H4a2 2 0 01-2-2V5z"/></svg>
               Suporte via WhatsApp
-            </div>
-            <div className="trust-item">
-              <svg width="16" height="16" fill="currentColor" viewBox="0 0 20 20"><path fillRule="evenodd" d="M10 2a8 8 0 100 16A8 8 0 0010 2zm0 2a6 6 0 110 12A6 6 0 0110 4zm0 2a1 1 0 00-1 1v3l-2 1.5a1 1 0 001.11 1.66L10 13.5l2.89 1.66A1 1 0 0014 14L12 12.5V9a1 1 0 00-1-1z" clipRule="evenodd"/></svg>
-              Atende todo o Brasil
             </div>
           </div>
         </div>
@@ -441,7 +437,7 @@ export default function Home() {
                     <div className="form-card-sub">Preencha abaixo — leva menos de 2 minutos.</div>
                   </div>
 
-                  <div className="doc-toggle" style={{ marginBottom: 22 }}>
+                  <div className="doc-toggle" style={{ marginBottom: 16 }}>
                     <button type="button" className={`doc-tab ${docType === 'cnpj' ? 'active' : ''}`} onClick={() => setDocType('cnpj')}>
                       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
                       CNPJ
@@ -453,19 +449,19 @@ export default function Home() {
                   </div>
 
                   {docType === 'cnpj' && (
-                    <div className="field" style={{ marginBottom: 18 }}>
+                    <div className="field" style={{ marginBottom: 12 }}>
                       <label>CNPJ</label>
                       <input type="text" required placeholder="00.000.000/0000-00" maxLength={18} value={cnpj} onChange={e => setCnpj(e.target.value)} />
                     </div>
                   )}
                   {docType === 'cpf' && (
-                    <div className="field" style={{ marginBottom: 18 }}>
+                    <div className="field" style={{ marginBottom: 12 }}>
                       <label>CPF</label>
                       <input type="text" required placeholder="000.000.000-00" maxLength={14} value={cpf} onChange={e => setCpf(e.target.value)} />
                     </div>
                   )}
 
-                  <div className="form-row" style={{ marginBottom: 18 }}>
+                  <div className="form-row" style={{ marginBottom: 12 }}>
                     <div className="field">
                       <label>Nome da Empresa</label>
                       <input type="text" required placeholder="Ex: Pizzaria do João" value={empresa} onChange={handleEmpresaChange} />
@@ -493,7 +489,7 @@ export default function Home() {
                     </div>
                   </div>
 
-                  <div className="form-row" style={{ marginBottom: 18 }}>
+                  <div className="form-row" style={{ marginBottom: 12 }}>
                     <div className="field">
                       <label>Estado</label>
                       <select required value={estado} onChange={e => setEstado(e.target.value)}>
@@ -509,7 +505,7 @@ export default function Home() {
                     </div>
                   </div>
 
-                  <div className="form-row" style={{ marginBottom: 4 }}>
+                  <div className="form-row" style={{ marginBottom: 0 }}>
                     <div className="field">
                       <label>Telefone / WhatsApp</label>
                       <input type="tel" required placeholder="(11) 99999-0000" maxLength={15} value={telefone} onChange={e => setTelefone(e.target.value)} />

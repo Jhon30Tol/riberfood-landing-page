@@ -306,7 +306,7 @@ export default function Planos() {
           <h2 className="reveal visible">Pronto para começar sem custo?</h2>
           <p className="reveal visible d1">Preencha os dados e nosso time entra em contato para o seu onboarding.</p>
           <Link to="/#onboarding" className="btn-primary reveal visible d2">
-            Cadastrar meu restaurante →
+            Cadastrar meu negócio →
           </Link>
           <p className="cta-note reveal visible d3">Sem cartão de crédito · Começa agora</p>
         </div>
