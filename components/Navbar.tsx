@@ -1,3 +1,9 @@
+/* Author: Jhon toledo
+ Date: 09/06/2026
+Objective: Navbar da Landing Page
+Date Alter: 09/06/2026
+Alter: 09/06/2026 - Correção no comportamento do menu mobile e no estilo do botão
+*/
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 
@@ -24,7 +30,7 @@ export default function Navbar() {
               if (el) el.scrollIntoView({ behavior: 'smooth' });
             }}>Começar grátis →</Link>
             <button 
-              className={`nav-hamburger ${isMobileNavOpen ? 'active' : ''}`} 
+              className={`nav-hamburger ${isMobileNavOpen ? 'open' : ''}`} 
               aria-label="Menu" 
               onClick={() => setIsMobileNavOpen(!isMobileNavOpen)}
             >
@@ -35,7 +41,7 @@ export default function Navbar() {
       </nav>
 
       {/* Menu mobile */}
-      <div className={`nav-mobile ${isMobileNavOpen ? 'active' : ''}`} id="nav-mobile">
+      <div className={`nav-mobile ${isMobileNavOpen ? 'open' : ''}`} id="nav-mobile">
         <Link to="/" onClick={() => setIsMobileNavOpen(false)}>Solução</Link>
         <Link to="/funcionalidades" onClick={() => setIsMobileNavOpen(false)}>Funcionalidades</Link>
         <Link to="/calcule" onClick={() => setIsMobileNavOpen(false)}>Calcule</Link>
