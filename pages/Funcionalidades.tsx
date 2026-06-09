@@ -120,13 +120,11 @@ export default function Funcionalidades() {
 
   return (
     <>
-      <section className="hero">
+      <section className="page-hero">
         <div className="container">
-          <div className="hero-inner">
-            <div className="hero-badge reveal" style={{ marginBottom: 16 }}><span className="label">Plataforma completa</span></div>
-            <h1 className="reveal reveal-delay-1">Tudo que você precisa.<br /><span className="accent">Tudo incluso.</span></h1>
-            <p className="hero-sub reveal reveal-delay-2">Explore cada funcionalidade e veja como funciona na prática.</p>
-          </div>
+          <div className="label reveal visible" style={{ marginBottom: 16 }}>Plataforma completa</div>
+          <h1 className="reveal visible d1">Tudo que você precisa.<br /><span className="accent">Tudo incluso.</span></h1>
+          <p className="reveal visible d2">Explore cada funcionalidade e veja como funciona na prática.</p>
         </div>
       </section>
 
