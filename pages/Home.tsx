@@ -28,13 +28,18 @@ export default function Home() {
   };
 
   const handleSubdomainChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setAutoGenerateSubdomain(false);
     let val = e.target.value.normalize('NFD').replace(/[\u0300-\u036f]/g, "");
     val = val.replace(/\s+/g, '-');
     val = val.toLowerCase().replace(/[^a-z0-9-]/g, '');
     val = val.replace(/-+/g, '-');
     val = val.replace(/^-+/g, '');
     setSubdomain(val);
+    
+    if (val === '') {
+      setAutoGenerateSubdomain(true);
+    } else {
+      setAutoGenerateSubdomain(false);
+    }
     
     setSubdomainStatus('idle');
     if (timeoutRef.current) clearTimeout(timeoutRef.current);
