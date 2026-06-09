@@ -29,19 +29,21 @@ export default function Home() {
 
   const handleSubdomainChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setAutoGenerateSubdomain(false);
-    const normalized = e.target.value.normalize('NFD').replace(/[\u0300-\u036f]/g, "");
-    const raw = normalized.toLowerCase().replace(/[^a-z0-9-]/g, '-');
-    const clean = raw.replace(/-+/g, '-').replace(/^-+/g, '');
-    setSubdomain(clean);
+    let val = e.target.value.normalize('NFD').replace(/[\u0300-\u036f]/g, "");
+    val = val.replace(/\s+/g, '-');
+    val = val.toLowerCase().replace(/[^a-z0-9-]/g, '');
+    val = val.replace(/-+/g, '-');
+    val = val.replace(/^-+/g, '');
+    setSubdomain(val);
     
     setSubdomainStatus('idle');
     if (timeoutRef.current) clearTimeout(timeoutRef.current);
     
-    if (clean.length >= 3) {
+    if (val.length >= 3 && !val.endsWith('-')) {
       setSubdomainStatus('checking');
       timeoutRef.current = setTimeout(async () => {
         try {
-          const res = await fetch(`https://api.stg.riberfood.com/api/v1/onboarding/subdomains/${clean}/availability`);
+          const res = await fetch(`https://api.stg.riberfood.com/api/v1/onboarding/subdomains/${val}/availability`);
           if (res.ok) {
             const data = await res.json();
             setSubdomainStatus(data.available ? 'available' : 'unavailable');
@@ -395,7 +397,6 @@ export default function Home() {
           <div className="faq-list">
             {[
               { q: 'O Riberfood cobra comissão por pedido?', a: 'Não. Cobramos uma taxa operacional fixa do cliente consumidor para manter o sistema funcionando. Para você, lojista, não há mensalidade nem comissão sobre os pedidos.' },
-              { q: 'O Riberfood atende só Ribeirão Preto?', a: 'Nossa sede é em Ribeirão Preto/SP, mas a plataforma foi pensada para atender negócios de delivery em todo o Brasil.' },
               { q: 'Preciso ser técnico para usar?', a: 'Não. A plataforma é extremamente simples e intuitiva. Se você sabe usar o celular, saberá usar o Riberfood. Em poucos minutos você está configurado e já começa a receber pedidos.' }
             ].map((faq, idx) => (
               <div key={idx} className={`faq-item reveal ${activeFaq === idx ? 'active' : ''}`}>
@@ -490,7 +491,8 @@ export default function Home() {
                         {subdomainStatus === 'checking' && <span style={{ color: 'var(--orange)' }}>Verificando disponibilidade...</span>}
                         {subdomainStatus === 'available' && <span style={{ color: '#16a34a', fontWeight: 500 }}>✅ Subdomínio disponível!</span>}
                         {subdomainStatus === 'unavailable' && <span style={{ color: '#dc2626', fontWeight: 500 }}>❌ Subdomínio já está em uso</span>}
-                        {subdomainStatus === 'idle' && <>Seu link: <strong>{subdomain || 'seu-nome'}</strong>.riberfood.com<br/><span style={{fontSize: 11, opacity: 0.7}}>Regra: apenas letras minúsculas, números e separado por traços.</span></>}
+                        {subdomainStatus === 'error' && <span style={{ color: '#dc2626', fontWeight: 500 }}>❌ Erro ao verificar subdomínio</span>}
+                        {subdomainStatus === 'idle' && <>Seu link: <strong>{subdomain || 'seu-nome'}</strong>.riberfood.com<br/><span style={{fontSize: 11, opacity: 0.7}}>Regra: apenas letras minúsculas, números e traços.</span></>}
                       </div>
                     </div>
                   </div>
