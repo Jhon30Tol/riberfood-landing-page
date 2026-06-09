@@ -29,7 +29,8 @@ export default function Home() {
 
   const handleSubdomainChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setAutoGenerateSubdomain(false);
-    const raw = e.target.value.toLowerCase().replace(/[^a-z0-9-]/g, '');
+    const normalized = e.target.value.normalize('NFD').replace(/[\u0300-\u036f]/g, "");
+    const raw = normalized.toLowerCase().replace(/[^a-z0-9-]/g, '-');
     const clean = raw.replace(/-+/g, '-').replace(/^-+/g, '');
     setSubdomain(clean);
     
@@ -42,7 +43,8 @@ export default function Home() {
         try {
           const res = await fetch(`https://api.stg.riberfood.com/api/v1/onboarding/subdomains/${clean}/availability`);
           if (res.ok) {
-            setSubdomainStatus('available');
+            const data = await res.json();
+            setSubdomainStatus(data.available ? 'available' : 'unavailable');
           } else {
             setSubdomainStatus('unavailable');
           }
@@ -65,8 +67,12 @@ export default function Home() {
         timeoutRef.current = setTimeout(async () => {
           try {
             const res = await fetch(`https://api.stg.riberfood.com/api/v1/onboarding/subdomains/${generated}/availability`);
-            if (res.ok) setSubdomainStatus('available');
-            else setSubdomainStatus('unavailable');
+            if (res.ok) {
+              const data = await res.json();
+              setSubdomainStatus(data.available ? 'available' : 'unavailable');
+            } else {
+              setSubdomainStatus('unavailable');
+            }
           } catch (error) {
             setSubdomainStatus('error');
           }
