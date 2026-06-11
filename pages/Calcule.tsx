@@ -63,7 +63,7 @@ export default function Calcule() {
               <div className="field">
                 <div className="field-top">
                   <label><span style={{ whiteSpace: 'nowrap' }}>Pedidos por mês</span> <span className="field-hint">quantos pedidos você recebe</span></label>
-                  <input type="number" className="field-value-input" min="0" value={pedidos} onChange={(e) => setPedidos(parseFloat(e.target.value) || 0)} />
+                  <input type="number" className="field-value-input" style={{ width: 90 }} min="0" value={pedidos} onChange={(e) => setPedidos(parseFloat(e.target.value) || 0)} />
                 </div>
                 <input 
                   type="range" 
@@ -78,7 +78,7 @@ export default function Calcule() {
               <div className="field">
                 <div className="field-top">
                   <label><span style={{ whiteSpace: 'nowrap' }}>Ticket médio</span> <span className="field-hint">valor médio por pedido</span></label>
-                  <input type="text" className="field-value-input" inputMode="numeric" value={ticketRaw} onChange={(e) => handleTicketChange(e.target.value)} />
+                  <input type="text" className="field-value-input" style={{ width: 90 }} inputMode="numeric" value={ticketRaw} onChange={(e) => handleTicketChange(e.target.value)} />
                 </div>
                 <input 
                   type="range" 
