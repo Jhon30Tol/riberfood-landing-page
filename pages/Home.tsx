@@ -1,3 +1,9 @@
+/* Author: Jhon toledo
+ Date: 11/06/2026
+Objective: Página Home contendo formulário de onboarding da landing page
+Date Alter: 11/06/2026
+Alter: 11/06/2026 - Separação dos campos Nome da Empresa e Subdomínio em linhas diferentes para melhor alinhamento das mensagens de validação
+*/
 import React, { useState, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
 
@@ -473,32 +479,30 @@ export default function Home() {
                     </div>
                   )}
 
-                  <div className="form-row" style={{ marginBottom: 12 }}>
-                    <div className="field">
-                      <label>Nome da Empresa</label>
-                      <input type="text" required placeholder="Ex: Pizzaria do João" value={empresa} onChange={handleEmpresaChange} />
-                    </div>
-                    <div className="field">
-                      <label>Subdomínio</label>
-                      <input 
-                        type="text" 
-                        required 
-                        placeholder="pizzaria-joao" 
-                        pattern="[a-z0-9\-]{3,}" 
-                        value={subdomain} 
-                        onChange={handleSubdomainChange} 
-                        style={{
-                          borderColor: subdomainStatus === 'available' ? '#22c55e' : subdomainStatus === 'unavailable' ? '#ef4444' : undefined,
-                          outline: subdomainStatus === 'available' ? '1px solid #22c55e' : subdomainStatus === 'unavailable' ? '1px solid #ef4444' : undefined
-                        }}
-                      />
-                      <div className="field-hint">
-                        {subdomainStatus === 'checking' && <span style={{ color: 'var(--orange)' }}>Verificando disponibilidade...</span>}
-                        {subdomainStatus === 'available' && <span style={{ color: '#16a34a', fontWeight: 500 }}>✅ Subdomínio disponível!</span>}
-                        {subdomainStatus === 'unavailable' && <span style={{ color: '#dc2626', fontWeight: 500 }}>❌ Subdomínio já está em uso</span>}
-                        {subdomainStatus === 'error' && <span style={{ color: '#dc2626', fontWeight: 500 }}>❌ Erro ao verificar subdomínio</span>}
-                        {subdomainStatus === 'idle' && <>Seu link: <strong>{subdomain || 'seu-nome'}</strong>.riberfood.com<br/><span style={{fontSize: 11, opacity: 0.7}}>Regra: apenas letras minúsculas, números e traços.</span></>}
-                      </div>
+                  <div className="field" style={{ marginBottom: 12 }}>
+                    <label>Nome da Empresa</label>
+                    <input type="text" required placeholder="Ex: Pizzaria do João" value={empresa} onChange={handleEmpresaChange} />
+                  </div>
+                  <div className="field" style={{ marginBottom: 12 }}>
+                    <label>Subdomínio</label>
+                    <input 
+                      type="text" 
+                      required 
+                      placeholder="pizzaria-joao" 
+                      pattern="[a-z0-9\-]{3,}" 
+                      value={subdomain} 
+                      onChange={handleSubdomainChange} 
+                      style={{
+                        borderColor: subdomainStatus === 'available' ? '#22c55e' : subdomainStatus === 'unavailable' ? '#ef4444' : undefined,
+                        outline: subdomainStatus === 'available' ? '1px solid #22c55e' : subdomainStatus === 'unavailable' ? '1px solid #ef4444' : undefined
+                      }}
+                    />
+                    <div className="field-hint">
+                      {subdomainStatus === 'checking' && <span style={{ color: 'var(--orange)' }}>Verificando disponibilidade...</span>}
+                      {subdomainStatus === 'available' && <span style={{ color: '#16a34a', fontWeight: 500 }}>✅ Subdomínio disponível!</span>}
+                      {subdomainStatus === 'unavailable' && <span style={{ color: '#dc2626', fontWeight: 500 }}>❌ Subdomínio já está em uso</span>}
+                      {subdomainStatus === 'error' && <span style={{ color: '#dc2626', fontWeight: 500 }}>❌ Erro ao verificar subdomínio</span>}
+                      {subdomainStatus === 'idle' && <>Seu link: <strong>{subdomain || 'seu-nome'}</strong>.riberfood.com<br/><span style={{fontSize: 11, opacity: 0.7}}>Regra: apenas letras minúsculas, números e traços.</span></>}
                     </div>
                   </div>
 

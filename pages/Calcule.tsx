@@ -1,3 +1,9 @@
+/* Author: Jhon toledo
+ Date: 11/06/2026
+Objective: Calculadora de simulação de economia da landing page
+Date Alter: 11/06/2026
+Alter: 11/06/2026 - Correção do layout responsivo de wrap do texto "Pedidos por mês" e alinhamento do slider e input
+*/
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 
@@ -55,8 +61,8 @@ export default function Calcule() {
               <p className="sub">Ajuste os valores para refletir a realidade da sua operação.</p>
 
               <div className="field">
-                <div className="field-top">
-                  <label>Pedidos por mês <span className="field-hint">quantos pedidos você recebe</span></label>
+                <div className="field-top" style={{ alignItems: 'center' }}>
+                  <label style={{ whiteSpace: 'nowrap' }}>Pedidos por mês <span className="field-hint" style={{ whiteSpace: 'normal' }}>quantos pedidos você recebe</span></label>
                   <input type="number" className="field-value-input" min="0" value={pedidos} onChange={(e) => setPedidos(parseFloat(e.target.value) || 0)} />
                 </div>
                 <input 
@@ -70,8 +76,8 @@ export default function Calcule() {
               </div>
 
               <div className="field">
-                <div className="field-top">
-                  <label>Ticket médio <span className="field-hint">valor médio por pedido</span></label>
+                <div className="field-top" style={{ alignItems: 'center' }}>
+                  <label style={{ whiteSpace: 'nowrap' }}>Ticket médio <span className="field-hint" style={{ whiteSpace: 'normal' }}>valor médio por pedido</span></label>
                   <input type="text" className="field-value-input" inputMode="numeric" value={ticketRaw} onChange={(e) => handleTicketChange(e.target.value)} />
                 </div>
                 <input 
