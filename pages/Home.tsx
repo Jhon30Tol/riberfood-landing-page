@@ -507,7 +507,7 @@ export default function Home() {
                   </div>
 
                   <div className="form-row" style={{ marginBottom: 12 }}>
-                    <div className="field">
+                    <div className="field" style={{ marginBottom: 0 }}>
                       <label>Estado</label>
                       <select required value={estado} onChange={e => setEstado(e.target.value)}>
                         <option value="">Selecione</option>
@@ -516,18 +516,18 @@ export default function Home() {
                         ))}
                       </select>
                     </div>
-                    <div className="field">
+                    <div className="field" style={{ marginBottom: 0 }}>
                       <label>Seu Nome</label>
                       <input type="text" required placeholder="Nome completo" value={nome} onChange={e => setNome(e.target.value)} />
                     </div>
                   </div>
 
                   <div className="form-row" style={{ marginBottom: 0 }}>
-                    <div className="field">
+                    <div className="field" style={{ marginBottom: 0 }}>
                       <label>Telefone / WhatsApp</label>
                       <input type="tel" required placeholder="(11) 99999-0000" maxLength={15} value={telefone} onChange={e => setTelefone(e.target.value)} />
                     </div>
-                    <div className="field">
+                    <div className="field" style={{ marginBottom: 0 }}>
                       <label>E-mail</label>
                       <input type="email" required placeholder="seu@email.com" value={email} onChange={e => setEmail(e.target.value)} />
                     </div>
