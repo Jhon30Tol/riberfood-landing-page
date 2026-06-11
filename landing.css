@@ -663,7 +663,7 @@
 
     .field { display: flex; flex-direction: column; gap: 7px; }
     .field label {
-      font-size: 12px; font-weight: 700; color: rgba(255,255,255,.5);
+      font-size: 12px; font-weight: 700; color: rgba(255,255,255,.85);
       letter-spacing: .05em; text-transform: uppercase;
     }
     .field input,
@@ -1187,10 +1187,10 @@
     .calc-panel h2 { font-size: 22px; font-weight: 900; margin-bottom: 6px; }
     .calc-panel .sub { font-size: 14px; color: var(--gray-5); margin-bottom: 28px; line-height: 1.6; }
 
-    .field { margin-bottom: 28px; }
-    .field-top { display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; margin-bottom: 14px; }
-    .field label { font-size: 13px; font-weight: 700; color: var(--gray-8); line-height: 1.4; }
-    .field-hint { display: block; font-size: 11px; color: var(--gray-5); font-weight: 400; margin-top: 3px; }
+    .calc-panel .field { margin-bottom: 28px; }
+    .calc-panel .field-top { display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; margin-bottom: 14px; }
+    .calc-panel .field label { font-size: 13px; font-weight: 700; color: var(--gray-8); line-height: 1.4; }
+    .calc-panel .field-hint { display: block; font-size: 11px; color: var(--gray-5); font-weight: 400; margin-top: 3px; }
 
     /* Value badge (slider fields) */
     .field-value-input {
